@@ -14,6 +14,7 @@ public class Admin {
     private String passwdHash;
     private String sessionToken;
 
+
     //constructors getters and setters
     public Admin() {
     }

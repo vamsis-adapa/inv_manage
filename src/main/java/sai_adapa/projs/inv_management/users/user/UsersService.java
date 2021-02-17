@@ -14,16 +14,14 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public String addUser(PreUsers preUsers) {
+    public void addUser(PreUsers preUsers) {
         Users users = new Users(preUsers.getName(), preUsers.getE_mail(), preUsers.getDetails(), AuthTools.encodePassword(preUsers.getPasswd()));
         usersRepository.save(users);
-        return "yes";
     }
 
-    public String addUser(String name, String e_mail, String details, String password) {
+    public void addUser(String name, String e_mail, String details, String password) {
         Users users = new Users(name, e_mail, details, AuthTools.encodePassword(password));
         usersRepository.save(users);
-        return "yes";
     }
 
     public Users getUser(String e_mail) {
