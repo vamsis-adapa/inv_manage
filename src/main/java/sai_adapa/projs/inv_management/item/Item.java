@@ -7,25 +7,25 @@ import javax.persistence.Id;
 public class Item {
 
     @Id
-    private String id;
+    private String item_id;
     private String name;
     private String description;
 
     public Item() {
     }
 
-    public Item(String id, String name, String description) {
-        this.id = id;
+    public Item(String item_id, String name, String description) {
+        this.item_id = item_id;
         this.name = name;
         this.description = description;
     }
 
-    public String getId() {
-        return id;
+    public String getItem_id() {
+        return item_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setItem_id(String id) {
+        this.item_id = id;
     }
 
     public String getName() {
