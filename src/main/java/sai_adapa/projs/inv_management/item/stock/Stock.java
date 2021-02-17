@@ -8,8 +8,10 @@ import java.util.Date;
 
 @Entity
 public class Stock {
+
     @Id
-    private String id;
+    @GeneratedValue( generator = "identity")
+    private Long id;
 
 
     @ManyToOne
@@ -29,19 +31,18 @@ public class Stock {
     public Stock() {
     }
 
-    public Stock(String id, Vendor vendor, Item item, int cost, Date dateAdded) {
-        this.id = id;
+    public Stock( Vendor vendor, Item item, int cost, Date dateAdded) {
         this.vendor = vendor;
         this.item = item;
         this.cost = cost;
         this.dateAdded = dateAdded;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

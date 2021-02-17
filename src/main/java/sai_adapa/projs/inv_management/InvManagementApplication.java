@@ -5,14 +5,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import sai_adapa.projs.inv_management.auth.AuthTools;
 import sai_adapa.projs.inv_management.item.Item;
 import sai_adapa.projs.inv_management.item.ItemRepository;
 import sai_adapa.projs.inv_management.item.stock.Stock;
 import sai_adapa.projs.inv_management.item.stock.StockRepository;
 import sai_adapa.projs.inv_management.users.admin.Admin;
 import sai_adapa.projs.inv_management.users.admin.AdminRepository;
+import sai_adapa.projs.inv_management.users.user.PreUsers;
 import sai_adapa.projs.inv_management.users.user.Users;
 import sai_adapa.projs.inv_management.users.user.UsersRepository;
+import sai_adapa.projs.inv_management.users.user.UsersService;
 import sai_adapa.projs.inv_management.users.vendor.Vendor;
 import sai_adapa.projs.inv_management.users.vendor.VendorRepository;
 
@@ -26,6 +29,9 @@ public class InvManagementApplication {
 
 
 ////    Test bed
+
+        @Autowired
+        UsersService usersService;
 //    VendorRepository vendorRepository;
 //    AdminRepository adminRepository;
 //    UsersRepository usersRepository;
@@ -58,9 +64,27 @@ public class InvManagementApplication {
 //    }
 //
 //
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void doSomethingAfterStartup() {
-//        System.out.println("Strawberry");
+    @EventListener(ApplicationReadyEvent.class)
+    public void doSomethingAfterStartup() {
+//
+        System.out.println(AuthTools.encodePassword("printer"));
+
+        PreUsers preUsers = new PreUsers("dam","lef","coee","hard");
+
+        usersService.addUser(preUsers);
+        usersService.addUser("choc","draw","kdjf;lkdjf fdlakj; ", "meow");
+
+
+        System.out.println(usersService.verifyUser("draw","meow"));
+        System.out.println(usersService.verifyUser("draw","myadf"));
+        Users k = usersService.getUser("draw");
+        System.out.println(usersService.createSession(k));
+        usersService.endSession(k);
+        System.out.println("Strawberry");
+
+
+    }
+
 //        Vendor vendor = new Vendor("vend", "straw", "cjhp", "my", "yare");
 //        vendorRepository.save(vendor);
 //
@@ -75,9 +99,6 @@ public class InvManagementApplication {
 //
 //        Stock stock = new Stock("calc_meow",vendor,item,3,new java.util.Date());
 //        stockRepository.save(stock);
-//
-//        System.out.println("King");
-//
-//    }
+
 
 }

@@ -1,30 +1,32 @@
 package sai_adapa.projs.inv_management.item;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Item {
 
     @Id
-    private String item_id;
+    @GeneratedValue( generator = "identity")
+    private Long item_id;
     private String name;
     private String description;
 
     public Item() {
     }
 
-    public Item(String item_id, String name, String description) {
-        this.item_id = item_id;
+    public Item(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public String getItem_id() {
+    public Long getItem_id() {
         return item_id;
     }
 
-    public void setItem_id(String id) {
+    public void setItem_id(Long id) {
         this.item_id = id;
     }
 

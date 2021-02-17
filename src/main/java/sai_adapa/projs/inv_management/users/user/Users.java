@@ -1,30 +1,41 @@
 package sai_adapa.projs.inv_management.users.user;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class Users {
 
     @Id
-    private String user_id;
+    @GeneratedValue(generator = "identity")
+    private Long user_id;
 
     private String name;
-    private String e_mail;
+    @Column(unique = true)
+    private String email;
     private String details;
     private String passwdHash;
-
+    private String sessionToken;
 
     //constructors getters and setters
     public Users() {
     }
 
-    public Users(String user_id, String name, String e_mail, String details, String passwdHash) {
-        this.user_id = user_id;
+    public Users(String name, String email, String details, String passwdHash) {
         this.name = name;
-        this.e_mail = e_mail;
+        this.email = email;
         this.details = details;
         this.passwdHash = passwdHash;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
     public String getPasswdHash() {
@@ -34,11 +45,12 @@ public class Users {
     public void setPasswdHash(String passwdHash) {
         this.passwdHash = passwdHash;
     }
-    public String getUser_id() {
+
+    public Long getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(String user_id) {
+    public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
 
@@ -50,12 +62,12 @@ public class Users {
         this.name = name;
     }
 
-    public String getE_mail() {
-        return e_mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setE_mail(String e_mail) {
-        this.e_mail = e_mail;
+    public void setEmail(String e_mail) {
+        this.email = e_mail;
     }
 
     public String getDetails() {
@@ -66,3 +78,6 @@ public class Users {
         this.details = details;
     }
 }
+
+
+

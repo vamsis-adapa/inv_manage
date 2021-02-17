@@ -1,43 +1,50 @@
 package sai_adapa.projs.inv_management.users.admin;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Admin {
 
     @Id
-    private String admin_id;
+    @GeneratedValue( generator = "identity")
+    private Long admin_id;
 
-    private String e_mail;
+    @Column(unique = true)
+    private String email;
     private String passwdHash;
-
-
+    private String sessionToken;
 
     //constructors getters and setters
     public Admin() {
     }
 
-    public Admin(String admin_id, String e_mail, String passwd, String passwdHash) {
-        this.admin_id = admin_id;
-        this.e_mail = e_mail;
+    public Admin(String email, String passwdHash) {
+        this.email = email;
         this.passwdHash = passwdHash;
     }
 
-    public String getAdmin_id() {
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String session_token) {
+        this.sessionToken = session_token;
+    }
+
+    public Long getAdmin_id() {
         return admin_id;
     }
 
-    public void setAdmin_id(String admin_id) {
+    public void setAdmin_id(Long admin_id) {
         this.admin_id = admin_id;
     }
 
-    public String getE_mail() {
-        return e_mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setE_mail(String e_mail) {
-        this.e_mail = e_mail;
+    public void setEmail(String e_mail) {
+        this.email = e_mail;
     }
 
     public String getPasswdHash() {

@@ -1,33 +1,41 @@
 package sai_adapa.projs.inv_management.users.vendor;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
 public class Vendor {
 
     @Id
-    private String vendor_id;
+    @GeneratedValue( generator = "identity")
+    private Long vendor_id;
 
     private String name;
-    private String e_mail;
+
+    @Column(unique = true)
+    private String email;
     private String description;
     private String passwdHash;
-
-
+    private String sessionToken;
 
     //constructors getters and setters
     public Vendor() {
     }
 
-    public Vendor(String vendor_id, String name, String e_mail, String description, String passwdHash) {
-        this.vendor_id = vendor_id;
+    public Vendor(String name, String email, String description, String passwdHash) {
         this.name = name;
-        this.e_mail = e_mail;
+        this.email = email;
         this.description = description;
         this.passwdHash = passwdHash;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
     public String getPasswdHash() {
@@ -38,11 +46,11 @@ public class Vendor {
         this.passwdHash = passwdHash;
     }
 
-    public String getVendor_id() {
+    public Long getVendor_id() {
         return vendor_id;
     }
 
-    public void setVendor_id(String vendor_id) {
+    public void setVendor_id(Long vendor_id) {
         this.vendor_id = vendor_id;
     }
 
@@ -54,12 +62,12 @@ public class Vendor {
         this.name = name;
     }
 
-    public String getE_mail() {
-        return e_mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setE_mail(String email_id) {
-        this.e_mail = email_id;
+    public void setEmail(String email_id) {
+        this.email = email_id;
     }
 
     public String getDescription() {
