@@ -24,7 +24,8 @@ public class InvManagementApplication {
     }
 
 
-    //Test bed
+
+////    Test bed
 //    VendorRepository vendorRepository;
 //    AdminRepository adminRepository;
 //    UsersRepository usersRepository;
@@ -76,7 +77,7 @@ public class InvManagementApplication {
 //        stockRepository.save(stock);
 //
 //        System.out.println("King");
-
-    }
+//
+//    }
 
 }
