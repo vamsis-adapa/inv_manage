@@ -29,9 +29,9 @@ public class InvManagementApplication {
 
 
 ////    Test bed
-
-        @Autowired
-        UsersService usersService;
+//
+//        @Autowired
+//        UsersService usersService;
 //    VendorRepository vendorRepository;
 //    AdminRepository adminRepository;
 //    UsersRepository usersRepository;
@@ -67,20 +67,20 @@ public class InvManagementApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
 //
-        System.out.println(AuthTools.encodePassword("printer"));
-
-        PreUsers preUsers = new PreUsers("dam","lef","coee","hard");
-
-        usersService.addUser(preUsers);
-        usersService.addUser("choc","draw","kdjf;lkdjf fdlakj; ", "meow");
-
-
-        System.out.println(usersService.verifyUser("draw","meow"));
-        System.out.println(usersService.verifyUser("draw","myadf"));
-        Users k = usersService.getUser("draw");
-        System.out.println(usersService.createSession(k));
-        usersService.endSession(k);
-        System.out.println("Strawberry");
+//        System.out.println(AuthTools.encodePassword("printer"));
+//
+//        PreUsers preUsers = new PreUsers("dam","lef","coee","hard");
+//
+//        usersService.addUser(preUsers);
+//        usersService.addUser("choc","draw","kdjf;lkdjf fdlakj; ", "meow");
+//
+//
+//        System.out.println(usersService.verifyUser("draw","meow"));
+//        System.out.println(usersService.verifyUser("draw","myadf"));
+//        Users k = usersService.getUser("draw");
+//        System.out.println(usersService.createSession(k));
+//        usersService.endSession(k);
+//        System.out.println("Strawberry");
 
 
     }

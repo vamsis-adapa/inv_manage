@@ -14,9 +14,6 @@ public class AdminService {
         this.adminRepository = adminRepository;
     }
 
-    public void addUser(PreAdmin preAdmin) {
-        adminRepository.save(new Admin(preAdmin.getEmail(), AuthTools.encodePassword(preAdmin.getPasswd())));
-    }
 
     public void addUser(String email, String password) {
         adminRepository.save(new Admin(email, AuthTools.encodePassword(password)));

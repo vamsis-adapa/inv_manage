@@ -7,6 +7,11 @@ public class PreAdmin {
     public PreAdmin() {
     }
 
+    public PreAdmin(String email)
+    {
+        this.email = email;
+    }
+
     public PreAdmin(String email, String passwd) {
         this.email = email;
         this.passwd = passwd;
