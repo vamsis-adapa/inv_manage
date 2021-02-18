@@ -12,6 +12,7 @@ public class Admin {
     @Column(unique = true)
     private String email;
     private String passwdHash;
+    @Column(unique = true,nullable = true)
     private String sessionToken;
 
 

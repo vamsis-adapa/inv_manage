@@ -15,12 +15,19 @@ public class AdminService {
     }
 
 
+    public Boolean verifyToken( String token) {
+        return adminRepository.existsAdminBySessionToken(token);
+    }
+
     public void addUser(String email, String password) {
         adminRepository.save(new Admin(email, AuthTools.encodePassword(password)));
     }
 
     public Admin getUser(String email) {
         return adminRepository.findByEmail(email);
+    }
+    public Admin getUserFromSession(String token){
+        return adminRepository.findBySessionToken(token);
     }
 
     public Boolean verifyUser(Admin admin, String password) {
@@ -32,13 +39,13 @@ public class AdminService {
         return AuthTools.verifyPassword(password, passwdHash);
     }
 
-    public String createSession(Admin admin)
-    {
+    public String createSession(Admin admin) {
         String sessionToken = AuthTools.generateNewToken();
         admin.setSessionToken(sessionToken);
         adminRepository.save(admin);
-        return  sessionToken;
+        return sessionToken;
     }
+
     public String createSession(String email) {
         Admin admin = getUser(email);
         String sessionToken = AuthTools.generateNewToken();
@@ -47,13 +54,12 @@ public class AdminService {
         return sessionToken;
     }
 
-    public void endSession(Admin admin)
-    {
+    public void endSession(Admin admin) {
         admin.setSessionToken(null);
         adminRepository.save(admin);
     }
-    public  void endSession (String email)
-    {
+
+    public void endSession(String email) {
         Admin admin = getUser(email);
         admin.setSessionToken(null);
         adminRepository.save(admin);

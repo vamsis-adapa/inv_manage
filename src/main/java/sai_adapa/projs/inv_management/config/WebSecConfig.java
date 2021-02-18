@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.auth;
+package sai_adapa.projs.inv_management.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class WebConfig extends WebSecurityConfigurerAdapter {
+public class WebSecConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
