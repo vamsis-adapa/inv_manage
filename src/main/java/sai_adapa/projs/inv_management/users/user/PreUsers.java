@@ -18,6 +18,11 @@ public class PreUsers {
         return e_mail;
     }
 
+    public PreUsers(String e_mail, String passwd) {
+        this.e_mail = e_mail;
+        this.passwd = passwd;
+    }
+
     public void setE_mail(String e_mail) {
         this.e_mail = e_mail;
     }
