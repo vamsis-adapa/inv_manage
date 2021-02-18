@@ -15,7 +15,8 @@ public class AdminService {
     }
 
 
-    public Boolean verifyToken( String token) {
+    public Boolean verifyToken(String token) {
+        System.out.println(adminRepository.existsAdminBySessionToken(token));
         return adminRepository.existsAdminBySessionToken(token);
     }
 
@@ -26,7 +27,8 @@ public class AdminService {
     public Admin getUser(String email) {
         return adminRepository.findByEmail(email);
     }
-    public Admin getUserFromSession(String token){
+
+    public Admin getUserFromSession(String token) {
         return adminRepository.findBySessionToken(token);
     }
 

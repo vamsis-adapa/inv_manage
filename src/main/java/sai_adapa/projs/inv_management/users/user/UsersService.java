@@ -25,7 +25,15 @@ public class UsersService {
     }
 
     public Users getUser(String e_mail) {
-        return usersRepository.findByEmail(e_mail).get(0);
+        return usersRepository.findByEmail(e_mail);
+    }
+
+    public Users getUsersBySession(String token) {
+        return usersRepository.findBySessionToken(token);
+    }
+
+    public Boolean verifySession(String token) {
+        return usersRepository.existsUsersBySessionToken(token);
     }
 
     public Boolean verifyUser(Users users, String password) {

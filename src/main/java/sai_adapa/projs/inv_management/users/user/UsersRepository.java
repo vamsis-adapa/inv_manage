@@ -8,6 +8,9 @@ import java.util.List;
 @Repository
 public interface UsersRepository extends JpaRepository<Users,String> {
 
-    List<Users> findByEmail(String email);
+    Users findByEmail(String email);
+    Users findBySessionToken(String token);
+    Boolean existsUsersBySessionToken(String token);
+
 }
 
