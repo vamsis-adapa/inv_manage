@@ -5,7 +5,6 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: create-drop
-
     generate-ddl: true
   datasource:
     url: jdbc:postgresql://localhost:5432/inv_spring_application

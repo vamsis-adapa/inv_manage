@@ -1,20 +1,31 @@
 package sai_adapa.projs.inv_management.users.admin;
 
-import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.UUID;
 
 @Entity
 public class Admin {
 
+    //    @Id
+//    @GeneratedValue(generator = "identity")
+//    private Long admin_id;
     @Id
-    @GeneratedValue( generator = "identity")
-    private Long admin_id;
-
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(unique = true, nullable = false)
+    @Type(type = "pg-uuid")
+    private UUID admin_id;
     @Column(unique = true)
     private String email;
     private String passwdHash;
-    @Column(unique = true,nullable = true)
+    @Column(unique = true, nullable = true)
     private String sessionToken;
-
 
     //constructors getters and setters
     public Admin() {
@@ -25,6 +36,7 @@ public class Admin {
         this.passwdHash = passwdHash;
     }
 
+
     public String getSessionToken() {
         return sessionToken;
     }
@@ -33,11 +45,11 @@ public class Admin {
         this.sessionToken = session_token;
     }
 
-    public Long getAdmin_id() {
+    public UUID getAdmin_id() {
         return admin_id;
     }
 
-    public void setAdmin_id(Long admin_id) {
+    public void setAdmin_id(UUID admin_id) {
         this.admin_id = admin_id;
     }
 

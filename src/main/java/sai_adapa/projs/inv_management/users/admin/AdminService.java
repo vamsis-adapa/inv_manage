@@ -32,6 +32,18 @@ public class AdminService {
         return adminRepository.findBySessionToken(token);
     }
 
+    public void deleteUser(Admin admin) {
+        adminRepository.delete(admin);
+    }
+
+    public void editUser(Admin admin, String email, String password) {
+        if (email != null)
+            admin.setEmail(email);
+        if (password != null)
+            admin.setPasswdHash(AuthTools.encodePassword(password));
+        adminRepository.save(admin);
+    }
+
     public Boolean verifyUser(Admin admin, String password) {
         return AuthTools.verifyPassword(password, admin.getPasswdHash());
     }

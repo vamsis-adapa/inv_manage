@@ -2,10 +2,7 @@ package sai_adapa.projs.inv_management.users.vendor;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class VendorController {
@@ -34,6 +31,18 @@ public class VendorController {
         } else
             return "failed";
     }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = {"/vendor"})
+    public void editVendor(@RequestBody PreVendor preVendor, @RequestHeader("session_token") String key)
+    {
+        vendorService.editUser(vendorService.getUserBySession(key),preVendor.getName(),preVendor.getEmail(),preVendor.getDescription(),preVendor.getPasswd());
+    }
+
+
+
+
+
+
 
 
 }

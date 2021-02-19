@@ -21,6 +21,22 @@ public class VendorService {
         vendorRepository.save(new Vendor(name, email, description, AuthTools.encodePassword(passwd)));
     }
 
+    public void deleteUser(Vendor vendor) {
+        vendorRepository.delete(vendor);
+    }
+
+    public void editUser(Vendor vendor, String name, String email, String desc, String password) {
+        if (name != null)
+            vendor.setName(name);
+        if (email != null)
+            vendor.setEmail(email);
+        if (desc != null)
+            vendor.setDescription(desc);
+        if (password != null)
+            vendor.setPasswdHash(AuthTools.encodePassword(password));
+        vendorRepository.save(vendor);
+    }
+
     public Vendor getUserBySession(String token) {
         return vendorRepository.findBySessionToken(token);
     }
@@ -32,6 +48,8 @@ public class VendorService {
     public Vendor getUser(String email) {
         return vendorRepository.findByEmail(email);
     }
+
+
 
     public Boolean verifyUser(Vendor vendor, String password) {
         return AuthTools.verifyPassword(password, vendor.getPasswdHash());

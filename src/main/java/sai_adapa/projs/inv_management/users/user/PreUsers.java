@@ -2,7 +2,7 @@ package sai_adapa.projs.inv_management.users.user;
 
 public class PreUsers {
     private String name;
-    private String e_mail;
+    private String email;
     private String details;
     private String passwd;
 
@@ -14,17 +14,17 @@ public class PreUsers {
         this.name = name;
     }
 
-    public String getE_mail() {
-        return e_mail;
+    public String getEmail() {
+        return email;
     }
 
-    public PreUsers(String e_mail, String passwd) {
-        this.e_mail = e_mail;
+    public PreUsers(String email, String passwd) {
+        this.email = email;
         this.passwd = passwd;
     }
 
-    public void setE_mail(String e_mail) {
-        this.e_mail = e_mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDetails() {
@@ -46,9 +46,9 @@ public class PreUsers {
     public PreUsers() {
     }
 
-    public PreUsers(String name, String e_mail, String details, String passwd) {
+    public PreUsers(String name, String email, String details, String passwd) {
         this.name = name;
-        this.e_mail = e_mail;
+        this.email = email;
         this.details = details;
         this.passwd = passwd;
     }

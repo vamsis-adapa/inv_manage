@@ -1,9 +1,6 @@
 package sai_adapa.projs.inv_management.users.user;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UsersController {
@@ -16,24 +13,26 @@ public class UsersController {
 
     @RequestMapping(method = RequestMethod.POST, value = {"/app_user"})
     public void signUp(@RequestBody PreUsers preUser) {
-        usersService.addUser(preUser.getName(),preUser.getE_mail(),preUser.getDetails(),preUser.getPasswd());
+        usersService.addUser(preUser.getName(), preUser.getEmail(), preUser.getDetails(), preUser.getPasswd());
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = {"/app_user/login"})
-    public String signIn(@RequestBody PreUsers preUsers)
-    {
-        if ( usersService.verifyUser(preUsers.getE_mail(),preUsers.getPasswd()))
-        {
-            return usersService.createSession(preUsers.getE_mail());
-        }
-        else
+    @RequestMapping(method = RequestMethod.POST, value = {"/app_user/login"})
+    public String signIn(@RequestBody PreUsers preUsers) {
+        if (usersService.verifyUser(preUsers.getEmail(), preUsers.getPasswd())) {
+            return usersService.createSession(preUsers.getEmail());
+        } else
             return "failed";
     }
 
+    @RequestMapping(method = RequestMethod.PATCH, value = {"/app_user"})
+    public void editUser(@RequestBody PreUsers preUsers, @RequestHeader("session_token") String key) {
+        usersService.editUser(usersService.getUsersBySession(key), preUsers.getName(), preUsers.getEmail(), preUsers.getDetails(), preUsers.getPasswd());
+    }
+
+
     @RequestMapping(method = RequestMethod.DELETE, value = {"/app_user/logout"})
-    public void signOut(@RequestBody PreUsers preUsers)
-    {
-        usersService.endSession(usersService.getUser(preUsers.getE_mail()));
+    public void signOut(@RequestBody PreUsers preUsers) {
+        usersService.endSession(usersService.getUser(preUsers.getEmail()));
     }
 
 }

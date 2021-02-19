@@ -15,7 +15,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(new AdminVerifier()).addPathPatterns("/admin/logout");
+
+        registry.addInterceptor(new AdminVerifier()).addPathPatterns("/admin","/admin/**").excludePathPatterns("/admin/new","/admin/login");
         registry.addInterceptor(new UsersVerifier()).addPathPatterns("/app_user/logout");
         registry.addInterceptor(new VendorVerifier()).addPathPatterns(("/vendor/logout"));
     }

@@ -15,7 +15,7 @@ public class UsersService {
     }
 
     public void addUser(PreUsers preUsers) {
-        Users users = new Users(preUsers.getName(), preUsers.getE_mail(), preUsers.getDetails(), AuthTools.encodePassword(preUsers.getPasswd()));
+        Users users = new Users(preUsers.getName(), preUsers.getEmail(), preUsers.getDetails(), AuthTools.encodePassword(preUsers.getPasswd()));
         usersRepository.save(users);
     }
 
@@ -38,6 +38,22 @@ public class UsersService {
 
     public Boolean verifyUser(Users users, String password) {
         return AuthTools.verifyPassword(password, users.getPasswdHash());
+    }
+
+    public void deleteUser(Users users) {
+        usersRepository.delete(users);
+    }
+
+    public void editUser(Users users, String name, String email, String details, String password) {
+        if (name != null)
+            users.setName(name);
+        if (email != null)
+            users.setEmail(email);
+        if (details != null)
+            users.setDetails(details);
+        if (password != null)
+            users.setPasswdHash(AuthTools.encodePassword(password));
+        usersRepository.save(users);
     }
 
     public Boolean verifyUser(String e_mail, String password) {
