@@ -51,8 +51,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-<<<<<<< Updated upstream
-=======
+
         <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>logbook-core</artifactId>
@@ -69,7 +68,7 @@
             <version>3.3.0</version>
             <type>jar</type>
         </dependency>
->>>>>>> Stashed changes
+
 
 
         <dependency>
