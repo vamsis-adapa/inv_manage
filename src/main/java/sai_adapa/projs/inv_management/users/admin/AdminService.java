@@ -1,6 +1,7 @@
 package sai_adapa.projs.inv_management.users.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.AuthTools;
 
@@ -14,7 +15,7 @@ public class AdminService {
         this.adminRepository = adminRepository;
     }
 
-
+    @Cacheable(value = "adminSessionsStatus", key = "#token")
     public Boolean verifyToken(String token) {
         System.out.println(adminRepository.existsAdminBySessionToken(token));
         return adminRepository.existsAdminBySessionToken(token);
@@ -28,6 +29,7 @@ public class AdminService {
         return adminRepository.findByEmail(email);
     }
 
+    @Cacheable (value = "adminFromSession", key = "#token")
     public Admin getUserFromSession(String token) {
         return adminRepository.findBySessionToken(token);
     }
@@ -59,6 +61,7 @@ public class AdminService {
         adminRepository.save(admin);
         return sessionToken;
     }
+
 
     public String createSession(String email) {
         Admin admin = getUser(email);
