@@ -1,11 +1,10 @@
 package sai_adapa.projs.inv_management;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.event.EventListener;
-<<<<<<< Updated upstream
 import sai_adapa.projs.inv_management.auth.AuthTools;
 import sai_adapa.projs.inv_management.item.Item;
 import sai_adapa.projs.inv_management.item.ItemRepository;
@@ -19,12 +18,8 @@ import sai_adapa.projs.inv_management.users.user.UsersRepository;
 import sai_adapa.projs.inv_management.users.user.UsersService;
 import sai_adapa.projs.inv_management.users.vendor.Vendor;
 import sai_adapa.projs.inv_management.users.vendor.VendorRepository;
-=======
-import org.zalando.logbook.Logbook;
->>>>>>> Stashed changes
 
 @SpringBootApplication
-@EnableCaching
 public class InvManagementApplication {
 
     public static void main(String[] args) {
@@ -69,8 +64,6 @@ public class InvManagementApplication {
 //    }
 //
 //
-=======
->>>>>>> Stashed changes
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
 //
@@ -106,5 +99,6 @@ public class InvManagementApplication {
 //
 //        Stock stock = new Stock("calc_meow",vendor,item,3,new java.util.Date());
 //        stockRepository.save(stock);
+
 
 }

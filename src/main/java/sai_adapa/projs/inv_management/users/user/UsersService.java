@@ -1,7 +1,6 @@
 package sai_adapa.projs.inv_management.users.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.AuthTools;
 
@@ -29,12 +28,10 @@ public class UsersService {
         return usersRepository.findByEmail(e_mail);
     }
 
-    @Cacheable(value = "usersFromSession", key = "#token")
     public Users getUsersBySession(String token) {
         return usersRepository.findBySessionToken(token);
     }
 
-    @Cacheable(value = "usersSessionStatus", key = "#token")
     public Boolean verifySession(String token) {
         return usersRepository.existsUsersBySessionToken(token);
     }

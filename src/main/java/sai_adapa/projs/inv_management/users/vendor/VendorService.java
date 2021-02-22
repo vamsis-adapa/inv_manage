@@ -1,7 +1,6 @@
 package sai_adapa.projs.inv_management.users.vendor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.AuthTools;
 
@@ -38,12 +37,10 @@ public class VendorService {
         vendorRepository.save(vendor);
     }
 
-    @Cacheable(value = "vendorFromSession", key = "#token")
     public Vendor getUserBySession(String token) {
         return vendorRepository.findBySessionToken(token);
     }
 
-    @Cacheable(value = "vendorSessionStatus", key = "#token")
     public Boolean verifySession(String token) {
         return vendorRepository.existsVendorBySessionToken(token);
     }
@@ -51,6 +48,7 @@ public class VendorService {
     public Vendor getUser(String email) {
         return vendorRepository.findByEmail(email);
     }
+
 
 
     public Boolean verifyUser(Vendor vendor, String password) {
@@ -61,14 +59,12 @@ public class VendorService {
         return AuthTools.verifyPassword(password, getUser(email).getPasswdHash());
     }
 
-
     public String createSession(Vendor vendor) {
         String sessionToken = AuthTools.generateNewToken();
         vendor.setSessionToken(sessionToken);
         vendorRepository.save(vendor);
         return sessionToken;
     }
-
 
     public String createSession(String email) {
         Vendor vendor = getUser(email);
