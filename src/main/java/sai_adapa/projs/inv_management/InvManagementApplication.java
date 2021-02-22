@@ -32,6 +32,7 @@ public class InvManagementApplication {
     }
 
 
+<<<<<<< Updated upstream
 
 ////    Test bed
 //
