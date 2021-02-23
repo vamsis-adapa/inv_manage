@@ -1,8 +1,10 @@
-package sai_adapa.projs.inv_management.users.vendor;
+package sai_adapa.projs.inv_management.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sai_adapa.projs.inv_management.users.io.PreVendor;
+import sai_adapa.projs.inv_management.services.VendorService;
 
 @RestController
 public class VendorController {

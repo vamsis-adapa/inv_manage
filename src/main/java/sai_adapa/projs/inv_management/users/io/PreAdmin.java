@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.users.admin;
+package sai_adapa.projs.inv_management.users.io;
 
 public class PreAdmin {
     private String email;

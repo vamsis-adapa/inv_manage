@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.users.user;
+package sai_adapa.projs.inv_management.users.io;
 
 public class PreUsers {
     private String name;

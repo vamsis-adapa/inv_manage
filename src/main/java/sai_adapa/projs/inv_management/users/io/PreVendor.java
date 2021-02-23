@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.users.vendor;
+package sai_adapa.projs.inv_management.users.io;
 
 public class PreVendor {
 

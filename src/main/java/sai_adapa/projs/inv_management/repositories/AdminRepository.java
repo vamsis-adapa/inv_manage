@@ -1,8 +1,8 @@
-package sai_adapa.projs.inv_management.users.admin;
+package sai_adapa.projs.inv_management.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import sai_adapa.projs.inv_management.users.Admin;
 
 @Repository
 public interface AdminRepository extends JpaRepository<Admin,String> {

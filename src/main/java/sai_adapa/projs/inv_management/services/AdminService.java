@@ -1,9 +1,11 @@
-package sai_adapa.projs.inv_management.users.admin;
+package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import sai_adapa.projs.inv_management.auth.AuthTools;
+import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.repositories.AdminRepository;
+import sai_adapa.projs.inv_management.users.Admin;
+import sai_adapa.projs.inv_management.users.io.PreAdmin;
 
 @Service
 public class AdminService {
@@ -15,21 +17,21 @@ public class AdminService {
         this.adminRepository = adminRepository;
     }
 
-    @Cacheable(value = "adminSessionsStatus", key = "#token")
+
     public Boolean verifyToken(String token) {
         System.out.println(adminRepository.existsAdminBySessionToken(token));
         return adminRepository.existsAdminBySessionToken(token);
     }
 
     public void addUser(String email, String password) {
-        adminRepository.save(new Admin(email, AuthTools.encodePassword(password)));
+        adminRepository.save( Admin.builder().email(email).passwdHash(AuthTools.encodePassword(password)).build());
     }
 
     public Admin getUser(String email) {
         return adminRepository.findByEmail(email);
     }
 
-    @Cacheable (value = "adminFromSession", key = "#token")
+
     public Admin getUserFromSession(String token) {
         return adminRepository.findBySessionToken(token);
     }
@@ -39,10 +41,11 @@ public class AdminService {
     }
 
     public void editUser(Admin admin, String email, String password) {
+        PreAdmin preAdmin = new PreAdmin();
         if (email != null)
-            admin.setEmail(email);
+            preAdmin.setEmail(email);
         if (password != null)
-            admin.setPasswdHash(AuthTools.encodePassword(password));
+            preAdmin.setPasswd(AuthTools.encodePassword(password));
         adminRepository.save(admin);
     }
 

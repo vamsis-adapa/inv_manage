@@ -1,9 +1,8 @@
-package sai_adapa.projs.inv_management.users.user;
+package sai_adapa.projs.inv_management.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import sai_adapa.projs.inv_management.users.Users;
 
 @Repository
 public interface UsersRepository extends JpaRepository<Users,String> {

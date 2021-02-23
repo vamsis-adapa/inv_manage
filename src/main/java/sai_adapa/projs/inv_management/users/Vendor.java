@@ -1,32 +1,32 @@
-package sai_adapa.projs.inv_management.users.user;
+package sai_adapa.projs.inv_management.users;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+
 
 @Entity
-public class Users {
+public class Vendor {
 
     @Id
-    @GeneratedValue(generator = "identity")
-    private Long user_id;
+    @GeneratedValue( generator = "identity")
+    private Long vendor_id;
 
     private String name;
+
     @Column(unique = true)
     private String email;
-    private String details;
+    private String description;
     private String passwdHash;
     private String sessionToken;
 
     //constructors getters and setters
-    public Users() {
+    public Vendor() {
     }
 
-    public Users(String name, String email, String details, String passwdHash) {
+    public Vendor(String name, String email, String description, String passwdHash) {
         this.name = name;
         this.email = email;
-        this.details = details;
+        this.description = description;
         this.passwdHash = passwdHash;
     }
 
@@ -46,12 +46,12 @@ public class Users {
         this.passwdHash = passwdHash;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getVendor_id() {
+        return vendor_id;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setVendor_id(Long vendor_id) {
+        this.vendor_id = vendor_id;
     }
 
     public String getName() {
@@ -66,18 +66,15 @@ public class Users {
         return email;
     }
 
-    public void setEmail(String e_mail) {
-        this.email = e_mail;
+    public void setEmail(String email_id) {
+        this.email = email_id;
     }
 
-    public String getDetails() {
-        return details;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
-
-
-

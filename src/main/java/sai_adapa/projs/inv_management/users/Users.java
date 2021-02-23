@@ -1,32 +1,32 @@
-package sai_adapa.projs.inv_management.users.vendor;
+package sai_adapa.projs.inv_management.users;
 
-
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
-public class Vendor {
+public class Users {
 
     @Id
-    @GeneratedValue( generator = "identity")
-    private Long vendor_id;
+    @GeneratedValue(generator = "identity")
+    private Long user_id;
 
     private String name;
-
     @Column(unique = true)
     private String email;
-    private String description;
+    private String details;
     private String passwdHash;
     private String sessionToken;
 
     //constructors getters and setters
-    public Vendor() {
+    public Users() {
     }
 
-    public Vendor(String name, String email, String description, String passwdHash) {
+    public Users(String name, String email, String details, String passwdHash) {
         this.name = name;
         this.email = email;
-        this.description = description;
+        this.details = details;
         this.passwdHash = passwdHash;
     }
 
@@ -46,12 +46,12 @@ public class Vendor {
         this.passwdHash = passwdHash;
     }
 
-    public Long getVendor_id() {
-        return vendor_id;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setVendor_id(Long vendor_id) {
-        this.vendor_id = vendor_id;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
     public String getName() {
@@ -66,15 +66,18 @@ public class Vendor {
         return email;
     }
 
-    public void setEmail(String email_id) {
-        this.email = email_id;
+    public void setEmail(String e_mail) {
+        this.email = e_mail;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDetails() {
+        return details;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDetails(String details) {
+        this.details = details;
     }
 }
+
+
+
