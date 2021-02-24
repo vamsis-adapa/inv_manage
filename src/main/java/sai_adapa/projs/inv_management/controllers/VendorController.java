@@ -3,7 +3,7 @@ package sai_adapa.projs.inv_management.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sai_adapa.projs.inv_management.users.io.PreVendor;
+import sai_adapa.projs.inv_management.entities.users.io.PreVendor;
 import sai_adapa.projs.inv_management.services.VendorService;
 
 @RestController
@@ -21,7 +21,7 @@ public class VendorController {
         vendorService.endSession(preVendor.getEmail());
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = {"/vendor"})
+    @RequestMapping(method = RequestMethod.POST, value = {"/vendor/new"})
     public void signUp(@RequestBody PreVendor preVendor) {
         vendorService.addUser(preVendor);
     }
@@ -35,9 +35,9 @@ public class VendorController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = {"/vendor"})
-    public void editVendor(@RequestBody PreVendor preVendor, @RequestHeader("session_token") String key)
+    public void editVendor(@RequestBody PreVendor preVendor)
     {
-        vendorService.editUser(vendorService.getUserBySession(key),preVendor.getName(),preVendor.getEmail(),preVendor.getDescription(),preVendor.getPasswd());
+        vendorService.editUser(vendorService.getUser(preVendor.getEmail()),preVendor.getName(),preVendor.getEmail(),preVendor.getDescription(),preVendor.getPasswd());
     }
 
 

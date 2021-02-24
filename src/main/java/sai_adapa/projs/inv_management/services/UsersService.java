@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 import sai_adapa.projs.inv_management.repositories.UsersRepository;
-import sai_adapa.projs.inv_management.users.io.PreUsers;
-import sai_adapa.projs.inv_management.users.Users;
+import sai_adapa.projs.inv_management.entities.users.io.PreUsers;
+import sai_adapa.projs.inv_management.entities.users.Users;
 
 @Service
 public class UsersService {
@@ -17,14 +17,8 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public void addUser(PreUsers preUsers) {
-        Users users = new Users(preUsers.getName(), preUsers.getEmail(), preUsers.getDetails(), AuthTools.encodePassword(preUsers.getPasswd()));
-        usersRepository.save(users);
-    }
-
     public void addUser(String name, String e_mail, String details, String password) {
-        Users users = new Users(name, e_mail, details, AuthTools.encodePassword(password));
-        usersRepository.save(users);
+        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(AuthTools.encodePassword(password)).build());
     }
 
     public Users getUser(String e_mail) {

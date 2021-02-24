@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 import sai_adapa.projs.inv_management.repositories.VendorRepository;
-import sai_adapa.projs.inv_management.users.io.PreVendor;
-import sai_adapa.projs.inv_management.users.Vendor;
+import sai_adapa.projs.inv_management.entities.users.io.PreVendor;
+import sai_adapa.projs.inv_management.entities.users.Vendor;
 
 @Service
 public class VendorService {
@@ -16,12 +16,10 @@ public class VendorService {
         this.vendorRepository = vendorRepository;
     }
 
-    public void addUser(PreVendor preVendor) {
-        vendorRepository.save(new Vendor(preVendor.getName(), preVendor.getEmail(), preVendor.getDescription(), AuthTools.encodePassword(preVendor.getPasswd())));
-    }
+
 
     public void addUser(String name, String email, String description, String passwd) {
-        vendorRepository.save(new Vendor(name, email, description, AuthTools.encodePassword(passwd)));
+        vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(AuthTools.encodePassword(passwd)).build());
     }
 
     public void deleteUser(Vendor vendor) {

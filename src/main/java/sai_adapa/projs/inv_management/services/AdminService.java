@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 import sai_adapa.projs.inv_management.repositories.AdminRepository;
-import sai_adapa.projs.inv_management.users.Admin;
-import sai_adapa.projs.inv_management.users.io.PreAdmin;
+import sai_adapa.projs.inv_management.entities.users.Admin;
+
 
 @Service
 public class AdminService {
@@ -41,11 +41,10 @@ public class AdminService {
     }
 
     public void editUser(Admin admin, String email, String password) {
-        PreAdmin preAdmin = new PreAdmin();
         if (email != null)
-            preAdmin.setEmail(email);
+            admin.setEmail(email);
         if (password != null)
-            preAdmin.setPasswd(AuthTools.encodePassword(password));
+            admin.setPasswdHash(AuthTools.encodePassword(password));
         adminRepository.save(admin);
     }
 

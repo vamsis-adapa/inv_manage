@@ -4,10 +4,10 @@ package sai_adapa.projs.inv_management.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.services.AdminService;
-import sai_adapa.projs.inv_management.users.io.PreAdmin;
-import sai_adapa.projs.inv_management.users.io.PreUsers;
+import sai_adapa.projs.inv_management.entities.users.io.PreAdmin;
+import sai_adapa.projs.inv_management.entities.users.io.PreUsers;
 import sai_adapa.projs.inv_management.services.UsersService;
-import sai_adapa.projs.inv_management.users.io.PreVendor;
+import sai_adapa.projs.inv_management.entities.users.io.PreVendor;
 import sai_adapa.projs.inv_management.services.VendorService;
 
 @RestController
@@ -49,8 +49,8 @@ public class AdminController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = {"/admin"})
-    public void editAdminDetails(@RequestBody PreAdmin preAdmin, @RequestHeader("session_token") String key) {
-        adminService.editUser(adminService.getUserFromSession(key), preAdmin.getEmail(), preAdmin.getPasswd());
+    public void editAdminDetails(@RequestBody PreAdmin preAdmin) {
+        adminService.editUser(adminService.getUser(preAdmin.getEmail()), preAdmin.getEmail(), preAdmin.getPasswd());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = {"/admin"})
