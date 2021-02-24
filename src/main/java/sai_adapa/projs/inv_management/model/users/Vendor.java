@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.UUID;
 
 
 @Entity
@@ -24,7 +25,7 @@ public class Vendor {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, nullable = false)
     @Type(type = "pg-uuid")
-    private Long vendor_id;
+    private UUID vendor_id;
 
     private String name;
 

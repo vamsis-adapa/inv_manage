@@ -17,6 +17,7 @@ public class Stock {
     @ManyToOne
     @JoinColumn(name = "item_id")
     Item item;
+    int inv_num;
     int cost;
     @Id
     @GeneratedValue(generator = "identity")
@@ -27,11 +28,11 @@ public class Stock {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateAdded;
 
-    public Stock(Vendor vendor, Item item, int cost, Date dateAdded) {
+    public Stock(Vendor vendor, Item item, int cost,int inv_num) {
         this.vendor = vendor;
         this.item = item;
         this.cost = cost;
-        this.dateAdded = dateAdded;
+        this.inv_num = inv_num;
     }
 
 

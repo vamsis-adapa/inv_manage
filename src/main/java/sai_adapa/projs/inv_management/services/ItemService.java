@@ -16,8 +16,10 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public void addItem(String name, String description) {
-        itemRepository.save(Item.builder().name(name).description(description).build());
+    public Long addItem(String name, String description) {
+        Item item = Item.builder().name(name).description(description).build();
+        itemRepository.save(item);
+        return item.getItem_id();
     }
 
     public Item getItemById(Long item_id) {
