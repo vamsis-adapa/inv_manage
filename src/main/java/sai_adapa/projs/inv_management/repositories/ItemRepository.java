@@ -6,4 +6,5 @@ import sai_adapa.projs.inv_management.model.items.Item;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item,Long> {
+
 }
