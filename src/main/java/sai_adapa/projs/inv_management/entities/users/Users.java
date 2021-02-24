@@ -24,10 +24,12 @@ public class Users {
     @Type(type = "pg-uuid")
     private Long user_id;
 
+    @Column(nullable = false)
     private String name;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     private String details;
+    @Column(nullable = false)
     private String passwdHash;
     private String sessionToken;
 

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 import sai_adapa.projs.inv_management.repositories.UsersRepository;
-import sai_adapa.projs.inv_management.entities.users.io.PreUsers;
 import sai_adapa.projs.inv_management.entities.users.Users;
 
 @Service
@@ -35,23 +34,32 @@ public class UsersService {
         return usersRepository.existsUsersBySessionToken(token);
     }
 
-    public Boolean verifyUser(Users users, String password) {
-        return AuthTools.verifyPassword(password, users.getPasswdHash());
-    }
-
     public void deleteUser(Users users) {
         usersRepository.delete(users);
     }
 
     public void editUser(Users users, String name, String email, String details, String password) {
-        if (name != null)
+        int check =0;
+        if (name != null) {
             users.setName(name);
-        if (email != null)
+            check =1;
+        }
+        if (email != null) {
             users.setEmail(email);
-        if (details != null)
+            check = 1;
+        }
+        if (details != null) {
             users.setDetails(details);
-        if (password != null)
+            check = 1;
+        }
+        if (password != null) {
             users.setPasswdHash(AuthTools.encodePassword(password));
+            check = 1;
+        }
+        if ( check ==0)
+        {
+            //throw error
+        }
         usersRepository.save(users);
     }
 
@@ -60,13 +68,7 @@ public class UsersService {
         return AuthTools.verifyPassword(password, passwdHash);
     }
 
-    public String createSession(Users users) {
-        String sessionToken = AuthTools.generateNewToken();
-        users.setSessionToken(sessionToken);
-        usersRepository.save(users);
-        return sessionToken;
 
-    }
 
     public String createSession(String e_mail) {
         Users users = getUser(e_mail);
@@ -81,10 +83,5 @@ public class UsersService {
         usersRepository.save(users);
     }
 
-    public void endSession(String e_mail) {
-        Users users = getUser(e_mail);
-        users.setSessionToken(null);
-        usersRepository.save(users);
-    }
 
 }

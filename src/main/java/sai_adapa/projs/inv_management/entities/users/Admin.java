@@ -26,12 +26,12 @@ public class Admin {
     @Column(unique = true, nullable = false)
     @Type(type = "pg-uuid")
     private UUID admin_id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @Setter
     private String email;
-        @Setter
+    @Setter
     private String passwdHash;
-        @Setter
+    @Setter
     @Column(unique = true, nullable = true)
     private String sessionToken;
 

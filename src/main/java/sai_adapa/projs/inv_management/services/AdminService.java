@@ -31,7 +31,6 @@ public class AdminService {
         return adminRepository.findByEmail(email);
     }
 
-
     public Admin getUserFromSession(String token) {
         return adminRepository.findBySessionToken(token);
     }
@@ -41,27 +40,26 @@ public class AdminService {
     }
 
     public void editUser(Admin admin, String email, String password) {
-        if (email != null)
+        int check =0;
+        if (email != null) {
             admin.setEmail(email);
-        if (password != null)
+            check = 1;
+        }
+        if (password != null) {
             admin.setPasswdHash(AuthTools.encodePassword(password));
+            check = 1;
+        }
+        if ( check ==0)
+        {
+            //throw
+        }
         adminRepository.save(admin);
     }
 
-    public Boolean verifyUser(Admin admin, String password) {
-        return AuthTools.verifyPassword(password, admin.getPasswdHash());
-    }
 
     public Boolean verifyUser(String email, String password) {
         String passwdHash = getUser(email).getPasswdHash();
         return AuthTools.verifyPassword(password, passwdHash);
-    }
-
-    public String createSession(Admin admin) {
-        String sessionToken = AuthTools.generateNewToken();
-        admin.setSessionToken(sessionToken);
-        adminRepository.save(admin);
-        return sessionToken;
     }
 
 
@@ -73,10 +71,6 @@ public class AdminService {
         return sessionToken;
     }
 
-    public void endSession(Admin admin) {
-        admin.setSessionToken(null);
-        adminRepository.save(admin);
-    }
 
     public void endSession(String email) {
         Admin admin = getUser(email);

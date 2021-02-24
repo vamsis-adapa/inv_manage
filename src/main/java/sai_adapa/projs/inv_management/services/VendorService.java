@@ -2,10 +2,9 @@ package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sai_adapa.projs.inv_management.tools.AuthTools;
-import sai_adapa.projs.inv_management.repositories.VendorRepository;
-import sai_adapa.projs.inv_management.entities.users.io.PreVendor;
 import sai_adapa.projs.inv_management.entities.users.Vendor;
+import sai_adapa.projs.inv_management.repositories.VendorRepository;
+import sai_adapa.projs.inv_management.tools.AuthTools;
 
 @Service
 public class VendorService {
@@ -17,7 +16,6 @@ public class VendorService {
     }
 
 
-
     public void addUser(String name, String email, String description, String passwd) {
         vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(AuthTools.encodePassword(passwd)).build());
     }
@@ -27,14 +25,27 @@ public class VendorService {
     }
 
     public void editUser(Vendor vendor, String name, String email, String desc, String password) {
-        if (name != null)
+        int check = 0;
+        if (name != null) {
             vendor.setName(name);
-        if (email != null)
+            check = 1;
+        }
+        if (email != null) {
             vendor.setEmail(email);
-        if (desc != null)
+            check = 1;
+        }
+        if (desc != null) {
             vendor.setDescription(desc);
-        if (password != null)
+            check = 1;
+        }
+        if (password != null) {
             vendor.setPasswdHash(AuthTools.encodePassword(password));
+            check = 1;
+        }
+        if ( check ==0)
+        {
+            //throw
+        }
         vendorRepository.save(vendor);
     }
 
@@ -53,20 +64,8 @@ public class VendorService {
     }
 
 
-    public Boolean verifyUser(Vendor vendor, String password) {
-        return AuthTools.verifyPassword(password, vendor.getPasswdHash());
-    }
-
     public Boolean verifyUser(String email, String password) {
         return AuthTools.verifyPassword(password, getUser(email).getPasswdHash());
-    }
-
-
-    public String createSession(Vendor vendor) {
-        String sessionToken = AuthTools.generateNewToken();
-        vendor.setSessionToken(sessionToken);
-        vendorRepository.save(vendor);
-        return sessionToken;
     }
 
 
@@ -78,10 +77,6 @@ public class VendorService {
         return sessionToken;
     }
 
-    public void endSession(Vendor vendor) {
-        vendor.setSessionToken(null);
-        vendorRepository.save(vendor);
-    }
 
     public void endSession(String email) {
         Vendor vendor = getUser(email);

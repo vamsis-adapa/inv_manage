@@ -23,7 +23,7 @@ public class VendorController {
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/new"})
     public void signUp(@RequestBody PreVendor preVendor) {
-        vendorService.addUser(preVendor);
+        vendorService.addUser(preVendor.getName(),preVendor.getEmail(),preVendor.getDescription(),preVendor.getPasswd());
     }
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/login"})

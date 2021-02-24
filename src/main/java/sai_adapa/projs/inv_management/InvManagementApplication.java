@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.event.EventListener;
+import sai_adapa.projs.inv_management.tools.AuthTools;
 
 @SpringBootApplication
 @EnableCaching
@@ -17,6 +18,9 @@ public class InvManagementApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
+        System.out.println("strawberry");
+//        System.out.println(AuthTools.encodePassword(null));
+        System.out.println("coffee");
 
 
     }
