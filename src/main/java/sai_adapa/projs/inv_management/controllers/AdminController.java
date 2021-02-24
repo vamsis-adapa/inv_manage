@@ -4,10 +4,10 @@ package sai_adapa.projs.inv_management.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.services.AdminService;
-import sai_adapa.projs.inv_management.entities.users.io.PreAdmin;
-import sai_adapa.projs.inv_management.entities.users.io.PreUsers;
+import sai_adapa.projs.inv_management.model.users.io.PreAdmin;
+import sai_adapa.projs.inv_management.model.users.io.PreUsers;
 import sai_adapa.projs.inv_management.services.UsersService;
-import sai_adapa.projs.inv_management.entities.users.io.PreVendor;
+import sai_adapa.projs.inv_management.model.users.io.PreVendor;
 import sai_adapa.projs.inv_management.services.VendorService;
 
 @RestController

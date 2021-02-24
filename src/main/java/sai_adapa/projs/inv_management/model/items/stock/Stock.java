@@ -1,7 +1,7 @@
-package sai_adapa.projs.inv_management.entities.items.stock;
+package sai_adapa.projs.inv_management.model.items.stock;
 
-import sai_adapa.projs.inv_management.entities.items.Item;
-import sai_adapa.projs.inv_management.entities.users.Vendor;
+import sai_adapa.projs.inv_management.model.items.Item;
+import sai_adapa.projs.inv_management.model.users.Vendor;
 
 import javax.persistence.*;
 import java.util.Date;

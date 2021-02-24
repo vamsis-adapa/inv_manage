@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.entities.users;
+package sai_adapa.projs.inv_management.model.users;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;

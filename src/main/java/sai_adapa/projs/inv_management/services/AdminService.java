@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 import sai_adapa.projs.inv_management.repositories.AdminRepository;
-import sai_adapa.projs.inv_management.entities.users.Admin;
+import sai_adapa.projs.inv_management.model.users.Admin;
 
 
 @Service

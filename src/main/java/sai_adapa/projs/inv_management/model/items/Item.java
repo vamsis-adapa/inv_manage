@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.entities.items;
+package sai_adapa.projs.inv_management.model.items;
 
 import lombok.*;
 

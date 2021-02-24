@@ -1,19 +1,20 @@
-package sai_adapa.projs.inv_management.entities.users.io;
+package sai_adapa.projs.inv_management.model.users.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PreAdmin {
+@Getter
+@Setter
+public class PreVendor {
+
+    private String name;
     private String email;
+    private String description;
     private String passwd;
-
-
 
 
 }
