@@ -1,23 +1,27 @@
 package sai_adapa.projs.inv_management.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import sai_adapa.projs.inv_management.services.UsersService;
-import sai_adapa.projs.inv_management.tools.SpringContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class UsersVerifierInterceptor implements HandlerInterceptor {
 
-    private UsersService getUsersService() {
-        return SpringContext.getBean(UsersService.class);
+    UsersService usersService;
+
+    @Autowired
+    public void setUsersService(UsersService usersService) {
+        this.usersService = usersService;
     }
 
     @Override //Todo: add error resp in case of failure
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (getUsersService().verifySession(request.getHeader("session_token")))
-        {
+        if (usersService.verifySession(request.getHeader("session_token"))) {
             return true;
         }
         try {

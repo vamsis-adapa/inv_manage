@@ -1,5 +1,7 @@
 package sai_adapa.projs.inv_management.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import sai_adapa.projs.inv_management.services.AdminService;
 import sai_adapa.projs.inv_management.tools.SpringContext;
@@ -9,17 +11,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@Component
 public class AdminVerifierInterceptor implements HandlerInterceptor {
 
+AdminService adminService;
 
-    private AdminService getAdminService() {
-        return SpringContext.getBean(AdminService.class);
+@Autowired
+    public void setAdminService(AdminService adminService) {
+        this.adminService = adminService;
     }
+
 
 
     @Override //Todo: add error resp in case of failure
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (getAdminService().verifyToken(request.getHeader("session_token"))) {
+        if (adminService.verifyToken(request.getHeader("session_token"))) {
             System.out.println("verified");
             return true;
         }
