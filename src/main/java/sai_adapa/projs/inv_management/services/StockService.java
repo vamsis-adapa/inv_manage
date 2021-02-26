@@ -17,9 +17,16 @@ public class StockService {
     VendorService vendorService;
     ItemService itemService;
 
-    public StockService(StockRepository stockRepository, VendorService vendorService, ItemService itemService) {
-        this.stockRepository = stockRepository;
+
+    @Autowired
+    public void setVendorService(VendorService vendorService) {
         this.vendorService = vendorService;
+    }
+
+    @Autowired
+    public StockService(StockRepository stockRepository, ItemService itemService) {
+        this.stockRepository = stockRepository;
+
         this.itemService = itemService;
     }
 
