@@ -35,8 +35,10 @@ public class InvManagementApplication {
         vendorService.addUser("hit","mail","dlak;j","choc");
         vendorService.addUser("meow cat shop", "post","drifkdlf;j; ;dalkfj", "fire" );
 
-        stockService.addNewStock(it1,"mail",55, 12);
-        stockService.addNewStock(it2, "post", 34, 99);
+        stockService.addNewStock(it1,"mail",55, 12.0);
+        stockService.addNewStock(it2, "post", 34, 99.0);
+        stockService.addNewStock(it1,"mail",55, 13.0);
+
         System.out.println("coffee");
     }
 

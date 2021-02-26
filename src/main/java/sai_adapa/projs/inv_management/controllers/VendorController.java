@@ -3,8 +3,12 @@ package sai_adapa.projs.inv_management.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.users.io.PreVendor;
+import sai_adapa.projs.inv_management.model.users.io.PreVendorWithItem;
 import sai_adapa.projs.inv_management.services.VendorService;
+
+import java.util.UUID;
 
 @RestController
 public class VendorController {
@@ -40,6 +44,30 @@ public class VendorController {
         vendorService.editUser(vendorService.getUser(preVendor.getEmail()),preVendor.getName(),preVendor.getEmail(),preVendor.getDescription(),preVendor.getPasswd());
     }
 
+
+    @RequestMapping(method = RequestMethod.PUT, value = {"/vendor/items"})
+    public void addItem(@RequestBody PreVendorWithItem preVendorWithItem )
+    {
+        vendorService.addNewItem(preVendorWithItem.getItem_name(), preVendorWithItem.getItem_description());
+    }
+    @RequestMapping(method = RequestMethod.PUT, value = {"/vendor/stock"})
+    public void addStock(@RequestBody PreVendorWithItem preVendorWithItem  )
+    {
+        vendorService.addStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(),preVendorWithItem.getCost(), preVendorWithItem.getNum_stock());
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = {"/vendor/stock"})
+    public void editStock(@RequestBody PreVendorWithItem preVendorWithItem  )
+    {
+        vendorService.editStock(preVendorWithItem.getEmail(),preVendorWithItem.getItem_id(),preVendorWithItem.getNum_stock(),preVendorWithItem.getCost());
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = {"/vendor/stock"})
+    public void deleteStock(@RequestBody PreVendorWithItem preVendorWithItem  )
+    {
+        vendorService.deleteStock(preVendorWithItem.getEmail(),preVendorWithItem.getItem_id());
+    }
+    
 
 
 

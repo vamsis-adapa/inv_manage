@@ -1,23 +1,22 @@
 package sai_adapa.projs.inv_management.model.users.io;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class PreVendor {
+public class PreVendorWithItem extends PreVendor {
 
+    private Long item_id;
 
+    private String item_name;
 
-    private String name;
-    private String email;
-    private String description;
-    private String passwd;
-
-
+    private String item_description;
+    private Double cost;
+    private Integer num_stock;
 }
