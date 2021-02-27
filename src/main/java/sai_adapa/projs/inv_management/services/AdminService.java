@@ -2,9 +2,9 @@ package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sai_adapa.projs.inv_management.tools.AuthTools;
-import sai_adapa.projs.inv_management.repositories.AdminRepository;
 import sai_adapa.projs.inv_management.model.users.Admin;
+import sai_adapa.projs.inv_management.repositories.AdminRepository;
+import sai_adapa.projs.inv_management.tools.AuthTools;
 
 
 @Service
@@ -24,7 +24,7 @@ public class AdminService {
     }
 
     public void addUser(String email, String password) {
-        adminRepository.save( Admin.builder().email(email).passwdHash(AuthTools.encodePassword(password)).build());
+        adminRepository.save(Admin.builder().email(email).passwdHash(AuthTools.encodePassword(password)).build());
     }
 
     public Admin getUser(String email) {
@@ -39,8 +39,18 @@ public class AdminService {
         adminRepository.delete(admin);
     }
 
+    public Admin getReturnable(Admin admin) {
+        admin.setPasswdHash(null);
+        admin.setSessionToken(null);
+        return admin;
+    }
+
+    public Admin displayUser(String email) {
+        return getReturnable(getUser(email));
+    }
+
     public void editUser(Admin admin, String email, String password) {
-        int check =0;
+        int check = 0;
         if (email != null) {
             admin.setEmail(email);
             check = 1;
@@ -49,8 +59,7 @@ public class AdminService {
             admin.setPasswdHash(AuthTools.encodePassword(password));
             check = 1;
         }
-        if ( check ==0)
-        {
+        if (check == 0) {
             //throw
         }
         adminRepository.save(admin);

@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import sai_adapa.projs.inv_management.auth.AdminVerifierInterceptor;
-import sai_adapa.projs.inv_management.auth.UsersVerifierInterceptor;
-import sai_adapa.projs.inv_management.auth.VendorVerifierInterceptor;
+import sai_adapa.projs.inv_management.auth.role.AdminVerifierInterceptor;
+import sai_adapa.projs.inv_management.auth.role.UsersVerifierInterceptor;
+import sai_adapa.projs.inv_management.auth.role.VendorVerifierInterceptor;
 
 
 @Configuration

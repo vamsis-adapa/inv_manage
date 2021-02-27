@@ -89,8 +89,7 @@ public class VendorService {
     }
 
     public Long addStock(String vendor_email, Long item_id, Double price, Integer num_items) {
-        if ( stockService.checkExistingStock(vendor_email, item_id))
-        {
+        if (stockService.checkExistingStock(vendor_email, item_id)) {
             //throw error
         }
         return stockService.addNewStock(item_id, vendor_email, num_items, price);
@@ -101,16 +100,25 @@ public class VendorService {
     }
 
     public void editStock(String vendor_email, Long item_id, Integer inv_num, Double cost) {
-         Stock stock =stockService.getParticularStock(vendor_email,item_id);
-         if ( stock== null)
-         {
-                //throw error
-         }
+        Stock stock = stockService.getParticularStock(vendor_email, item_id);
+        if (stock == null) {
+            //throw error
+        }
 
-        stockService.editStock(stock.getId(), inv_num, cost );
+        stockService.editStock(stock.getId(), inv_num, cost);
     }
 
+    public Vendor getDisplayable(Vendor vendor) {
+        vendor.setPasswdHash(null);
+        vendor.setSessionToken(null);
+        return vendor;
 
+    }
+
+    public Vendor displayUser(String email) {
+        return getDisplayable(getUser(email));
+
+    }
 
 
     public String createSession(String email) {
