@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.users.Admin;
-import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.model.users.io.PreAdmin;
 import sai_adapa.projs.inv_management.model.users.io.PreUsers;
 import sai_adapa.projs.inv_management.model.users.io.PreVendor;
@@ -25,6 +24,11 @@ public class AdminController {
     @Autowired
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
+    }
+
+    @Autowired
+    public void setSessionIdentity(SessionIdentity sessionIdentity) {
+        this.sessionIdentity = sessionIdentity;
     }
 
     @Autowired
@@ -49,8 +53,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = {"/vendor"})
-    public Admin displayAdmin()
-    {
+    public Admin displayAdmin() {
         return adminService.displayUser(sessionIdentity.getEmail());
     }
 
@@ -69,7 +72,7 @@ public class AdminController {
             //throw
             return;
         }
-        adminService.editUser(adminService.getUser(preAdmin.getEmail()), preAdmin.getEmail(), preAdmin.getPasswd());
+        adminService.editUser(adminService.getUser(preAdmin.getEmail()), preAdmin.getChanged_email(), preAdmin.getPasswd());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = {"/admin"})

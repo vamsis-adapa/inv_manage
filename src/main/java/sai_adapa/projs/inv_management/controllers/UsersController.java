@@ -26,6 +26,11 @@ public class UsersController {
         this.sessionIdentity = sessionIdentity;
     }
 
+    @Autowired
+    public void setSessionIdentity(SessionIdentity sessionIdentity) {
+        this.sessionIdentity = sessionIdentity;
+    }
+
     @RequestMapping(value = {"app_user"})
     public Users getUserDetails() {
         return usersService.getUser(sessionIdentity.getEmail());
@@ -55,7 +60,7 @@ public class UsersController {
             //throw
             return;
         }
-        usersService.editUser(usersService.getUser(preUsers.getEmail()), preUsers.getName(), preUsers.getEmail(), preUsers.getDetails(), preUsers.getPasswd());
+        usersService.editUser(usersService.getUser(preUsers.getEmail()), preUsers.getName(), preUsers.getChanged_email(), preUsers.getDetails(), preUsers.getPasswd());
     }
 
 

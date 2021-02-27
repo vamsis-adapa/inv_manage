@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PreAdmin {
     private String email;
+    private String changed_email;
     private String passwd;
 
 

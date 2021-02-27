@@ -31,6 +31,11 @@ public class VendorController {
         this.sessionIdentity = sessionIdentity;
     }
 
+    @Autowired
+    public void setSessionIdentity(SessionIdentity sessionIdentity) {
+        this.sessionIdentity = sessionIdentity;
+    }
+
     @RequestMapping(method = RequestMethod.DELETE, value = {"/vendor/logout"})
     public void signOut(@RequestBody PreVendor preVendor) {
         if (!sessionIdentity.verifyIdentity(preVendor.getEmail())) {
@@ -59,7 +64,7 @@ public class VendorController {
             // throw
             return;
         }
-        vendorService.editUser(vendorService.getUser(preVendor.getEmail()), preVendor.getName(), preVendor.getEmail(), preVendor.getDescription(), preVendor.getPasswd());
+        vendorService.editUser(vendorService.getUser(preVendor.getEmail()), preVendor.getName(), preVendor.getChanged_email(), preVendor.getDescription(), preVendor.getPasswd());
     }
 
 
@@ -77,7 +82,7 @@ public class VendorController {
         vendorService.addStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getCost(), preVendorWithItem.getNum_stock());
     }
 
-    @RequestMapping(value = {"/vendor"})
+    @RequestMapping(method = RequestMethod.GET,value = {"/vendor"})
     public Vendor displayVendor() {
         return vendorService.displayUser(sessionIdentity.getEmail());
     }

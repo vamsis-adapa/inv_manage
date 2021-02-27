@@ -10,6 +10,7 @@ import lombok.*;
 public class PreUsers {
     private String name;
     private String email;
+    private String changed_email;
     private String details;
     private String passwd;
 

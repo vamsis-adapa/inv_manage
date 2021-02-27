@@ -16,6 +16,7 @@ public class PreVendor {
 
     private String name;
     private String email;
+    private String changed_email;
     private String description;
     private String passwd;
 

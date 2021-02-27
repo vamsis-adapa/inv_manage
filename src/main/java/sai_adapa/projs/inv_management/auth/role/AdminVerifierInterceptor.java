@@ -19,7 +19,7 @@ public class AdminVerifierInterceptor implements HandlerInterceptor {
     SessionIdentity sessionIdentity;
 
     @Autowired
-    public void setCurrentUser(SessionIdentity sessionIdentity) {
+    public AdminVerifierInterceptor(SessionIdentity sessionIdentity) {
         this.sessionIdentity = sessionIdentity;
     }
 
@@ -31,7 +31,7 @@ public class AdminVerifierInterceptor implements HandlerInterceptor {
     @Override //Todo: add error resp in case of failure
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        Admin admin =  adminService.getUserFromSession(request.getHeader("session_token"));
+        Admin admin = adminService.getUserFromSession(request.getHeader("session_token"));
         if (admin != null) {
             sessionIdentity.setIdentity(admin.getEmail());
             System.out.println("verified");
