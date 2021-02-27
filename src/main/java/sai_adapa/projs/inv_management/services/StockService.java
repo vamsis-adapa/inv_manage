@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.users.Vendor;
-import sai_adapa.projs.inv_management.repositories.StockRepository;
+import sai_adapa.projs.inv_management.repositories.sql.StockRepository;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class StockService {

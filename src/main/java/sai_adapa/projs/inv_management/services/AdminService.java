@@ -3,7 +3,7 @@ package sai_adapa.projs.inv_management.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.users.Admin;
-import sai_adapa.projs.inv_management.repositories.AdminRepository;
+import sai_adapa.projs.inv_management.repositories.sql.AdminRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 
 

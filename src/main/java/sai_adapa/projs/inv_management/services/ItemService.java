@@ -3,7 +3,7 @@ package sai_adapa.projs.inv_management.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Item;
-import sai_adapa.projs.inv_management.repositories.ItemRepository;
+import sai_adapa.projs.inv_management.repositories.sql.ItemRepository;
 
 import java.util.List;
 
