@@ -9,19 +9,20 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import sai_adapa.projs.inv_management.model.orders.Orders;
+import sai_adapa.projs.inv_management.model.items.Stock;
+import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
-import sai_adapa.projs.inv_management.services.ItemService;
-import sai_adapa.projs.inv_management.services.StockService;
-import sai_adapa.projs.inv_management.services.VendorService;
+import sai_adapa.projs.inv_management.services.*;
+
+import java.util.List;
 
 @SpringBootApplication
 @EnableCaching
 @EnableMongoRepositories(basePackageClasses = OrderRepository.class)
+@EnableMongoAuditing
 @EnableJpaRepositories(basePackages = "sai_adapa.projs.inv_management.repositories.sql", excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = OrderRepository.class))
-//@EnableJpaRepositories(basePackageClasses = {UsersRepository.class,VendorRepository.class, StockRepository.class, ItemRepository.class, AdminRepository.class})
-//@EnableJpaRepositories(basePackages = "sai_adapa.projs.inv_management.repositories.sql")
 public class InvManagementApplication {
 
     @Autowired
@@ -35,6 +36,12 @@ public class InvManagementApplication {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    UsersService usersService;
+
     public static void main(String[] args) {
         SpringApplication.run(InvManagementApplication.class, args);
     }
@@ -43,21 +50,22 @@ public class InvManagementApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
         System.out.println("strawberry");
-//        System.out.println(AuthTools.encodePassword(null));
-//        Long it1 = itemService.addItem("choc", "brown and hard");
-//        Long it2 = itemService.addItem("choc 2", "black and bitter");
-//        vendorService.addUser("hit", "mail", "dlak;j", "choc");
-//        vendorService.addUser("meow cat shop", "post", "drifkdlf;j; ;dalkfj", "fire");
-//
+
+        Long it1 = itemService.addItem("choc", "brown and hard");
+        Long it2 = itemService.addItem("choc 2", "black and bitter");
+
+        vendorService.addUser("hit", "mail", "dlak;j", "choc");
+        vendorService.addUser("meow cat shop", "post", "drifkdlf;j; ;dalkfj", "fire");
+        usersService.addUser("fire", "gif", "dalk;jf", "yare");
 //        stockService.addNewStock(it1, "mail", 55, 12.0);
 //        stockService.addNewStock(it2, "post", 34, 99.0);
 //        stockService.addNewStock(it1, "mail", 55, 13.0);
 
-        Orders orders = Orders.builder().orderGroup(Long.getLong("1")).itemId(Long.getLong("1")).build();
-        orderRepository.save(orders);
-        orderRepository.save(Orders.builder().itemId(Long.getLong("8643")).build());
-
-
+        vendorService.addStock("mail", itemService.getAllItems().get(0).getItem_id(), 32.0, 5);
+        vendorService.addStock("post",itemService.getAllItems().get(0).getItem_id(),12.0,32);
+        List<Stock>allStock=  stockService.getAllStock();
+        List<Vendor> allVendor = stockService.getItemVendors(itemService.getAllItems().get(0).getItem_id());;
+        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUser_id(), 32);
         System.out.println("coffee");
     }
 

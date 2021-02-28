@@ -15,4 +15,7 @@ public List<Stock> findAllByVendor(Vendor vendor);
 public Stock findStockByVendorAndItem(Vendor vendor, Item item);
 public  boolean existsStockByVendorAndItem(Vendor vendor, Item item);
 
+public List<Stock>findAllByItem(Item item);
+
+public List<Vendor>findDistinctVendorByItem(Item item);
 }

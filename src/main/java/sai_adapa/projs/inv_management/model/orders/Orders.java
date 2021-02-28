@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,17 +18,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
+@Entity
 public class Orders {
-
-    List<SubOrder> listOfItems;
     @Id
     private String Id;
-    private Long orderGroup;
     private UUID vendorId;
     private UUID userId;
     private Long itemId;
+    private Integer numberOfItems;
+    private Double individualCost;
+    @CreatedDate
     private LocalDateTime transactionDate;
-    private Float totalCost;
+    private Double totalCost;
 
 
 }

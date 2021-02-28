@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.model.items.Item;
+import sai_adapa.projs.inv_management.model.items.io.ItemDetails;
 import sai_adapa.projs.inv_management.services.ItemService;
 
 import java.util.List;
@@ -24,10 +25,12 @@ public class ItemController {
     {
         return itemService.getAllItems();
     }
+
+    //possibly edit tos how stocks
     @RequestMapping(value = {"/items/{id}"})
-    public Item getItem(@PathVariable Long id)
+    public ItemDetails getItem(@PathVariable Long id)
     {
-        return itemService.getItemById(id);
+        return itemService.getItemDetails(id);
     }
 
 }
