@@ -3,18 +3,26 @@ package sai_adapa.projs.inv_management.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Stock;
+import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class VendorService {
     VendorRepository vendorRepository;
     ItemService itemService;
     StockService stockService;
+    OrderService orderService;
+
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @Autowired
     public VendorService(VendorRepository vendorRepository, ItemService itemService) {
@@ -140,4 +148,10 @@ public class VendorService {
         vendorRepository.save(vendor);
 
     }
+    public List<DisplayableOrderVendor> getOrderReport(String vendorEmail)
+    {
+        Vendor vendor = getUser(vendorEmail);
+        return orderService.findOrdersOfVendor(vendor.getVendor_id()).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
+    }
+
 }

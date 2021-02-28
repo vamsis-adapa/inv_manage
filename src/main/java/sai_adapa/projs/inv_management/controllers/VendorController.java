@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.items.Stock;
+import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.model.users.io.PreVendor;
 import sai_adapa.projs.inv_management.model.users.io.PreVendorWithItem;
@@ -82,7 +83,7 @@ public class VendorController {
         vendorService.addStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getCost(), preVendorWithItem.getNum_stock());
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = {"/vendor"})
+    @RequestMapping(method = RequestMethod.GET, value = {"/vendor"})
     public Vendor displayVendor() {
         return vendorService.displayUser(sessionIdentity.getEmail());
     }
@@ -114,5 +115,14 @@ public class VendorController {
         return vendorService.getVendorStock(preVendorWithItem.getEmail());
     }
 
+    @RequestMapping(value = {"/vendor/orders"})
+    public List<DisplayableOrderVendor> viewAllOrders(@RequestBody PreVendor preVendor) {
+        if (!sessionIdentity.verifyIdentity(preVendor.getEmail())) {
+            // throw
+            return null;
+        }
+        return vendorService.getOrderReport(preVendor.getEmail());
+
+    }
 
 }

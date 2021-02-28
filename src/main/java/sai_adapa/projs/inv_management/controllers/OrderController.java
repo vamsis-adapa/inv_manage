@@ -40,7 +40,11 @@ public class OrderController {
     //add role auth users
     @RequestMapping(method = RequestMethod.POST, value = {"/order"})
     public String handleOrder(@RequestBody PreUserWithOrder preUserWithOrder) {
-        sessionIdentity.verifyIdentity(preUserWithOrder.getEmail());
+        if( !sessionIdentity.verifyIdentity(preUserWithOrder.getEmail()))
+        {
+            //throw
+            return null ;
+        }
 
         Users users = usersService.getUser(preUserWithOrder.getEmail());
         Vendor vendor = vendorService.getUser((preUserWithOrder.getVendorEmail()));
@@ -48,7 +52,9 @@ public class OrderController {
         if (stockService.checkAvailability(preUserWithOrder.getItemId(), vendor.getEmail(), preUserWithOrder.getNumberOfItems())) {
             return orderService.createOrder(stockService.getParticularStock(vendor.getEmail(), preUserWithOrder.getItemId()), users.getUser_id(), preUserWithOrder.getNumberOfItems());
         }
+        //throw
         return "-1";
     }
+
 
 }

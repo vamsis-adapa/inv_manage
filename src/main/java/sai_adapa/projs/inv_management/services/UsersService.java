@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
-import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 
@@ -19,7 +18,6 @@ public class UsersService {
     private UsersRepository usersRepository;
     private OrderService orderService;
     private SessionIdentity sessionIdentity;
-    private OrderRepository orderRepository;
     private VendorService vendorService;
     private ItemService itemService;
 
@@ -34,10 +32,6 @@ public class UsersService {
     }
 
     @Autowired
-    public void setOrderRepository(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
-
     public void setVendorService(VendorService vendorService) {
         this.vendorService = vendorService;
     }
@@ -134,9 +128,8 @@ public class UsersService {
 
     public List<DisplayableOrder> getUserOrderReport(String email) {
         Users users = getUser(email);
-        return orderRepository.findAllByUserId(users.getUser_id()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
+        return orderService.findOrdersOfUser(users.getUser_id()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
-
 
 
 }
