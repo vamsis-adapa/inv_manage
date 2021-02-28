@@ -65,7 +65,7 @@ public class UsersService {
     }
 
     public Users getUser(UUID uuid) {
-        return usersRepository.findByUser_id(uuid);
+        return usersRepository.findByUserId(uuid);
     }
 
     public Users getUsersBySession(String token) {
@@ -128,7 +128,7 @@ public class UsersService {
 
     public List<DisplayableOrder> getUserOrderReport(String email) {
         Users users = getUser(email);
-        return orderService.findOrdersOfUser(users.getUser_id()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
+        return orderService.findOrdersOfUser(users.getUserId()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
 
 

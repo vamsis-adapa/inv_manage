@@ -50,7 +50,7 @@ public class OrderController {
         Vendor vendor = vendorService.getUser((preUserWithOrder.getVendorEmail()));
 
         if (stockService.checkAvailability(preUserWithOrder.getItemId(), vendor.getEmail(), preUserWithOrder.getNumberOfItems())) {
-            return orderService.createOrder(stockService.getParticularStock(vendor.getEmail(), preUserWithOrder.getItemId()), users.getUser_id(), preUserWithOrder.getNumberOfItems());
+            return orderService.createOrder(stockService.getParticularStock(vendor.getEmail(), preUserWithOrder.getItemId()), users.getUserId(), preUserWithOrder.getNumberOfItems());
         }
         //throw
         return "-1";

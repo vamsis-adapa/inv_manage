@@ -81,7 +81,7 @@ public class VendorService {
         return vendorRepository.findByEmail(email);
     }
     public Vendor getUser(UUID vendorId){
-        return  vendorRepository.findByVendor_id(vendorId);
+        return  vendorRepository.findByVendorId(vendorId);
     }
 
     public Stock getStock(String email, Long item_id) {
@@ -151,7 +151,7 @@ public class VendorService {
     public List<DisplayableOrderVendor> getOrderReport(String vendorEmail)
     {
         Vendor vendor = getUser(vendorEmail);
-        return orderService.findOrdersOfVendor(vendor.getVendor_id()).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
+        return orderService.findOrdersOfVendor(vendor.getVendorId()).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
     }
 
 }

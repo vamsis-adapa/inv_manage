@@ -47,7 +47,7 @@ public class OrderService {
     public String createOrder(Stock stock, UUID userID, Integer numberOfItems) {
         Double total_cost = numberOfItems * stock.getCost();
         stockService.buyStock(stock.getId(), numberOfItems);
-        Orders orders = Orders.builder().userId(userID).vendorId(stock.getVendor().getVendor_id()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).individualCost(stock.getCost()).totalCost(total_cost).build();
+        Orders orders = Orders.builder().userId(userID).vendorId(stock.getVendor().getVendorId()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).individualCost(stock.getCost()).totalCost(total_cost).build();
         orderRepository.save(orders);
         return orders.getId();
     }

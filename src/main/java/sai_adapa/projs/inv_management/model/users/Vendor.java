@@ -25,7 +25,7 @@ public class Vendor {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, nullable = false)
     @Type(type = "pg-uuid")
-    private UUID vendor_id;
+    private UUID vendorId;
 
     private String name;
 

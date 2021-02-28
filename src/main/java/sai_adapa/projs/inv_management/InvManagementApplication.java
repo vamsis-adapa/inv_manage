@@ -65,7 +65,7 @@ public class InvManagementApplication {
         vendorService.addStock("post",itemService.getAllItems().get(0).getItem_id(),12.0,32);
         List<Stock>allStock=  stockService.getAllStock();
         List<Vendor> allVendor = stockService.getItemVendors(itemService.getAllItems().get(0).getItem_id());;
-        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUser_id(), 32);
+        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUserId(), 32);
         System.out.println("coffee");
     }
 

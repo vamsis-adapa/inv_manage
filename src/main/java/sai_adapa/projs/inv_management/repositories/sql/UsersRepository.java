@@ -11,7 +11,7 @@ public interface UsersRepository extends JpaRepository<Users,String> {
 
     Users findByEmail(String email);
     Users findBySessionToken(String token);
-    Users findByUser_id(UUID uuid);
+    Users findByUserId(UUID uuid);
     Boolean existsUsersBySessionToken(String token);
 
 }

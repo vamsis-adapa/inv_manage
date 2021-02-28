@@ -10,6 +10,6 @@ import java.util.UUID;
 public interface VendorRepository extends JpaRepository<Vendor,String > {
     Vendor findByEmail(String email);
     Vendor findBySessionToken(String token);
-    Vendor findByVendor_id(UUID uuid);
+    Vendor findByVendorId(UUID uuid);
     Boolean existsVendorBySessionToken(String token);
 }

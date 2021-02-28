@@ -23,7 +23,7 @@ public class Users {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(unique = true, nullable = false)
     @Type(type = "pg-uuid")
-    private UUID user_id;
+    private UUID userId;
 
     @Column(nullable = false)
     private String name;
