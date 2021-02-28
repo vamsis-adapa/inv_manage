@@ -8,6 +8,7 @@ import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VendorService {
@@ -70,6 +71,9 @@ public class VendorService {
 
     public Vendor getUser(String email) {
         return vendorRepository.findByEmail(email);
+    }
+    public Vendor getUser(UUID vendorId){
+        return  vendorRepository.findByVendor_id(vendorId);
     }
 
     public Stock getStock(String email, Long item_id) {

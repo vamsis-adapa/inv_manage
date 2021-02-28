@@ -38,7 +38,7 @@ public class OrderController {
     }
 
     //add role auth users
-    @RequestMapping(method = RequestMethod.PATCH, value = {"/order"})
+    @RequestMapping(method = RequestMethod.POST, value = {"/order"})
     public String handleOrder(@RequestBody PreUserWithOrder preUserWithOrder) {
         sessionIdentity.verifyIdentity(preUserWithOrder.getEmail());
 

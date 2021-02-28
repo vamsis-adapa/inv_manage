@@ -2,18 +2,54 @@ package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
+import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
+import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UsersService {
 
-    UsersRepository usersRepository;
+    private UsersRepository usersRepository;
+    private OrderService orderService;
+    private SessionIdentity sessionIdentity;
+    private OrderRepository orderRepository;
+    private VendorService vendorService;
+    private ItemService itemService;
 
     @Autowired
     public UsersService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
+    }
+
+    @Autowired
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
+    @Autowired
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    public void setVendorService(VendorService vendorService) {
+        this.vendorService = vendorService;
+    }
+
+    @Autowired
+    public void setSessionIdentity(SessionIdentity sessionIdentity) {
+        this.sessionIdentity = sessionIdentity;
+    }
+
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     public void addUser(String name, String e_mail, String details, String password) {
@@ -34,11 +70,13 @@ public class UsersService {
         return usersRepository.findByEmail(e_mail);
     }
 
+    public Users getUser(UUID uuid) {
+        return usersRepository.findByUser_id(uuid);
+    }
 
     public Users getUsersBySession(String token) {
         return usersRepository.findBySessionToken(token);
     }
-
 
     public Boolean verifySession(String token) {
         return usersRepository.existsUsersBySessionToken(token);
@@ -77,6 +115,9 @@ public class UsersService {
         return AuthTools.verifyPassword(password, passwdHash);
     }
 
+    public Boolean authIdentity(String email) {
+        return sessionIdentity.verifyIdentity(email);
+    }
 
     public String createSession(String e_mail) {
         Users users = getUser(e_mail);
@@ -90,6 +131,12 @@ public class UsersService {
         users.setSessionToken(null);
         usersRepository.save(users);
     }
+
+    public List<DisplayableOrder> getUserOrderReport(String email) {
+        Users users = getUser(email);
+        return orderRepository.findAllByUserId(users.getUser_id()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
+    }
+
 
 
 }

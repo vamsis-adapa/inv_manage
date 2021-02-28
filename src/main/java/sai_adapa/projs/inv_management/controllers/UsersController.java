@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
+import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.io.PreUsers;
 import sai_adapa.projs.inv_management.services.UsersService;
+
+import java.util.List;
 
 @RestController
 public class UsersController {
@@ -61,6 +64,17 @@ public class UsersController {
             return;
         }
         usersService.editUser(usersService.getUser(preUsers.getEmail()), preUsers.getName(), preUsers.getChanged_email(), preUsers.getDetails(), preUsers.getPasswd());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"})
+    public List<DisplayableOrder> getOrderReport(@RequestBody PreUsers preUsers)
+    {
+        if (!sessionIdentity.verifyIdentity(preUsers.getEmail()))
+        {
+            //throw
+            return null;
+        }
+        return usersService.getUserOrderReport(preUsers.getEmail());
     }
 
 
