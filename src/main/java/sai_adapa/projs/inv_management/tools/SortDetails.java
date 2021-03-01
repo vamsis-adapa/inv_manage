@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class SortDetails {
     String criteria;
-    String direction;
+    String direction;//either "asc" or "desc"
 }
