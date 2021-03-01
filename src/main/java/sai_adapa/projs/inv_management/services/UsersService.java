@@ -7,6 +7,7 @@ import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.tools.SortDetails;
 
 import java.util.List;
 import java.util.UUID;
@@ -130,6 +131,21 @@ public class UsersService {
         Users users = getUser(email);
         return orderService.findOrdersOfUser(users.getUserId()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
+
+    public List<DisplayableOrder> getUserOrderReportPaginated(String email, Integer pageSize, Integer pageNumber)
+    {
+        Users users = getUser(email);
+        return orderService.findOrdersOfUserPaginated(users.getUserId(),pageNumber,pageSize).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
+    }
+
+    public List<DisplayableOrder> getUserOrderReportPaginatedAndSorted(String email, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList)
+    {
+        Users users = getUser(email);
+        return orderService.findOrdersOfUserPaginatedAndSorted(users.getUserId(),pageNumber,pageSize,sortDetailsList).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
+    }
+
+
+
 
 
 }

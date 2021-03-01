@@ -1,14 +1,12 @@
 package sai_adapa.projs.inv_management.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.io.PreUsers;
+import sai_adapa.projs.inv_management.model.users.io.UserWithSort;
 import sai_adapa.projs.inv_management.services.UsersService;
 
 import java.util.List;
@@ -66,15 +64,23 @@ public class UsersController {
         usersService.editUser(usersService.getUser(preUsers.getEmail()), preUsers.getName(), preUsers.getChanged_email(), preUsers.getDetails(), preUsers.getPasswd());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"})
-    public List<DisplayableOrder> getOrderReport(@RequestBody PreUsers preUsers)
+    @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"},params = {"pageSize","pageNumber"})
+    public List<DisplayableOrder> getOrderReport(@RequestBody UserWithSort userWithSort, @RequestParam Integer pageSize, @RequestParam Integer pageNumber)
     {
-        if (!sessionIdentity.verifyIdentity(preUsers.getEmail()))
+        if (!sessionIdentity.verifyIdentity(userWithSort.getUserEmail()))
         {
             //throw
             return null;
         }
-        return usersService.getUserOrderReport(preUsers.getEmail());
+        if ( pageNumber ==null)
+            pageNumber = 0;
+        if( pageSize == null)
+            pageSize = 5;
+        if ( userWithSort.getSortDetailsList()== null)
+        {
+          return   usersService.getUserOrderReportPaginated(userWithSort.getUserEmail(),pageSize,pageNumber);
+        }
+        return  usersService.getUserOrderReportPaginatedAndSorted(userWithSort.getUserEmail(),pageSize,pageNumber,userWithSort.getSortDetailsList());
     }
 
 
@@ -86,5 +92,6 @@ public class UsersController {
         }
         usersService.endSession(usersService.getUser(preUsers.getEmail()));
     }
+
 
 }

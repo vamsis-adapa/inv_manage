@@ -2,16 +2,14 @@ package sai_adapa.projs.inv_management.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.model.users.io.PreVendor;
 import sai_adapa.projs.inv_management.model.users.io.PreVendorWithItem;
+import sai_adapa.projs.inv_management.model.users.io.VendorWithSort;
 import sai_adapa.projs.inv_management.services.VendorService;
 
 import java.util.List;
@@ -116,12 +114,19 @@ public class VendorController {
     }
 
     @RequestMapping(value = {"/vendor/orders"})
-    public List<DisplayableOrderVendor> viewAllOrders(@RequestBody PreVendor preVendor) {
-        if (!sessionIdentity.verifyIdentity(preVendor.getEmail())) {
+    public List<DisplayableOrderVendor> viewAllOrders(@RequestBody VendorWithSort vendorWithSort, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
+        if (!sessionIdentity.verifyIdentity(vendorWithSort.getVendorEmail())) {
             // throw
             return null;
         }
-        return vendorService.getOrderReport(preVendor.getEmail());
+        if (pageNumber == null)
+            pageNumber = 0;
+        if (pageSize == null)
+            pageSize = 0;
+        if (vendorWithSort.getSortDetailsList() == null)
+            return vendorService.getOrderReportPaginated(vendorWithSort.getVendorEmail(), pageSize, pageNumber);
+        return vendorService.getOrderReportPaginatedAndSorted(vendorWithSort.getVendorEmail(), pageSize, pageNumber, vendorWithSort.getSortDetailsList());
+        
 
     }
 

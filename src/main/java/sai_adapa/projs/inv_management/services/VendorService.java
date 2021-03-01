@@ -7,6 +7,7 @@ import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.tools.SortDetails;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,14 +21,14 @@ public class VendorService {
     OrderService orderService;
 
     @Autowired
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
-    }
-
-    @Autowired
     public VendorService(VendorRepository vendorRepository, ItemService itemService) {
         this.vendorRepository = vendorRepository;
         this.itemService = itemService;
+    }
+
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @Autowired
@@ -80,8 +81,9 @@ public class VendorService {
     public Vendor getUser(String email) {
         return vendorRepository.findByEmail(email);
     }
-    public Vendor getUser(UUID vendorId){
-        return  vendorRepository.findByVendorId(vendorId);
+
+    public Vendor getUser(UUID vendorId) {
+        return vendorRepository.findByVendorId(vendorId);
     }
 
     public Stock getStock(String email, Long item_id) {
@@ -148,10 +150,20 @@ public class VendorService {
         vendorRepository.save(vendor);
 
     }
-    public List<DisplayableOrderVendor> getOrderReport(String vendorEmail)
-    {
+
+    public List<DisplayableOrderVendor> getOrderReport(String vendorEmail) {
         Vendor vendor = getUser(vendorEmail);
         return orderService.findOrdersOfVendor(vendor.getVendorId()).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
+    }
+
+    public List<DisplayableOrderVendor> getOrderReportPaginated(String vendorEmail, Integer pageSize, Integer pageNumber) {
+        Vendor vendor = getUser(vendorEmail);
+        return orderService.findOrdersOfVendorPaginated(vendor.getVendorId(), pageNumber, pageSize).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
+    }
+
+    public List<DisplayableOrderVendor> getOrderReportPaginatedAndSorted(String vendorEmail, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList) {
+        Vendor vendor = getUser(vendorEmail);
+        return orderService.findOrdersOfVendorPaginatedAndSorted(vendor.getVendorId(), pageNumber, pageSize,sortDetailsList).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
     }
 
 }

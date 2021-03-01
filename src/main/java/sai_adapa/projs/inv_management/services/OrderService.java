@@ -1,12 +1,16 @@
 package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.Orders;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
+import sai_adapa.projs.inv_management.tools.SortDetails;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +22,8 @@ public class OrderService {
     UsersService usersService;
     VendorService vendorService;
     StockService stockService;
+    Pageable sortedByPriceDescNameAsc =
+            PageRequest.of(0, 5, Sort.by("price").descending().and(Sort.by("name")));
 
     @Autowired
     public OrderService(OrderRepository orderRepository) {
@@ -73,5 +79,52 @@ public class OrderService {
         return orderRepository.findAllByVendorId(uuid);
     }
 
+    public Sort declareSort(String criteria, String direction, Sort preSort) {
+        Sort sort;
+        if (preSort == null) {
+            sort = Sort.by(criteria);
+            if (direction == "des")
+                sort = sort.descending();
+            else if (direction == "asc")
+                sort = sort.ascending();
+            return sort;
+        }
 
+        sort = preSort.and(Sort.by(criteria));
+        if (direction == "des")
+            sort = sort.descending();
+        else if (direction == "asc")
+            sort = sort.ascending();
+        return sort;
+    }
+
+    public Sort generateSort(List<SortDetails> sortDetailsList) {
+        Sort finalSort = null;
+        for (SortDetails sortDetails : sortDetailsList) {
+            finalSort = declareSort(sortDetails.getCriteria(), sortDetails.getDirection(), finalSort);
+        }
+        return finalSort;
+    }
+
+    public List<Orders> findOrdersOfUserPaginated(UUID uuid, Integer pageNumber, Integer pageSize) {
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
+        return orderRepository.findAllByUserId(uuid, pageRequest).getContent();
+    }
+
+    public List<Orders> findOrdersOfUserPaginatedAndSorted(UUID uuid, Integer pageNumber, Integer pageSize, List<SortDetails> sortDetailsList) {
+        Sort sort = generateSort(sortDetailsList);
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        return orderRepository.findAllByUserId(uuid, pageRequest).getContent();
+    }
+
+    public List<Orders> findOrdersOfVendorPaginated(UUID uuid, Integer pageNumber, Integer pageSize) {
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
+        return orderRepository.findAllByVendorId(uuid, pageRequest).getContent();
+    }
+
+    public List<Orders> findOrdersOfVendorPaginatedAndSorted(UUID uuid, Integer pageNumber, Integer pageSize, List<SortDetails> sortDetailsList) {
+        Sort sort = generateSort(sortDetailsList);
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        return orderRepository.findAllByVendorId(uuid, pageRequest).getContent();
+    }
 }
