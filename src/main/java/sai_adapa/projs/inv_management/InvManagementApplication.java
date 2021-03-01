@@ -11,12 +11,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.services.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableCaching
@@ -51,21 +53,31 @@ public class InvManagementApplication {
     public void doSomethingAfterStartup() {
         System.out.println("strawberry");
 
-        Long it1 = itemService.addItem("choc", "brown and hard");
-        Long it2 = itemService.addItem("choc 2", "black and bitter");
+        Long it1 = itemService.addItem("choc", "brown and hard chocolate");
+        Long it2 = itemService.addItem("choc 2", "black and bitter chocolate");
+        Long ite = itemService.addItem("straw", "yare yareada chocolate");
+        Long ite2 = itemService.addItem("dkjs;a", ";ldjaf_");
+        Long ite3 = itemService.addItem("dfja;", "chds;f");
+        Long ite4 = itemService.addItem("sdlfjchocolate;", "jdfaksljfla chocolate");
+        Long ite5 = itemService.addItem("trex", "dljkfsa;chocolate");
 
-        vendorService.addUser("hit", "mail", "dlak;j", "choc");
-        vendorService.addUser("meow cat shop", "post", "drifkdlf;j; ;dalkfj", "fire");
-        usersService.addUser("fire", "gif", "dalk;jf", "yare");
+//        vendorService.addUser("hit", "mail", "dlak;j", "choc");
+//        vendorService.addUser("meow cat shop", "post", "drifkdlf;j; ;dalkfj", "fire");
+//        usersService.addUser("fire", "gif", "dalk;jf", "yare");
 //        stockService.addNewStock(it1, "mail", 55, 12.0);
 //        stockService.addNewStock(it2, "post", 34, 99.0);
 //        stockService.addNewStock(it1, "mail", 55, 13.0);
 
-        vendorService.addStock("mail", itemService.getAllItems().get(0).getItem_id(), 32.0, 5);
-        vendorService.addStock("post",itemService.getAllItems().get(0).getItem_id(),12.0,32);
-        List<Stock>allStock=  stockService.getAllStock();
-        List<Vendor> allVendor = stockService.getItemVendors(itemService.getAllItems().get(0).getItem_id());;
-        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUserId(), 32);
+//        vendorService.addStock("mail", itemService.getAllItems().get(0).getItem_id(), 32.0, 5);
+//        vendorService.addStock("post", itemService.getAllItems().get(0).getItem_id(), 12.0, 32);
+//        List<Stock> allStock = stockService.getAllStock();
+//        List<Vendor> allVendor = stockService.getItemVendors(itemService.getAllItems().get(0).getItem_id());
+        ;
+//        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUserId(), 32);
+//        System.out.println(itemService.paginatedGetAllItem(1, 2).get().map(item -> item.getName()).collect(Collectors.toList()));
+//        System.out.println(itemService.paginatedGetAllItem(2, 3));
+//        System.out.println(itemService.paginatedGetAllItem(2, 3).stream().collect(Collectors.toList()));
+        System.out.println( itemService.paginatedGetSearchedItems(0, 6, "choc").getContent().stream().map(item -> item.getName()).collect(Collectors.toList()));
         System.out.println("coffee");
     }
 

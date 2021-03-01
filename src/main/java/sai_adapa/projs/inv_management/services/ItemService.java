@@ -1,6 +1,9 @@
 package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.items.io.ItemDetails;
@@ -54,6 +57,23 @@ public class ItemService {
             item.setDescription(description);
         }
         itemRepository.save(item);
+    }
+
+    //Todo change to query
+    public Integer totalNumberOfItems() {
+        return getAllItems().size();
+    }
+
+    public Slice<Item> paginatedGetSearchedItems(Integer pageNumber, Integer pageSize, String searchQuery) {
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
+        searchQuery = "%"+searchQuery+"%";
+        return itemRepository.findAllByNameLikeOrDescriptionLike(searchQuery, searchQuery, pageRequest);
+    }
+
+
+    public Slice<Item> paginatedGetAllItem(Integer pageNumber, Integer pageSize) {
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
+        return itemRepository.findAll(pageRequest);
     }
 
     //    public void updateItem(Long item_id)
