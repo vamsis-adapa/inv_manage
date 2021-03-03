@@ -83,9 +83,9 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = {"/admin/logout"})
     public void signOut(@RequestBody PreAdmin preAdmin) {
-        if (!sessionIdentity.verifyIdentity(preAdmin.getEmail())) {
+        if (!(sessionIdentity.verifyIdentity(preAdmin.getEmail()))) {
             //throw
-            return;
+            return ;
         }
         adminService.endSession(preAdmin.getEmail());
     }

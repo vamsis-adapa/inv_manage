@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 public class SessionIdentity {
     private String email;
 
-    public void setIdentity(String email)
-    {
+    public void setIdentity(String email) {
         this.email = email;
     }
 
     public Boolean verifyIdentity(String email) {
-        if (email == this.email) {
+
+        if (email.equals(this.email)) {
             return true;
         }
         System.out.println("not the required person");
