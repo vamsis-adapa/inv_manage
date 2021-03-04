@@ -2,6 +2,7 @@ package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sai_adapa.projs.inv_management.cache.AdminCache;
 import sai_adapa.projs.inv_management.model.users.Admin;
 import sai_adapa.projs.inv_management.repositories.sql.AdminRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
@@ -11,12 +12,17 @@ import sai_adapa.projs.inv_management.tools.AuthTools;
 public class AdminService {
 
     AdminRepository adminRepository;
+    AdminCache adminCache;
 
     @Autowired
     public AdminService(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
     }
 
+    @Autowired
+    public void setAdminCache(AdminCache adminCache) {
+        this.adminCache = adminCache;
+    }
 
     public Boolean verifyToken(String token) {
         System.out.println(adminRepository.existsAdminBySessionToken(token));
@@ -27,8 +33,24 @@ public class AdminService {
         adminRepository.save(Admin.builder().email(email).passwdHash(AuthTools.encodePassword(password)).build());
     }
 
+
     public Admin getUser(String email) {
-        return adminRepository.findByEmail(email);
+        Admin admin = adminCache.getAdmin(email);
+        if (admin != null)
+            return admin;
+        admin = adminRepository.findByEmail(email);
+        adminCache.addAdmin(email, admin);
+        return admin;
+    }
+
+    public String getUserEmailFromSession(String token) {
+        String email = adminCache.getEmail(token);
+        if (email != null)
+            return email;
+
+        email = adminRepository.findBySessionToken(token).getEmail();
+        adminCache.addEmail(token, email);
+        return email;
     }
 
     public Admin getUserFromSession(String token) {
@@ -65,17 +87,21 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
-
     public Boolean verifyUser(String email, String password) {
         String passwdHash = getUser(email).getPasswdHash();
         return AuthTools.verifyPassword(password, passwdHash);
     }
 
-
     public String createSession(String email) {
+        String token = adminCache.getSession(email);
+        if (token != null) {
+            return token;
+        }
+
         Admin admin = getUser(email);
         String sessionToken = AuthTools.generateNewToken();
         admin.setSessionToken(sessionToken);
+        adminCache.addSession(email, admin.getSessionToken());
         adminRepository.save(admin);
         return sessionToken;
     }
@@ -83,7 +109,10 @@ public class AdminService {
 
     public void endSession(String email) {
         Admin admin = getUser(email);
+
+        adminCache.removeAccess(admin.getSessionToken());
         admin.setSessionToken(null);
+        adminCache.removeSession(email);
         adminRepository.save(admin);
     }
 

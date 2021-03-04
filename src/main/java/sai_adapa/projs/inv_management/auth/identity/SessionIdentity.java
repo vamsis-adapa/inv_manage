@@ -15,6 +15,7 @@ public class SessionIdentity {
 
     public void setIdentity(String email) {
         this.email = email;
+        System.out.println(this.email);
     }
 
     public Boolean verifyIdentity(String email) {
