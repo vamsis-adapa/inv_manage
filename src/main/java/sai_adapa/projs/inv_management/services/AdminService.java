@@ -44,15 +44,16 @@ public class AdminService {
     }
 
     public String getUserEmailFromSession(String token) {
-        String email = adminCache.getEmail(token);
+        String email = adminCache.getEmailSession(token);
         if (email != null)
             return email;
 
         email = adminRepository.findBySessionToken(token).getEmail();
-        adminCache.addEmail(token, email);
+        adminCache.addEmailSession(token, email);
         return email;
     }
 
+    //add cache
     public Admin getUserFromSession(String token) {
         return adminRepository.findBySessionToken(token);
     }
@@ -87,6 +88,7 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
+
     public Boolean verifyUser(String email, String password) {
         String passwdHash = getUser(email).getPasswdHash();
         return AuthTools.verifyPassword(password, passwdHash);
@@ -97,10 +99,10 @@ public class AdminService {
         if (token != null) {
             return token;
         }
-
         Admin admin = getUser(email);
         String sessionToken = AuthTools.generateNewToken();
         admin.setSessionToken(sessionToken);
+        adminCache.addAdmin(email, admin);
         adminCache.addSession(email, admin.getSessionToken());
         adminRepository.save(admin);
         return sessionToken;
@@ -109,10 +111,9 @@ public class AdminService {
 
     public void endSession(String email) {
         Admin admin = getUser(email);
-
         adminCache.removeAccess(admin.getSessionToken());
         admin.setSessionToken(null);
-        adminCache.removeSession(email);
+        adminCache.removeEmailSession(email);
         adminRepository.save(admin);
     }
 

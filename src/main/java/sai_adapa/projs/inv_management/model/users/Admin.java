@@ -18,7 +18,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Admin  {
+public class Admin implements Serializable {
 
 
     @Id

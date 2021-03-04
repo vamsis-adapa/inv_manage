@@ -10,8 +10,9 @@ import sai_adapa.projs.inv_management.model.users.Admin;
 public class AdminCache {
 
 
-    @Cacheable("admin")
+    @Cacheable(value = "admin",key = "#email")
     public Admin getAdmin(String email) {
+        System.out.println("hit failed");
         return null;
     }
 
@@ -20,7 +21,7 @@ public class AdminCache {
         return admin;
     }
 
-    @Cacheable("admin_session")
+    @Cacheable(value = "admin_session",key = "#email")
     public String getSession(String email) {
         return null;
     }
@@ -30,27 +31,27 @@ public class AdminCache {
         return token;
     }
 
-    @Cacheable("admin_access")
-    public String getEmail(String token) {
+    @Cacheable(value = "admin_access",key = "#token")
+    public String getEmailSession(String token) {
         return null;
     }
 
-    @CachePut(value = "admin_access", key = "token")
-    public String addEmail(String token, String email) {
+    @CachePut(value = "admin_access", key = "#token")
+    public String addEmailSession(String token, String email) {
         return email;
     }
 
-    @CacheEvict(value = "admin_access")
+    @CacheEvict(value = "admin_access",key = "#token")
     public void removeAccess(String token) {
         return;
     }
 
-    @CacheEvict(value = "admin_session")
-    public void removeSession(String email) {
+    @CacheEvict(value = "admin_session",key = "#email")
+    public void removeEmailSession(String email) {
         return;
     }
 
-    @CacheEvict(value = "admin")
+    @CacheEvict(value = "admin",key = "#email")
     public void removeAdmin(String email) {
         return;
     }

@@ -31,9 +31,9 @@ public class AdminVerifierInterceptor implements HandlerInterceptor {
     @Override //Todo: add error resp in case of failure
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        Admin admin = adminService.getUserFromSession(request.getHeader("session_token"));
-        if (admin != null) {
-            sessionIdentity.setIdentity(admin.getEmail());
+        String email = adminService.getUserEmailFromSession(request.getHeader("session_token"));
+        if (email!= null) {
+            sessionIdentity.setIdentity(email);
             System.out.println("verified");
             return true;
         }

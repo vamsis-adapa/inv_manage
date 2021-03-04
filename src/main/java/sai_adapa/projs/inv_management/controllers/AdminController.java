@@ -60,7 +60,6 @@ public class AdminController {
     @RequestMapping(method = RequestMethod.POST, value = {"/admin/login"})
     public String signIn(@RequestBody PreAdmin preAdmin) {
         if (adminService.verifyUser(preAdmin.getEmail(), preAdmin.getPasswd())) {
-            System.out.println("outside of blokc");
             return adminService.createSession(preAdmin.getEmail());
         } else {
             return "failed";
