@@ -3,7 +3,6 @@ package sai_adapa.projs.inv_management.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
-import sai_adapa.projs.inv_management.cache.UserCache;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
@@ -17,8 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class UsersService {
 
-    private final UsersRepository usersRepository;
-    private UserCache userCache;
+    private UsersRepository usersRepository;
     private OrderService orderService;
     private SessionIdentity sessionIdentity;
     private VendorService vendorService;
@@ -27,11 +25,6 @@ public class UsersService {
     @Autowired
     public UsersService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
-    }
-
-    @Autowired
-    public void setUserCache(UserCache userCache) {
-        this.userCache = userCache;
     }
 
     @Autowired
@@ -69,50 +62,27 @@ public class UsersService {
     }
 
     public Users getUser(String e_mail) {
-        Users users = userCache.getUserFromEmail(e_mail);
-        userCache.invalidateCache(users);
-        if (users != null)
-            return users;
-        users = usersRepository.findByEmail(e_mail);
-        userCache.addUserFromEmail(e_mail, users);
-        return users;
+        return usersRepository.findByEmail(e_mail);
     }
 
-
     public Users getUser(UUID uuid) {
-        Users users = userCache.getUserFromUUID(uuid);
-        if (users != null)
-            return users;
-
-        users = usersRepository.findByUserId(uuid);
-        userCache.addUserFromUUID(uuid, users);
-        return users;
+        return usersRepository.findByUserId(uuid);
     }
 
     public Users getUsersBySession(String token) {
-        Users users = userCache.getUserFromSession(token);
-        if (users != null)
-            return users;
-        users = usersRepository.findBySessionToken(token);
-        userCache.addUserFromSession(token, users);
-        return users;
+        return usersRepository.findBySessionToken(token);
     }
 
     public Boolean verifySession(String token) {
-        Users users = getUsersBySession(token);
-        if (users != null)
-            return true;
-        return false;
+        return usersRepository.existsUsersBySessionToken(token);
     }
 
     public void deleteUser(Users users) {
         usersRepository.delete(users);
     }
 
-
     public void editUser(Users users, String name, String email, String details, String password) {
         int check = 0;
-        userCache.invalidateCache(users);
         if (name != null) {
             users.setName(name);
             check = 1;
@@ -132,7 +102,6 @@ public class UsersService {
         if (check == 0) {
             //throw error
         }
-
         usersRepository.save(users);
     }
 
@@ -141,23 +110,19 @@ public class UsersService {
         return AuthTools.verifyPassword(password, passwdHash);
     }
 
+    public Boolean authIdentity(String email) {
+        return sessionIdentity.verifyIdentity(email);
+    }
 
     public String createSession(String e_mail) {
-        String session = userCache.getSession(e_mail);
-        if (session != null)
-            return session;
-
         Users users = getUser(e_mail);
-
         String sessionToken = AuthTools.generateNewToken();
         users.setSessionToken(sessionToken);
-        userCache.invalidateCache(users);
         usersRepository.save(users);
         return sessionToken;
     }
 
     public void endSession(Users users) {
-        userCache.removeSession(users.getEmail(), users.getSessionToken());
         users.setSessionToken(null);
         usersRepository.save(users);
     }
@@ -167,15 +132,20 @@ public class UsersService {
         return orderService.findOrdersOfUser(users.getUserId()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
 
-    public List<DisplayableOrder> getUserOrderReportPaginated(String email, Integer pageSize, Integer pageNumber) {
+    public List<DisplayableOrder> getUserOrderReportPaginated(String email, Integer pageSize, Integer pageNumber)
+    {
         Users users = getUser(email);
-        return orderService.findOrdersOfUserPaginated(users.getUserId(), pageNumber, pageSize).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
+        return orderService.findOrdersOfUserPaginated(users.getUserId(),pageNumber,pageSize).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
 
-    public List<DisplayableOrder> getUserOrderReportPaginatedAndSorted(String email, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList) {
+    public List<DisplayableOrder> getUserOrderReportPaginatedAndSorted(String email, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList)
+    {
         Users users = getUser(email);
-        return orderService.findOrdersOfUserPaginatedAndSorted(users.getUserId(), pageNumber, pageSize, sortDetailsList).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
+        return orderService.findOrdersOfUserPaginatedAndSorted(users.getUserId(),pageNumber,pageSize,sortDetailsList).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
+
+
+
 
 
 }
