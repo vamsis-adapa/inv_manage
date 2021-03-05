@@ -68,13 +68,22 @@ public class UsersService {
         return users;
     }
 
+    public void addUserToCache(Users users) {
+        if (users == null) {
+            return;
+        }
+        userCache.addUserFromUUID(users.getUserId(), users);
+        userCache.addUserFromEmail(users.getEmail(), users);
+        if (users.getSessionToken() != null)
+            userCache.addUserFromSession(users.getSessionToken(), users);
+    }
+
     public Users getUser(String e_mail) {
         Users users = userCache.getUserFromEmail(e_mail);
-        userCache.invalidateCache(users);
         if (users != null)
             return users;
         users = usersRepository.findByEmail(e_mail);
-        userCache.addUserFromEmail(e_mail, users);
+        addUserToCache(users);
         return users;
     }
 
@@ -83,9 +92,8 @@ public class UsersService {
         Users users = userCache.getUserFromUUID(uuid);
         if (users != null)
             return users;
-
         users = usersRepository.findByUserId(uuid);
-        userCache.addUserFromUUID(uuid, users);
+        addUserToCache(users);
         return users;
     }
 
@@ -94,7 +102,7 @@ public class UsersService {
         if (users != null)
             return users;
         users = usersRepository.findBySessionToken(token);
-        userCache.addUserFromSession(token, users);
+        addUserToCache(users);
         return users;
     }
 
@@ -105,14 +113,24 @@ public class UsersService {
         return false;
     }
 
+    public void removeUserFromCache(Users users) {
+        if (users == null)
+            return;
+        userCache.removeUserFromEmail(users.getEmail());
+        userCache.removeUserFromUUID(users.getUserId());
+        if (users.getSessionToken() != null)
+            userCache.removeUserSession(users.getSessionToken());
+    }
+
     public void deleteUser(Users users) {
+        removeUserFromCache(users);
         usersRepository.delete(users);
     }
 
 
     public void editUser(Users users, String name, String email, String details, String password) {
         int check = 0;
-        userCache.invalidateCache(users);
+
         if (name != null) {
             users.setName(name);
             check = 1;
@@ -130,9 +148,9 @@ public class UsersService {
             check = 1;
         }
         if (check == 0) {
-            //throw error
+            return;//throw error
         }
-
+        addUserToCache(users);
         usersRepository.save(users);
     }
 
@@ -151,13 +169,21 @@ public class UsersService {
 
         String sessionToken = AuthTools.generateNewToken();
         users.setSessionToken(sessionToken);
-        userCache.invalidateCache(users);
+        addUserToCache(users);
         usersRepository.save(users);
         return sessionToken;
     }
 
+    public void removeSessionCache(Users users) {
+        if (users.getSessionToken() != null)
+            userCache.removeSession(users.getSessionToken());
+
+        userCache.removeSessionToken(users.getEmail());
+    }
+
     public void endSession(Users users) {
-        userCache.removeSession(users.getEmail(), users.getSessionToken());
+
+        removeSessionCache(users);
         users.setSessionToken(null);
         usersRepository.save(users);
     }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -11,13 +12,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import sai_adapa.projs.inv_management.model.items.Item;
-import sai_adapa.projs.inv_management.model.items.Stock;
-import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.services.*;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -43,6 +40,8 @@ public class InvManagementApplication {
 
     @Autowired
     UsersService usersService;
+    @Autowired
+    private CacheManager cacheManager;
 
     public static void main(String[] args) {
         SpringApplication.run(InvManagementApplication.class, args);
@@ -53,6 +52,9 @@ public class InvManagementApplication {
     public void doSomethingAfterStartup() {
         System.out.println("strawberry");
 
+        cacheManager.getCacheNames()
+                .parallelStream()
+                .forEach(n -> cacheManager.getCache(n).clear());
         Long it1 = itemService.addItem("choc", "brown and hard chocolate");
         Long it2 = itemService.addItem("choc 2", "black and bitter chocolate");
         Long ite = itemService.addItem("straw", "yare yareada chocolate");
@@ -77,7 +79,7 @@ public class InvManagementApplication {
 //        System.out.println(itemService.paginatedGetAllItem(1, 2).get().map(item -> item.getName()).collect(Collectors.toList()));
 //        System.out.println(itemService.paginatedGetAllItem(2, 3));
 //        System.out.println(itemService.paginatedGetAllItem(2, 3).stream().collect(Collectors.toList()));
-        System.out.println( itemService.paginatedGetSearchedItems(0, 6, "choc").getContent().stream().map(item -> item.getName()).collect(Collectors.toList()));
+        System.out.println(itemService.paginatedGetSearchedItems(0, 6, "choc").getContent().stream().map(item -> item.getName()).collect(Collectors.toList()));
         System.out.println("coffee");
     }
 

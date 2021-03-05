@@ -3,7 +3,6 @@ package sai_adapa.projs.inv_management.cache;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 import sai_adapa.projs.inv_management.model.users.Users;
 
@@ -38,7 +37,7 @@ public class UserCache {
     }
 
     @CachePut(value = "session:user", key = "#token")
-    public Users addUserFromSession(String Token, Users users) {
+    public Users addUserFromSession(String token, Users users) {
         return users;
     }
 
@@ -53,20 +52,28 @@ public class UserCache {
     }
 
 
-    @Caching(evict = {
-            @CacheEvict(value = "email:session", key = "#eMail"),
-            @CacheEvict(value = "session:user", key = "#token")
-    })
-    public void removeSession(String eMail, String token) {
+    @CacheEvict(value = "session:user", key = "#token")
+    public void removeSession(String token) {
         return;
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "email:user", key = "#users.email"),
-            @CacheEvict(value = "session:user", key = "#users.sessionToken"),
-            @CacheEvict(value = "uuid:user", key = "#users.userId")
-    })
-    public void invalidateCache(Users users) {
+    @CacheEvict(value = "email:session", key = "#email")
+    public void removeSessionToken(String email) {
+        return;
+    }
+
+    @CacheEvict(value = "email:user", key = "#email")
+    public void removeUserFromEmail(String email) {
+        return;
+    }
+
+    @CacheEvict(value = "session:user", key = "#token")
+    public void removeUserSession(String token) {
+        return;
+    }
+
+    @CacheEvict(value = "uuid:user", key = "#userId")
+    public void removeUserFromUUID(UUID userId) {
         return;
     }
 
