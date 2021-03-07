@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.cache.VendorCache;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
-import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 import sai_adapa.projs.inv_management.tools.SortDetails;
+import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,14 +24,14 @@ public class VendorService {
     VendorCache vendorCache;
 
     @Autowired
-    public void setVendorCache(VendorCache vendorCache) {
-        this.vendorCache = vendorCache;
-    }
-
-    @Autowired
     public VendorService(VendorRepository vendorRepository, ItemService itemService) {
         this.vendorRepository = vendorRepository;
         this.itemService = itemService;
+    }
+
+    @Autowired
+    public void setVendorCache(VendorCache vendorCache) {
+        this.vendorCache = vendorCache;
     }
 
     @Autowired
@@ -47,6 +47,7 @@ public class VendorService {
     public void addUser(String name, String email, String description, String passwd) {
         vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(AuthTools.encodePassword(passwd)).build());
     }
+
     public void addVendorToCache(Vendor vendor) {
         if (vendor == null) {
             return;
@@ -89,10 +90,10 @@ public class VendorService {
 
     public Vendor getUserBySession(String token) {
         Vendor vendor = vendorCache.getUserFromSession(token);
-        if ( vendor != null)
+        if (vendor != null)
             return vendor;
 
-        vendor= vendorRepository.findBySessionToken(token);
+        vendor = vendorRepository.findBySessionToken(token);
         addVendorToCache(vendor);
         return vendor;
     }
@@ -104,18 +105,18 @@ public class VendorService {
 
     public Vendor getUser(String email) {
         Vendor vendor = vendorCache.getUserFromEmail(email);
-        if ( vendor!=null)
+        if (vendor != null)
             return vendor;
-        vendor=vendorRepository.findByEmail(email);
+        vendor = vendorRepository.findByEmail(email);
         addVendorToCache(vendor);
         return vendor;
     }
 
     public Vendor getUser(UUID vendorId) {
         Vendor vendor = vendorCache.getUserFromUUID(vendorId);
-        if ( vendor!=null)
+        if (vendor != null)
             return vendor;
-        vendor=vendorRepository.findByVendorId(vendorId);
+        vendor = vendorRepository.findByVendorId(vendorId);
         addVendorToCache(vendor);
         return vendor;
     }
@@ -140,11 +141,31 @@ public class VendorService {
         if (stockService.checkExistingStock(vendor_email, item_id)) {
             //throw error
         }
-        return stockService.addNewStock(item_id, vendor_email, num_items, price);
+
+        Stock stock =  stockService.addNewStock(item_id, vendor_email, num_items, price);
+        orderService.createVendorOrder(stock,num_items,OrderStatus.VendorStockNew);
+        return stock.getId();
+    }
+
+    public void incrementVendorStock(String vendor_email, Long item_id, Integer inv_num) {
+        Stock stock = stockService.getParticularStock(vendor_email, item_id);
+        if (stock == null) {
+            //throw
+        }
+        stockService.editStock(stock.getId(), inv_num + stock.getInv_num(), null);
+        orderService.createVendorOrder(stock, inv_num, OrderStatus.VendorStockIncrement);
+
+
     }
 
     public void deleteStock(String vendor_email, Long item_id) {
+
+        Stock stock = stockService.getParticularStock(vendor_email, item_id);
+        if (stock != null) {
+            //throw
+        }
         stockService.deleteStock(vendor_email, item_id);
+        orderService.createVendorOrder(stock, null, OrderStatus.VendorStockDelete);
     }
 
     public void editStock(String vendor_email, Long item_id, Integer inv_num, Double cost) {
@@ -152,8 +173,8 @@ public class VendorService {
         if (stock == null) {
             //throw error
         }
-
         stockService.editStock(stock.getId(), inv_num, cost);
+        orderService.createVendorOrder(stock, inv_num, OrderStatus.VendorStockEdit);
     }
 
     public Vendor getDisplayable(Vendor vendor) {
@@ -171,7 +192,7 @@ public class VendorService {
 
     public String createSession(String email) {
         String session = vendorCache.getSession(email);
-        if (session!=null)
+        if (session != null)
             return session;
         Vendor vendor = getUser(email);
 
@@ -182,10 +203,8 @@ public class VendorService {
         return sessionToken;
     }
 
-    public void removeSessionCache(Vendor vendor)
-    {
-        if (vendor.getSessionToken()!= null)
-        {
+    public void removeSessionCache(Vendor vendor) {
+        if (vendor.getSessionToken() != null) {
             vendorCache.removeSession(vendor.getSessionToken());
         }
         vendorCache.removeSessionToken(vendor.getEmail());
@@ -210,7 +229,7 @@ public class VendorService {
 
     public List<DisplayableOrderVendor> getOrderReportPaginatedAndSorted(String vendorEmail, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList) {
         Vendor vendor = getUser(vendorEmail);
-        return orderService.findOrdersOfVendorPaginatedAndSorted(vendor.getVendorId(), pageNumber, pageSize,sortDetailsList).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
+        return orderService.findOrdersOfVendorPaginatedAndSorted(vendor.getVendorId(), pageNumber, pageSize, sortDetailsList).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
     }
 
 }

@@ -38,12 +38,4 @@ public class Stock {
     private  LocalDateTime DateUpdated;
 
 
-    public Stock(Vendor vendor, Item item, Double cost,Integer inv_num) {
-        this.vendor = vendor;
-        this.item = item;
-        this.cost = cost;
-        this.inv_num = inv_num;
-    }
-
-
 }

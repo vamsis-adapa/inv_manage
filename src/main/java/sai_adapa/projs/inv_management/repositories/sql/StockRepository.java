@@ -18,4 +18,5 @@ public  boolean existsStockByVendorAndItem(Vendor vendor, Item item);
 public List<Stock>findAllByItem(Item item);
 
 public List<Vendor>findDistinctVendorByItem(Item item);
+public Stock findStockById(Long id);
 }

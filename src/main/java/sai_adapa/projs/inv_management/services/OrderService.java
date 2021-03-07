@@ -11,6 +11,7 @@ import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.tools.SortDetails;
+import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,10 +51,17 @@ public class OrderService {
         this.vendorService = vendorService;
     }
 
+
+    public String createVendorOrder(Stock stock, Integer numberOfItems, OrderStatus orderStatus) {
+        Orders orders = Orders.builder().vendorId(stock.getVendor().getVendorId()).numberOfItems(numberOfItems).orderStatus(orderStatus).build();
+        orderRepository.save(orders);
+        return orders.getId();
+    }
+
     public String createOrder(Stock stock, UUID userID, Integer numberOfItems) {
         Double total_cost = numberOfItems * stock.getCost();
         stockService.buyStock(stock.getId(), numberOfItems);
-        Orders orders = Orders.builder().userId(userID).vendorId(stock.getVendor().getVendorId()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).individualCost(stock.getCost()).totalCost(total_cost).build();
+        Orders orders = Orders.builder().orderStatus(OrderStatus.Pending).userId(userID).vendorId(stock.getVendor().getVendorId()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).individualCost(stock.getCost()).totalCost(total_cost).build();
         orderRepository.save(orders);
         return orders.getId();
     }

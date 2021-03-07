@@ -29,10 +29,10 @@ public class StockService {
         this.vendorService = vendorService;
     }
 
-    public Long addNewStock(Long item_id, String vendor_email, int inv_num, Double price) {
+    public Stock addNewStock(Long item_id, String vendor_email, int inv_num, Double price) {
         Stock stock = Stock.builder().item(itemService.getItemById(item_id)).vendor(vendorService.getUser(vendor_email)).inv_num(inv_num).cost(price).build();
         stockRepository.save(stock);
-        return stock.getId();
+        return stock;
     }
 
     public void deleteStock(String vendor_email, Long item_id) {

@@ -80,6 +80,14 @@ public class VendorController {
         }
         vendorService.addStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getCost(), preVendorWithItem.getNum_stock());
     }
+    @RequestMapping(method = RequestMethod.PUT, value = {"/vendor/stock/"})
+    public void incrementStock(@RequestBody PreVendorWithItem preVendorWithItem, @PathVariable Long id) {
+        if (!sessionIdentity.verifyIdentity(preVendorWithItem.getEmail())) {
+            // throw
+            return;
+        }
+        vendorService.incrementVendorStock(preVendorWithItem.getEmail(),preVendorWithItem.getItem_id(),preVendorWithItem.getNum_stock());
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = {"/vendor"})
     public Vendor displayVendor() {

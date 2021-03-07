@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,10 +28,13 @@ public class Orders {
     private Long itemId;
     private Integer numberOfItems;
     private Double individualCost;
+    private OrderStatus orderStatus;
     @CreatedDate
     private LocalDateTime transactionDate;
     private Double totalCost;
 
 
 }
+
+
 
