@@ -26,7 +26,7 @@ public class UsersVerifierInterceptor implements HandlerInterceptor {
         this.usersService = usersService;
     }
 
-    @Override //Todo: add error resp in case of failure
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (usersService.verifySession(request.getHeader("session_token"))) {
             identity.setIdentity(usersService.getUsersBySession(request.getHeader("session_token")).getEmail());

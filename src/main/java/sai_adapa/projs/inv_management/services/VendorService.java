@@ -2,8 +2,10 @@ package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sai_adapa.projs.inv_management.cache.VendorCache;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
+import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
@@ -19,6 +21,12 @@ public class VendorService {
     ItemService itemService;
     StockService stockService;
     OrderService orderService;
+    VendorCache vendorCache;
+
+    @Autowired
+    public void setVendorCache(VendorCache vendorCache) {
+        this.vendorCache = vendorCache;
+    }
 
     @Autowired
     public VendorService(VendorRepository vendorRepository, ItemService itemService) {
@@ -38,6 +46,15 @@ public class VendorService {
 
     public void addUser(String name, String email, String description, String passwd) {
         vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(AuthTools.encodePassword(passwd)).build());
+    }
+    public void addVendorToCache(Vendor vendor) {
+        if (vendor == null) {
+            return;
+        }
+        vendorCache.addUserFromUUID(vendor.getVendorId(), vendor);
+        vendorCache.addUserFromEmail(vendor.getEmail(), vendor);
+        if (vendor.getSessionToken() != null)
+            vendorCache.addUserFromSession(vendor.getSessionToken(), vendor);
     }
 
     public void deleteUser(Vendor vendor) {
@@ -65,12 +82,19 @@ public class VendorService {
         if (check == 0) {
             //throw
         }
+
         vendorRepository.save(vendor);
     }
 
 
     public Vendor getUserBySession(String token) {
-        return vendorRepository.findBySessionToken(token);
+        Vendor vendor = vendorCache.getUserFromSession(token);
+        if ( vendor != null)
+            return vendor;
+
+        vendor= vendorRepository.findBySessionToken(token);
+        addVendorToCache(vendor);
+        return vendor;
     }
 
 
@@ -79,11 +103,21 @@ public class VendorService {
     }
 
     public Vendor getUser(String email) {
-        return vendorRepository.findByEmail(email);
+        Vendor vendor = vendorCache.getUserFromEmail(email);
+        if ( vendor!=null)
+            return vendor;
+        vendor=vendorRepository.findByEmail(email);
+        addVendorToCache(vendor);
+        return vendor;
     }
 
     public Vendor getUser(UUID vendorId) {
-        return vendorRepository.findByVendorId(vendorId);
+        Vendor vendor = vendorCache.getUserFromUUID(vendorId);
+        if ( vendor!=null)
+            return vendor;
+        vendor=vendorRepository.findByVendorId(vendorId);
+        addVendorToCache(vendor);
+        return vendor;
     }
 
     public Stock getStock(String email, Long item_id) {
@@ -136,19 +170,32 @@ public class VendorService {
 
 
     public String createSession(String email) {
+        String session = vendorCache.getSession(email);
+        if (session!=null)
+            return session;
         Vendor vendor = getUser(email);
+
         String sessionToken = AuthTools.generateNewToken();
         vendor.setSessionToken(sessionToken);
+        addVendorToCache(vendor);
         vendorRepository.save(vendor);
         return sessionToken;
     }
 
+    public void removeSessionCache(Vendor vendor)
+    {
+        if (vendor.getSessionToken()!= null)
+        {
+            vendorCache.removeSession(vendor.getSessionToken());
+        }
+        vendorCache.removeSessionToken(vendor.getEmail());
+    }
 
     public void endSession(String email) {
         Vendor vendor = getUser(email);
+        removeSessionCache(vendor);
         vendor.setSessionToken(null);
         vendorRepository.save(vendor);
-
     }
 
     public List<DisplayableOrderVendor> getOrderReport(String vendorEmail) {
