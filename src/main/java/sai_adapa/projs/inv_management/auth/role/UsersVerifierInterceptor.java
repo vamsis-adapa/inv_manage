@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.services.UsersService;
+import sai_adapa.projs.inv_management.tools.ResponseHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,12 +33,7 @@ public class UsersVerifierInterceptor implements HandlerInterceptor {
             identity.setIdentity(usersService.getUsersBySession(request.getHeader("session_token")).getEmail());
             return true;
         }
-        try {
-            response.getWriter().write("You are not an normal user");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        response.setStatus(401);
+        ResponseHandler.userVerificationFailed(response);
         return false;
     }
 }

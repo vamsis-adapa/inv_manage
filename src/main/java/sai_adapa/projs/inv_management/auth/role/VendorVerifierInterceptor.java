@@ -6,6 +6,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.services.VendorService;
+import sai_adapa.projs.inv_management.tools.ResponseHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,13 +36,7 @@ public class VendorVerifierInterceptor implements HandlerInterceptor {
             return  true;
 
         }
-        try {
-            response.getWriter().write("You are not a vendor");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        response.setStatus(401);
+        ResponseHandler.userVerificationFailed(response);
         return false;
     }
 }
