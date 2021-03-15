@@ -77,7 +77,7 @@ public class OrderService {
     }
 
     @SneakyThrows
-    DisplayableOrderVendor createDisplayableOrderVendor(Orders orders)  {
+    DisplayableOrderVendor createDisplayableOrderVendor(Orders orders) {
         String vendorEmail = vendorService.getUser(orders.getVendorId()).getEmail();
         String itemName = itemService.getItemById(orders.getItemId()).getName();
         return DisplayableOrderVendor.builder().id(orders.getId()).vendorEmail(vendorEmail).userID(orders.getUserId()).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();

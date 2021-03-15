@@ -2,12 +2,10 @@ package sai_adapa.projs.inv_management.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
-import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
@@ -45,54 +43,27 @@ public class VendorController {
     public void signOut(@RequestBody PreVendor preVendor, HttpServletResponse response) {
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, preVendor.getEmail(), response))
             return;
-        try {
-            vendorService.endSession(preVendor.getEmail());
-        } catch (UserNotFoundException e) {
-            ResponseHandler.actionFailed(response, "no user found with email: " + preVendor.getEmail());
-        }
+        vendorService.endSession(preVendor.getEmail());
     }
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/new"})
-    public void signUp(@RequestBody PreVendor preVendor, HttpServletResponse response) {
-        if (preVendor.getEmail() == null || preVendor.getEmail().equals("")) {
-            ResponseHandler.insufficientDetailsInRequest(response);//add message no email
-            return;
-        }
-        try {
-            vendorService.addUser(preVendor.getName(), preVendor.getEmail(), preVendor.getDescription(), preVendor.getPasswd());
-        } catch (NullPointerException e) {
-            ResponseHandler.insufficientDetailsInRequest(response);
-            return;
-        } catch (DataIntegrityViolationException e) {
-            ResponseHandler.userAlreadyExists(response);
-        }
-        return;
+    public void signUp(@RequestBody PreVendor preVendor) {
+        vendorService.addUser(preVendor.getName(), preVendor.getEmail(), preVendor.getDescription(), preVendor.getPasswd());
     }
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/login"})
-    public String signIn(@RequestBody PreVendor preVendor, HttpServletResponse response) {
-        try {
-            if (vendorService.verifyUser(preVendor.getEmail(), preVendor.getPasswd())) {
-                return vendorService.createSession(preVendor.getEmail());
-            } else
-                ResponseHandler.userVerificationFailed(response);
-            return "login failed";
-        } catch (UserNotFoundException e) {
-            ResponseHandler.userVerificationFailed(response);
-        }
-        return null;
+    public String signIn(@RequestBody PreVendor preVendor) {
+        if (vendorService.verifyUser(preVendor.getEmail(), preVendor.getPasswd())) {
+            return vendorService.createSession(preVendor.getEmail());
+        } else
+            return "failed";
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = {"/vendor"})
     public void editVendor(@RequestBody PreVendor preVendor, HttpServletResponse response) {
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, preVendor.getEmail(), response))
             return;
-
-        try {
-            vendorService.editUser(vendorService.getUser(preVendor.getEmail()), preVendor.getName(), preVendor.getChanged_email(), preVendor.getDescription(), preVendor.getPasswd());
-        } catch (UserNotFoundException e) {
-            ResponseHandler.actionFailed(response, "user not found");
-        }
+        vendorService.editUser(vendorService.getUser(preVendor.getEmail()), preVendor.getName(), preVendor.getChanged_email(), preVendor.getDescription(), preVendor.getPasswd());
     }
 
 
@@ -125,14 +96,8 @@ public class VendorController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = {"/vendor"})
-    public Vendor displayVendor(HttpServletResponse response) {
-        try {
-
-            return vendorService.displayUser(sessionIdentity.getEmail());
-        } catch (UserNotFoundException e) {
-            ResponseHandler.actionFailed(response, "User does not exist in system");
-            return null;
-        }
+    public Vendor displayVendor() {
+        return vendorService.displayUser(sessionIdentity.getEmail());
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = {"/vendor/stock"})
@@ -172,15 +137,11 @@ public class VendorController {
             pageNumber = 0;
         if (pageSize == null)
             pageSize = 0;
-        try {
+        if (vendorWithSort.getSortDetailsList() == null)
+            return vendorService.getOrderReportPaginated(vendorWithSort.getVendorEmail(), pageSize, pageNumber);
+        return vendorService.getOrderReportPaginatedAndSorted(vendorWithSort.getVendorEmail(), pageSize, pageNumber, vendorWithSort.getSortDetailsList());
 
 
-            if (vendorWithSort.getSortDetailsList() == null)
-                return vendorService.getOrderReportPaginated(vendorWithSort.getVendorEmail(), pageSize, pageNumber);
-            return vendorService.getOrderReportPaginatedAndSorted(vendorWithSort.getVendorEmail(), pageSize, pageNumber, vendorWithSort.getSortDetailsList());
-        } catch (UserNotFoundException e) {
-            ResponseHandler.actionFailed(response, "getting orders failed");
-        }
-        return null;
     }
+
 }

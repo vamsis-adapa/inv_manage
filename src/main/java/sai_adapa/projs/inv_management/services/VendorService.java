@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.cache.VendorCache;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
-import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
@@ -91,15 +90,12 @@ public class VendorService {
     }
 
 
-    public Vendor getUserBySession(String token) throws UserNotFoundException {
+    public Vendor getUserBySession(String token) {
         Vendor vendor = vendorCache.getUserFromSession(token);
         if (vendor != null)
             return vendor;
 
         vendor = vendorRepository.findBySessionToken(token);
-        if (vendor == null) {
-            throw new UserNotFoundException("no user with session: " + token);
-        }
         addVendorToCache(vendor);
         return vendor;
     }
@@ -109,26 +105,20 @@ public class VendorService {
         return vendorRepository.existsVendorBySessionToken(token);
     }
 
-    public Vendor getUser(String email) throws UserNotFoundException {
+    public Vendor getUser(String email) {
         Vendor vendor = vendorCache.getUserFromEmail(email);
         if (vendor != null)
             return vendor;
         vendor = vendorRepository.findByEmail(email);
-        if (vendor == null) {
-            throw new UserNotFoundException("no user with email: " + email);
-        }
         addVendorToCache(vendor);
         return vendor;
     }
 
-    public Vendor getUser(UUID vendorId) throws UserNotFoundException {
+    public Vendor getUser(UUID vendorId) {
         Vendor vendor = vendorCache.getUserFromUUID(vendorId);
         if (vendor != null)
             return vendor;
         vendor = vendorRepository.findByVendorId(vendorId);
-        if (vendor == null) {
-            throw new UserNotFoundException("no user with id: " + vendorId);
-        }
         addVendorToCache(vendor);
         return vendor;
     }
@@ -141,7 +131,7 @@ public class VendorService {
         }
     }
 
-    public Boolean verifyUser(String email, String password) throws UserNotFoundException {
+    public Boolean verifyUser(String email, String password) {
         return AuthTools.verifyPassword(password, getUser(email).getPasswdHash());
     }
 
@@ -159,6 +149,7 @@ public class VendorService {
             throw new StockCreationUnsuccessfulException();
         }
 
+
         Stock stock = stockService.addNewStock(item_id, vendor_email, num_items, price);
         orderService.createVendorOrder(stock, num_items, OrderStatus.VendorStockNew);
         return stock.getId();
@@ -166,20 +157,23 @@ public class VendorService {
 
     public void incrementVendorStock(String vendor_email, Long item_id, Integer inv_num) throws StockNotFoundException {
         Stock stock = stockService.getParticularStock(vendor_email, item_id);
+
         stockService.editStock(stock.getId(), inv_num + stock.getInv_num(), null);
         orderService.createVendorOrder(stock, inv_num, OrderStatus.VendorStockIncrement);
+
     }
 
     public void deleteStock(String vendor_email, Long item_id) throws StockNotFoundException {
+
         Stock stock = stockService.getParticularStock(vendor_email, item_id);
         stockService.deleteStock(vendor_email, item_id);
         orderService.createVendorOrder(stock, null, OrderStatus.VendorStockDelete);
     }
 
-    public void editStock(String vendor_email, Long item_id, Integer inv_num, Double cost) throws StockNotFoundException {
+    public void editStock(String vendor_email, Long item_id, Integer inv_num, Double cost) throws StockNotFoundException{
         Stock stock = stockService.getParticularStock(vendor_email, item_id);
         if (stock == null) {
-            throw new StockNotFoundException();
+            //throw error
         }
         stockService.editStock(stock.getId(), inv_num, cost);
         orderService.createVendorOrder(stock, inv_num, OrderStatus.VendorStockEdit);
@@ -192,25 +186,22 @@ public class VendorService {
 
     }
 
-    public Vendor displayUser(String email) throws UserNotFoundException {
+    public Vendor displayUser(String email) {
         return getDisplayable(getUser(email));
 
     }
 
 
-    public String createSession(String email) throws UserNotFoundException {
+    public String createSession(String email) {
         String session = vendorCache.getSession(email);
-        String sessionToken = null;
         if (session != null)
             return session;
-
         Vendor vendor = getUser(email);
-        sessionToken = AuthTools.generateNewToken();
+
+        String sessionToken = AuthTools.generateNewToken();
         vendor.setSessionToken(sessionToken);
         addVendorToCache(vendor);
         vendorRepository.save(vendor);
-
-
         return sessionToken;
     }
 
@@ -221,24 +212,24 @@ public class VendorService {
         vendorCache.removeSessionToken(vendor.getEmail());
     }
 
-    public void endSession(String email) throws UserNotFoundException {
+    public void endSession(String email) {
         Vendor vendor = getUser(email);
         removeSessionCache(vendor);
         vendor.setSessionToken(null);
         vendorRepository.save(vendor);
     }
 
-    public List<DisplayableOrderVendor> getOrderReport(String vendorEmail) throws UserNotFoundException {
+    public List<DisplayableOrderVendor> getOrderReport(String vendorEmail) {
         Vendor vendor = getUser(vendorEmail);
         return orderService.findOrdersOfVendor(vendor.getVendorId()).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
     }
 
-    public List<DisplayableOrderVendor> getOrderReportPaginated(String vendorEmail, Integer pageSize, Integer pageNumber) throws UserNotFoundException {
+    public List<DisplayableOrderVendor> getOrderReportPaginated(String vendorEmail, Integer pageSize, Integer pageNumber) {
         Vendor vendor = getUser(vendorEmail);
         return orderService.findOrdersOfVendorPaginated(vendor.getVendorId(), pageNumber, pageSize).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
     }
 
-    public List<DisplayableOrderVendor> getOrderReportPaginatedAndSorted(String vendorEmail, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList) throws UserNotFoundException {
+    public List<DisplayableOrderVendor> getOrderReportPaginatedAndSorted(String vendorEmail, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList) {
         Vendor vendor = getUser(vendorEmail);
         return orderService.findOrdersOfVendorPaginatedAndSorted(vendor.getVendorId(), pageNumber, pageSize, sortDetailsList).stream().map(orders -> orderService.createDisplayableOrderVendor(orders)).collect(Collectors.toList());
     }

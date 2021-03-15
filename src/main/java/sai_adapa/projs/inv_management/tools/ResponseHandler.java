@@ -26,6 +26,7 @@ public class ResponseHandler {
     }
 
 
+
     public static void resourceNotFound(HttpServletResponse response) {
         response.setStatus(404);
         return;
@@ -45,15 +46,6 @@ public class ResponseHandler {
         return;
     }
 
-    public static void actionFailed(HttpServletResponse response, String msg) {
-        response.setStatus(500);
-        try {
-            response.getWriter().write(msg);
-        } catch (Exception e) {
-        }
-        return;
-        return;
-    }
 
     public static void userDoesNotExist(HttpServletResponse response) {
         response.setStatus(401);
