@@ -5,14 +5,13 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.io.Serializable;
 
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item implements Serializable {
+public class Item {
 
     @Id
     @GeneratedValue( generator = "identity")

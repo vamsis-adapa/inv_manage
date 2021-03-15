@@ -3,8 +3,6 @@ package sai_adapa.projs.inv_management.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.cache.VendorCache;
-import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
-import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
@@ -124,11 +122,7 @@ public class VendorService {
     }
 
     public Stock getStock(String email, Long item_id) {
-        try {
-            return stockService.getParticularStock(email, item_id);
-        } catch (StockNotFoundException e) {
-            return null;
-        }
+        return stockService.getParticularStock(email, item_id);
     }
 
     public Boolean verifyUser(String email, String password) {
@@ -143,34 +137,38 @@ public class VendorService {
         return stockService.getVendorStock(email);
     }
 
-    public Long addStock(String vendor_email, Long item_id, Double price, Integer num_items) throws StockCreationUnsuccessfulException {
+    public Long addStock(String vendor_email, Long item_id, Double price, Integer num_items) {
         if (stockService.checkExistingStock(vendor_email, item_id)) {
-            //Todo: add exception msg
-            throw new StockCreationUnsuccessfulException();
+            //throw error
         }
 
-
-        Stock stock = stockService.addNewStock(item_id, vendor_email, num_items, price);
-        orderService.createVendorOrder(stock, num_items, OrderStatus.VendorStockNew);
+        Stock stock =  stockService.addNewStock(item_id, vendor_email, num_items, price);
+        orderService.createVendorOrder(stock,num_items,OrderStatus.VendorStockNew);
         return stock.getId();
     }
 
-    public void incrementVendorStock(String vendor_email, Long item_id, Integer inv_num) throws StockNotFoundException {
+    public void incrementVendorStock(String vendor_email, Long item_id, Integer inv_num) {
         Stock stock = stockService.getParticularStock(vendor_email, item_id);
-
+        if (stock == null) {
+            //throw
+        }
         stockService.editStock(stock.getId(), inv_num + stock.getInv_num(), null);
         orderService.createVendorOrder(stock, inv_num, OrderStatus.VendorStockIncrement);
 
+
     }
 
-    public void deleteStock(String vendor_email, Long item_id) throws StockNotFoundException {
+    public void deleteStock(String vendor_email, Long item_id) {
 
         Stock stock = stockService.getParticularStock(vendor_email, item_id);
+        if (stock != null) {
+            //throw
+        }
         stockService.deleteStock(vendor_email, item_id);
         orderService.createVendorOrder(stock, null, OrderStatus.VendorStockDelete);
     }
 
-    public void editStock(String vendor_email, Long item_id, Integer inv_num, Double cost) throws StockNotFoundException{
+    public void editStock(String vendor_email, Long item_id, Integer inv_num, Double cost) {
         Stock stock = stockService.getParticularStock(vendor_email, item_id);
         if (stock == null) {
             //throw error

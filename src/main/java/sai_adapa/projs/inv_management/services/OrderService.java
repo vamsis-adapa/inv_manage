@@ -1,6 +1,5 @@
 package sai_adapa.projs.inv_management.services;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -67,8 +66,6 @@ public class OrderService {
         return orders.getId();
     }
 
-    //Todo: check sneaky throw usage
-    @SneakyThrows
     public DisplayableOrder createDisplayableOrder(Orders orders) {
         String vendorEmail = vendorService.getUser(orders.getVendorId()).getEmail();
         String userEmail = usersService.getUser(orders.getUserId()).getEmail();
@@ -76,8 +73,7 @@ public class OrderService {
         return DisplayableOrder.builder().id(orders.getId()).vendorEmail(vendorEmail).userEmail(userEmail).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
     }
 
-    @SneakyThrows
-    DisplayableOrderVendor createDisplayableOrderVendor(Orders orders) {
+    public DisplayableOrderVendor createDisplayableOrderVendor(Orders orders) {
         String vendorEmail = vendorService.getUser(orders.getVendorId()).getEmail();
         String itemName = itemService.getItemById(orders.getItemId()).getName();
         return DisplayableOrderVendor.builder().id(orders.getId()).vendorEmail(vendorEmail).userID(orders.getUserId()).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
