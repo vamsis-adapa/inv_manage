@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.model.items.Item;
-import sai_adapa.projs.inv_management.model.items.io.ItemDetails;
+import sai_adapa.projs.inv_management.model.io.ItemDetails;
 import sai_adapa.projs.inv_management.services.ItemService;
 
 import java.util.List;

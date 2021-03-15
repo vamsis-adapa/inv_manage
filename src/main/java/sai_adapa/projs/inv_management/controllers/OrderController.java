@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.Vendor;
-import sai_adapa.projs.inv_management.model.users.io.PreUserWithOrder;
+import sai_adapa.projs.inv_management.model.io.PreUserWithOrder;
 import sai_adapa.projs.inv_management.services.*;
 
 @RestController

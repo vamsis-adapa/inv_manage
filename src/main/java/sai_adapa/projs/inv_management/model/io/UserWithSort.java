@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.model.users.io;
+package sai_adapa.projs.inv_management.model.io;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class VendorWithSort {
-    String vendorEmail;
+public class UserWithSort {
+    String userEmail;
     List<SortDetails> sortDetailsList;
 }

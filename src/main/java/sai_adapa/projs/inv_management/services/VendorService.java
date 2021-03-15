@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.cache.VendorCache;
 import sai_adapa.projs.inv_management.model.items.Stock;
-import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
+import sai_adapa.projs.inv_management.model.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
 import sai_adapa.projs.inv_management.tools.AuthTools;
 import sai_adapa.projs.inv_management.tools.SortDetails;
-import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
+import sai_adapa.projs.inv_management.model.enums.OrderStatus;
 
 import java.util.List;
 import java.util.UUID;

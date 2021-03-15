@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.tools.enums;
+package sai_adapa.projs.inv_management.model.enums;
 
 public enum OrderStatus {
     Pending,

@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.model.items.Stock;
-import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
+import sai_adapa.projs.inv_management.model.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
-import sai_adapa.projs.inv_management.model.users.io.PreVendor;
-import sai_adapa.projs.inv_management.model.users.io.PreVendorWithItem;
-import sai_adapa.projs.inv_management.model.users.io.VendorWithSort;
+import sai_adapa.projs.inv_management.model.io.PreVendor;
+import sai_adapa.projs.inv_management.model.io.PreVendorWithItem;
+import sai_adapa.projs.inv_management.model.io.VendorWithSort;
 import sai_adapa.projs.inv_management.services.VendorService;
 
 import java.util.List;

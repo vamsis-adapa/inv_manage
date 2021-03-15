@@ -7,11 +7,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.Orders;
-import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
-import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
+import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
+import sai_adapa.projs.inv_management.model.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.tools.SortDetails;
-import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
+import sai_adapa.projs.inv_management.model.enums.OrderStatus;
 
 import java.util.List;
 import java.util.UUID;
