@@ -23,9 +23,16 @@ public class RatingService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
+
+    //TODO: if accessToken not constant hit api
+    public String getAccessToken() {
+        return "stringToken";//TODO change to token
+    }
+
+
     public void rateItem(Item item, Rating rating) {
         ItemWithRating itemWithRating = new ItemWithRating(item, rating);
-
+        itemWithRating.setToken(getAccessToken());
         kafkaTemplate.send("ItemWithRating", itemWithRating);
         return;
     }
