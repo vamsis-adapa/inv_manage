@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.cache.AdminCache;
 import sai_adapa.projs.inv_management.model.users.Admin;
 import sai_adapa.projs.inv_management.repositories.sql.AdminRepository;
-import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.tools.PasswordTools;
 
 
 @Service
@@ -30,7 +30,7 @@ public class AdminService {
     }
 
     public void addUser(String email, String password) {
-        adminRepository.save(Admin.builder().email(email).passwdHash(AuthTools.encodePassword(password)).build());
+        adminRepository.save(Admin.builder().email(email).passwdHash(PasswordTools.encodePassword(password)).build());
     }
 
 
@@ -79,7 +79,7 @@ public class AdminService {
             check = 1;
         }
         if (password != null) {
-            admin.setPasswdHash(AuthTools.encodePassword(password));
+            admin.setPasswdHash(PasswordTools.encodePassword(password));
             check = 1;
         }
         if (check == 0) {
@@ -91,7 +91,7 @@ public class AdminService {
 
     public Boolean verifyUser(String email, String password) {
         String passwdHash = getUser(email).getPasswdHash();
-        return AuthTools.verifyPassword(password, passwdHash);
+        return PasswordTools.verifyPassword(password, passwdHash);
     }
 
     public String createSession(String email) {
@@ -100,7 +100,7 @@ public class AdminService {
             return token;
         }
         Admin admin = getUser(email);
-        String sessionToken = AuthTools.generateNewToken();
+        String sessionToken = PasswordTools.generateNewToken();
         admin.setSessionToken(sessionToken);
         adminCache.addAdmin(email, admin);
         adminCache.addSession(email, admin.getSessionToken());

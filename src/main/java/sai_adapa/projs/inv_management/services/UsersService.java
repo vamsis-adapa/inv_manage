@@ -9,7 +9,7 @@ import sai_adapa.projs.inv_management.model.items.ItemWithRating;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
-import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.tools.PasswordTools;
 import sai_adapa.projs.inv_management.tools.SortDetails;
 
 import java.util.List;
@@ -63,7 +63,7 @@ public class UsersService {
     }
 
     public void addUser(String name, String e_mail, String details, String password) {
-        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(AuthTools.encodePassword(password)).build());
+        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());
     }
 
     public Users displayUser(String email) {
@@ -154,7 +154,7 @@ public class UsersService {
             check = 1;
         }
         if (password != null) {
-            users.setPasswdHash(AuthTools.encodePassword(password));
+            users.setPasswdHash(PasswordTools.encodePassword(password));
             check = 1;
         }
         if (check == 0) {
@@ -166,7 +166,7 @@ public class UsersService {
 
     public Boolean verifyUser(String e_mail, String password) {
         String passwdHash = getUser(e_mail).getPasswdHash();
-        return AuthTools.verifyPassword(password, passwdHash);
+        return PasswordTools.verifyPassword(password, passwdHash);
     }
 
 
@@ -177,7 +177,7 @@ public class UsersService {
 
         Users users = getUser(e_mail);
 
-        String sessionToken = AuthTools.generateNewToken();
+        String sessionToken = PasswordTools.generateNewToken();
         users.setSessionToken(sessionToken);
         addUserToCache(users);
         usersRepository.save(users);

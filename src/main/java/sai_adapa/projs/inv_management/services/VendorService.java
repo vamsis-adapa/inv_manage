@@ -7,7 +7,7 @@ import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
-import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.tools.PasswordTools;
 import sai_adapa.projs.inv_management.tools.SortDetails;
 import sai_adapa.projs.inv_management.model.enums.OrderStatus;
 
@@ -45,7 +45,7 @@ public class VendorService {
     }
 
     public void addUser(String name, String email, String description, String passwd) {
-        vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(AuthTools.encodePassword(passwd)).build());
+        vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(PasswordTools.encodePassword(passwd)).build());
     }
 
     public void addVendorToCache(Vendor vendor) {
@@ -77,7 +77,7 @@ public class VendorService {
             check = 1;
         }
         if (password != null) {
-            vendor.setPasswdHash(AuthTools.encodePassword(password));
+            vendor.setPasswdHash(PasswordTools.encodePassword(password));
             check = 1;
         }
         if (check == 0) {
@@ -126,7 +126,7 @@ public class VendorService {
     }
 
     public Boolean verifyUser(String email, String password) {
-        return AuthTools.verifyPassword(password, getUser(email).getPasswdHash());
+        return PasswordTools.verifyPassword(password, getUser(email).getPasswdHash());
     }
 
     public Long addNewItem(String item_name, String description) {
@@ -196,7 +196,7 @@ public class VendorService {
             return session;
         Vendor vendor = getUser(email);
 
-        String sessionToken = AuthTools.generateNewToken();
+        String sessionToken = PasswordTools.generateNewToken();
         vendor.setSessionToken(sessionToken);
         addVendorToCache(vendor);
         vendorRepository.save(vendor);
