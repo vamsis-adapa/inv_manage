@@ -1,9 +1,13 @@
 package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.cache.UserCache;
+import sai_adapa.projs.inv_management.model.items.Item;
+import sai_adapa.projs.inv_management.model.items.ItemWithRating;
+import sai_adapa.projs.inv_management.model.items.Rating;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
@@ -23,10 +27,16 @@ public class UsersService {
     private SessionIdentity sessionIdentity;
     private VendorService vendorService;
     private ItemService itemService;
+    private KafkaTemplate<String, ItemWithRating> kafkaTemplate;
 
     @Autowired
     public UsersService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
+    }
+
+    @Autowired
+    public void setKafkaTemplate(KafkaTemplate<String, ItemWithRating> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Autowired
@@ -128,6 +138,8 @@ public class UsersService {
     }
 
 
+
+
     public void editUser(Users users, String name, String email, String details, String password) {
         int check = 0;
 
@@ -163,7 +175,7 @@ public class UsersService {
     public String createSession(String e_mail) {
         String session = userCache.getSession(e_mail);
         if (session != null)
-                return session;
+            return session;
 
         Users users = getUser(e_mail);
 

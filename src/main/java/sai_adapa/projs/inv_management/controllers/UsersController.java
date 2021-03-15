@@ -3,10 +3,13 @@ package sai_adapa.projs.inv_management.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
+import sai_adapa.projs.inv_management.model.items.Rating;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.io.PreUsers;
 import sai_adapa.projs.inv_management.model.users.io.UserWithSort;
+import sai_adapa.projs.inv_management.services.ItemService;
+import sai_adapa.projs.inv_management.services.RatingService;
 import sai_adapa.projs.inv_management.services.UsersService;
 
 import java.util.List;
@@ -14,12 +17,24 @@ import java.util.List;
 @RestController
 public class UsersController {
 
+    RatingService ratingService;
     SessionIdentity sessionIdentity;
     UsersService usersService;
+    ItemService itemService;
 
     @Autowired
     public UsersController(UsersService usersService) {
         this.usersService = usersService;
+    }
+
+    @Autowired
+    public void setRatingService(RatingService ratingService) {
+        this.ratingService = ratingService;
+    }
+
+    @Autowired
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
     }
 
     @Autowired
@@ -64,23 +79,25 @@ public class UsersController {
         usersService.editUser(usersService.getUser(preUsers.getEmail()), preUsers.getName(), preUsers.getChanged_email(), preUsers.getDetails(), preUsers.getPasswd());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"},params = {"pageSize","pageNumber"})
-    public List<DisplayableOrder> getOrderReport(@RequestBody UserWithSort userWithSort, @RequestParam Integer pageSize, @RequestParam Integer pageNumber)
-    {
-        if (!sessionIdentity.verifyIdentity(userWithSort.getUserEmail()))
-        {
+    @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"}, params = {"pageSize", "pageNumber"})
+    public List<DisplayableOrder> getOrderReport(@RequestBody UserWithSort userWithSort, @RequestParam Integer pageSize, @RequestParam Integer pageNumber) {
+        if (!sessionIdentity.verifyIdentity(userWithSort.getUserEmail())) {
             //throw
             return null;
         }
-        if ( pageNumber ==null)
+        if (pageNumber == null)
             pageNumber = 0;
-        if( pageSize == null)
+        if (pageSize == null)
             pageSize = 5;
-        if ( userWithSort.getSortDetailsList()== null)
-        {
-          return   usersService.getUserOrderReportPaginated(userWithSort.getUserEmail(),pageSize,pageNumber);
+        if (userWithSort.getSortDetailsList() == null) {
+            return usersService.getUserOrderReportPaginated(userWithSort.getUserEmail(), pageSize, pageNumber);
         }
-        return  usersService.getUserOrderReportPaginatedAndSorted(userWithSort.getUserEmail(),pageSize,pageNumber,userWithSort.getSortDetailsList());
+        return usersService.getUserOrderReportPaginatedAndSorted(userWithSort.getUserEmail(), pageSize, pageNumber, userWithSort.getSortDetailsList());
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/item/{id}/rate")
+    public void rateItem(@PathVariable Long id, Rating rating) {
+        ratingService.rateItem(itemService.getItemById(id), rating);
     }
 
 
@@ -92,6 +109,4 @@ public class UsersController {
         }
         usersService.endSession(usersService.getUser(preUsers.getEmail()));
     }
-
-
 }

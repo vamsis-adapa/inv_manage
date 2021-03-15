@@ -15,9 +15,10 @@ public class Item {
 
     @Id
     @GeneratedValue( generator = "identity")
-    private Long item_id;
+    protected Long item_id;
     @Setter
-    private String name;
+    protected String name;
     @Setter
-    private String description;
+    protected String description;
+
 }
