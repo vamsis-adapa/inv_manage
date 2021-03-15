@@ -25,11 +25,17 @@ public class ResponseHandler {
         return;
     }
 
+
+
     public static void resourceNotFound(HttpServletResponse response) {
         response.setStatus(404);
         return;
     }
 
+    public static void resourceNotCreated(HttpServletResponse response) {
+        response.setStatus(409);
+        return;
+    }
 
     public static void insufficientDetailsInRequest(HttpServletResponse response) {
         response.setStatus(409);
