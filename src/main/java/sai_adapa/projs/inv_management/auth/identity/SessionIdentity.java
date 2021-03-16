@@ -23,7 +23,6 @@ public class SessionIdentity {
         if (email.equals(this.email)) {
             return true;
         }
-        System.out.println("not the required person");
         return false;
     }
 

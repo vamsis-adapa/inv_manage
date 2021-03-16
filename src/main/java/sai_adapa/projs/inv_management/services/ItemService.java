@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import sai_adapa.projs.inv_management.exceptions.ItemNotFoundException;
 import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.items.io.ItemDetails;
 import sai_adapa.projs.inv_management.model.items.io.VendorCostMap;
@@ -34,11 +35,14 @@ public class ItemService {
         return item.getItem_id();
     }
 
-    public Item getItemById(Long item_id) {
-        return itemRepository.findById(item_id).get();
+    public Item getItemById(Long item_id) throws ItemNotFoundException {
+        Item item = itemRepository.findById(item_id).get();
+        if (item == null)
+            throw (new ItemNotFoundException("requested item (itemId: "+item_id+") not found"));
+        return item;
     }
 
-    public ItemDetails getItemDetails(Long item_id) {
+    public ItemDetails getItemDetails(Long item_id) throws ItemNotFoundException {
         Item item = getItemById(item_id);
         List<VendorCostMap> listOfVendors = stockService.getStockOfItem(item_id).stream().map(stock -> new VendorCostMap(stock.getVendor().getEmail(), stock.getCost(), stock.getInv_num())).collect(Collectors.toList());
         return ItemDetails.builder().Details(item.getDescription()).name(item.getName()).listOfVendors(listOfVendors).build();
@@ -48,7 +52,7 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public void editItem(Long item_id, String name, String description) {
+    public void editItem(Long item_id, String name, String description) throws ItemNotFoundException {
         Item item = getItemById(item_id);
         if (name != null) {
             item.setName(name);
@@ -66,7 +70,7 @@ public class ItemService {
 
     public Slice<Item> paginatedGetSearchedItems(Integer pageNumber, Integer pageSize, String searchQuery) {
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
-        searchQuery = "%"+searchQuery+"%";
+        searchQuery = "%" + searchQuery + "%";
         return itemRepository.findAllByNameLikeOrDescriptionLike(searchQuery, searchQuery, pageRequest);
     }
 
@@ -77,7 +81,7 @@ public class ItemService {
     }
 
     //    public void updateItem(Long item_id)
-    public void deleteItem(Long item_id) {
+    public void deleteItem(Long item_id) throws ItemNotFoundException {
         itemRepository.delete(getItemById(item_id));
     }
 }

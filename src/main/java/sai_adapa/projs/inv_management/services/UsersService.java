@@ -1,13 +1,12 @@
 package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.cache.UserCache;
-import sai_adapa.projs.inv_management.model.items.Item;
-import sai_adapa.projs.inv_management.model.items.ItemWithRating;
-import sai_adapa.projs.inv_management.model.items.Rating;
+import sai_adapa.projs.inv_management.exceptions.SessionCreateFailedException;
+import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
@@ -64,11 +63,13 @@ public class UsersService {
         this.orderService = orderService;
     }
 
-    public void addUser(String name, String e_mail, String details, String password) {
+    public void addUser(String name, String e_mail, String details, String password) throws DataIntegrityViolationException {
+
         usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(AuthTools.encodePassword(password)).build());
     }
 
-    public Users displayUser(String email) {
+    public Users displayUser(String email) throws UserNotFoundException {
+
         return getReturnable(getUser(email));
     }
 
@@ -88,39 +89,51 @@ public class UsersService {
             userCache.addUserFromSession(users.getSessionToken(), users);
     }
 
-    public Users getUser(String e_mail) {
+    public Users getUser(String e_mail) throws UserNotFoundException {
         Users users = userCache.getUserFromEmail(e_mail);
         if (users != null)
             return users;
         users = usersRepository.findByEmail(e_mail);
+        if (users == null) {
+            throw new UserNotFoundException();
+        }
         addUserToCache(users);
         return users;
     }
 
 
-    public Users getUser(UUID uuid) {
+    public Users getUser(UUID uuid) throws UserNotFoundException {
         Users users = userCache.getUserFromUUID(uuid);
         if (users != null)
             return users;
         users = usersRepository.findByUserId(uuid);
+        if (users == null) {
+            throw new UserNotFoundException();
+        }
         addUserToCache(users);
         return users;
     }
 
-    public Users getUsersBySession(String token) {
+    public Users getUsersBySession(String token) throws UserNotFoundException {
         Users users = userCache.getUserFromSession(token);
         if (users != null)
             return users;
         users = usersRepository.findBySessionToken(token);
+        if (users == null) {
+            throw new UserNotFoundException();
+        }
         addUserToCache(users);
         return users;
     }
 
     public Boolean verifySession(String token) {
-        Users users = getUsersBySession(token);
-        if (users != null)
-            return true;
-        return false;
+        Users users;
+        try {
+            users = getUsersBySession(token);
+        } catch (UserNotFoundException e) {
+            return false;
+        }
+        return users != null;
     }
 
     public void removeUserFromCache(Users users) {
@@ -132,6 +145,7 @@ public class UsersService {
             userCache.removeUserSession(users.getSessionToken());
     }
 
+    //TODO: Edit
     public void deleteUser(Users users) {
         removeUserFromCache(users);
         usersRepository.delete(users);
@@ -167,17 +181,26 @@ public class UsersService {
     }
 
     public Boolean verifyUser(String e_mail, String password) {
-        String passwdHash = getUser(e_mail).getPasswdHash();
+        String passwdHash;
+        try {
+            passwdHash = getUser(e_mail).getPasswdHash();
+        } catch (UserNotFoundException e) {
+            return false;
+        }
         return AuthTools.verifyPassword(password, passwdHash);
     }
 
 
-    public String createSession(String e_mail) {
+    public String createSession(String e_mail) throws SessionCreateFailedException {
         String session = userCache.getSession(e_mail);
         if (session != null)
             return session;
-
-        Users users = getUser(e_mail);
+        Users users;
+        try {
+            users = getUser(e_mail);
+        } catch (UserNotFoundException e) {
+            throw new SessionCreateFailedException();
+        }
 
         String sessionToken = AuthTools.generateNewToken();
         users.setSessionToken(sessionToken);
@@ -200,17 +223,17 @@ public class UsersService {
         usersRepository.save(users);
     }
 
-    public List<DisplayableOrder> getUserOrderReport(String email) {
+    public List<DisplayableOrder> getUserOrderReport(String email) throws UserNotFoundException {
         Users users = getUser(email);
         return orderService.findOrdersOfUser(users.getUserId()).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
 
-    public List<DisplayableOrder> getUserOrderReportPaginated(String email, Integer pageSize, Integer pageNumber) {
+    public List<DisplayableOrder> getUserOrderReportPaginated(String email, Integer pageSize, Integer pageNumber) throws UserNotFoundException {
         Users users = getUser(email);
         return orderService.findOrdersOfUserPaginated(users.getUserId(), pageNumber, pageSize).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
 
-    public List<DisplayableOrder> getUserOrderReportPaginatedAndSorted(String email, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList) {
+    public List<DisplayableOrder> getUserOrderReportPaginatedAndSorted(String email, Integer pageSize, Integer pageNumber, List<SortDetails> sortDetailsList) throws UserNotFoundException {
         Users users = getUser(email);
         return orderService.findOrdersOfUserPaginatedAndSorted(users.getUserId(), pageNumber, pageSize, sortDetailsList).stream().map(orders -> orderService.createDisplayableOrder(orders)).collect(Collectors.toList());
     }
