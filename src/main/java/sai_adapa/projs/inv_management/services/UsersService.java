@@ -2,11 +2,13 @@ package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.cache.UserCache;
 import sai_adapa.projs.inv_management.exceptions.SessionCreateFailedException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
+import sai_adapa.projs.inv_management.model.items.ItemWithRating;
 import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
