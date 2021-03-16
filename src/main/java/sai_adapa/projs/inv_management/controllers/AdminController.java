@@ -59,9 +59,7 @@ public class AdminController {
         } catch (DataIntegrityViolationException e) {
             ResponseHandler.userAlreadyExists(response);
             return;
-        }
-        catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             ResponseHandler.insufficientDetailsInRequest(response);
         }
         ResponseHandler.successfulCreate(response);
@@ -124,7 +122,7 @@ public class AdminController {
     public void deleteVendor(@RequestBody PreVendor preVendor, HttpServletResponse response) {
         try {
             vendorService.deleteUser(vendorService.getUser(preVendor.getEmail()));
-        } catch (NullPointerException |UserNotFoundException e) {
+        } catch (NullPointerException | UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }
 
@@ -135,7 +133,7 @@ public class AdminController {
     public void deleteUser(@RequestBody PreUsers preUsers, HttpServletResponse response) {
         try {
             usersService.deleteUser(usersService.getUser(preUsers.getEmail()));
-        } catch (NullPointerException e) {
+        } catch (UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }
     }

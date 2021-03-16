@@ -1,6 +1,7 @@
 package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.cache.VendorCache;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
@@ -47,7 +48,7 @@ public class VendorService {
         this.stockService = stockService;
     }
 
-    public void addUser(String name, String email, String description, String passwd) {
+    public void addUser(String name, String email, String description, String passwd) throws DataIntegrityViolationException {
         vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(AuthTools.encodePassword(passwd)).build());
     }
 
