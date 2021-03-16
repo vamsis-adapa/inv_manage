@@ -149,8 +149,9 @@ public class VendorService {
         return itemService.addItem(item_name, description);
     }
 
-    public List<Stock> getVendorStock(String email) {
+    public List<Stock> getVendorStock(String email) throws UserNotFoundException {
         return stockService.getVendorStock(email);
+
     }
 
     public Long addStock(String vendor_email, Long item_id, Double price, Integer num_items) throws StockCreationUnsuccessfulException {

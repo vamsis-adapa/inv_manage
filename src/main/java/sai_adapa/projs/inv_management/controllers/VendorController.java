@@ -161,7 +161,14 @@ public class VendorController {
     public List<Stock> viewStock(@RequestBody PreVendorWithItem preVendorWithItem, HttpServletResponse response) {
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, preVendorWithItem.getEmail(), response))
             return null;
-        return vendorService.getVendorStock(preVendorWithItem.getEmail());
+        try {
+            return vendorService.getVendorStock(preVendorWithItem.getEmail());
+        }
+        catch (UserNotFoundException e)
+        {
+            ResponseHandler.actionFailed(response,"user Not found");
+        }
+        return null ;
     }
 
     @RequestMapping(value = {"/vendor/orders"})

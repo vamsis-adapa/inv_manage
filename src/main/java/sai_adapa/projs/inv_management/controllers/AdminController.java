@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
+import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.users.Admin;
 import sai_adapa.projs.inv_management.model.users.io.PreAdmin;
 import sai_adapa.projs.inv_management.model.users.io.PreUsers;
@@ -123,7 +124,7 @@ public class AdminController {
     public void deleteVendor(@RequestBody PreVendor preVendor, HttpServletResponse response) {
         try {
             vendorService.deleteUser(vendorService.getUser(preVendor.getEmail()));
-        } catch (NullPointerException e) {
+        } catch (NullPointerException |UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }
 

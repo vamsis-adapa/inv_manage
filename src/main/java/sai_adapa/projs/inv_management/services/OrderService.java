@@ -59,12 +59,12 @@ public class OrderService {
         return orders.getId();
     }
 
-    public String createOrder(Stock stock, UUID userID, Integer numberOfItems) {
+    public Orders createOrder(Stock stock, UUID userID, Integer numberOfItems) {
         Double total_cost = numberOfItems * stock.getCost();
         stockService.buyStock(stock.getId(), numberOfItems);
         Orders orders = Orders.builder().orderStatus(OrderStatus.Pending).userId(userID).vendorId(stock.getVendor().getVendorId()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).individualCost(stock.getCost()).totalCost(total_cost).build();
         orderRepository.save(orders);
-        return orders.getId();
+        return orders;
     }
 
     //Todo: check sneaky throw usage

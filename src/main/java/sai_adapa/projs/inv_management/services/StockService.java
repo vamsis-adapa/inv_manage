@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.exceptions.ItemNotFoundException;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
+import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.StockRepository;
@@ -38,7 +39,7 @@ public class StockService {
         try {
             stock = Stock.builder().item(itemService.getItemById(item_id)).vendor(vendorService.getUser(vendor_email)).inv_num(inv_num).cost(price).build();
             stockRepository.save(stock);
-        } catch (ItemNotFoundException | DataIntegrityViolationException e) {
+        } catch (ItemNotFoundException | DataIntegrityViolationException | UserNotFoundException e) {
             //TODO: add message to exception
             throw (new StockCreationUnsuccessfulException());
         }
@@ -49,9 +50,8 @@ public class StockService {
         try {
 
 
-        stockRepository.delete(stockRepository.findStockByVendorAndItem(vendorService.getUser(vendor_email), itemService.getItemById(item_id)));}
-        catch (ItemNotFoundException e)
-        {
+            stockRepository.delete(stockRepository.findStockByVendorAndItem(vendorService.getUser(vendor_email), itemService.getItemById(item_id)));
+        } catch (ItemNotFoundException | UserNotFoundException e) {
             throw new StockNotFoundException();
         }
     }
@@ -84,7 +84,7 @@ public class StockService {
     public Stock getParticularStock(String vendor_email, Long item_id) throws StockNotFoundException {
         try {
             return stockRepository.findStockByVendorAndItem(vendorService.getUser(vendor_email), itemService.getItemById(item_id));
-        } catch (ItemNotFoundException e) {
+        } catch (ItemNotFoundException | UserNotFoundException exception) {
             throw new StockNotFoundException();
         }
     }
@@ -92,7 +92,7 @@ public class StockService {
     public Boolean checkExistingStock(String vendor_email, Long item_id) {
         try {
             return stockRepository.existsStockByVendorAndItem(vendorService.getUser(vendor_email), itemService.getItemById(item_id));
-        } catch (ItemNotFoundException e) {
+        } catch (ItemNotFoundException | UserNotFoundException exception) {
             return false;
         }
 
@@ -113,12 +113,15 @@ public class StockService {
     }
 
     public boolean checkAvailability(Long item_id, String vendor_email, Integer required) throws StockNotFoundException {
-
+//TODO : FIX
         return (required >= getParticularStock(vendor_email, item_id).getInv_num());
     }
 
-    public List<Stock> getVendorStock(String vendor_email) {
+    public List<Stock> getVendorStock(String vendor_email) throws UserNotFoundException {
+
         Vendor vendor = vendorService.getUser(vendor_email);
         return stockRepository.findAllByVendor(vendor);
+
+
     }
 }
