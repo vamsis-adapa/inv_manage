@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -58,6 +59,7 @@ public class PaymentService {
 
 
     //todo use more lambdas
+    @Async
     public Future<PaymentStatus> payForOrder(Orders orders, String userEmail, String vendorEmail, Double amount) {
 
         Integer amountInteger = ceilDoubleToInteger(amount);
@@ -95,6 +97,5 @@ public class PaymentService {
 
         orderService.changeOrderStatus(orders, PaymentStatus.Successful);
         return new AsyncResult<PaymentStatus>(PaymentStatus.Successful);
-
     }
 }

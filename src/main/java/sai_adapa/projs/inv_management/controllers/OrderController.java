@@ -26,6 +26,7 @@ public class OrderController {
     ItemService itemService;
     SessionIdentity sessionIdentity;
     OrderService orderService;
+    PaymentService paymentService;
 
     @Autowired
     public OrderController(StockService stockService, VendorService vendorService, UsersService usersService, ItemService itemService) {
@@ -33,6 +34,11 @@ public class OrderController {
         this.vendorService = vendorService;
         this.usersService = usersService;
         this.itemService = itemService;
+    }
+
+    @Autowired
+    public void setPaymentService(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 
     public void setOrderService(OrderService orderService) {
@@ -46,10 +52,9 @@ public class OrderController {
     //add role auth users
     @RequestMapping(method = RequestMethod.POST, value = {"/order"})
     public Orders handleOrder(@RequestBody PreUserWithOrder preUserWithOrder, HttpServletResponse response) {
-        if( !sessionIdentity.verifyIdentity(preUserWithOrder.getEmail()))
-        {
+        if (!sessionIdentity.verifyIdentity(preUserWithOrder.getEmail())) {
             //throw
-            return null ;
+            return null;
         }
 
         try {
@@ -57,20 +62,19 @@ public class OrderController {
             Vendor vendor = vendorService.getUser((preUserWithOrder.getVendorEmail()));
 
             if (stockService.checkAvailability(preUserWithOrder.getItemId(), vendor.getEmail(), preUserWithOrder.getNumberOfItems())) {
-                return orderService.createOrder(stockService.getParticularStock(vendor.getEmail(), preUserWithOrder.getItemId()), users.getUserId(), preUserWithOrder.getNumberOfItems());
+                Orders orders = orderService.createOrder(stockService.getParticularStock(vendor.getEmail(), preUserWithOrder.getItemId()), users.getUserId(), preUserWithOrder.getNumberOfItems());
+                paymentService.payForOrder(orders,users.getEmail(),vendor.getEmail(),orders.getTotalCost());
+                return orders;
             }
-            //throw
+
+            //TODO ADD RESPONSE
             return null;
-        }
-        catch (UserNotFoundException e)
-        {
+        } catch (UserNotFoundException e) {
             ResponseHandler.actionFailed(response, "User not found");
-        }
-        catch (StockNotFoundException e)
-        {
+        } catch (StockNotFoundException e) {
             ResponseHandler.resourceNotFound(response);
         }
-
+    //TODO add resp
         return null;
     }
 

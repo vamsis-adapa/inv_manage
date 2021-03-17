@@ -2,6 +2,7 @@ package sai_adapa.projs.inv_management.model.items;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ public class Item implements Serializable {
     @GeneratedValue( generator = "identity")
     protected Long item_id;
     @Setter
+    @Column(unique = true)
     protected String name;
     @Setter
     protected String description;

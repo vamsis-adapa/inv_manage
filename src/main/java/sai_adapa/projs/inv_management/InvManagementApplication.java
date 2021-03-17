@@ -12,6 +12,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
+import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
+import sai_adapa.projs.inv_management.model.items.Stock;
+import sai_adapa.projs.inv_management.model.orders.Orders;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.services.*;
 
@@ -43,6 +47,10 @@ public class InvManagementApplication {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private PaymentService paymentService;
+
+
     public static void main(String[] args) {
         SpringApplication.run(InvManagementApplication.class, args);
     }
@@ -58,10 +66,10 @@ public class InvManagementApplication {
         Long it1 = itemService.addItem("choc", "brown and hard chocolate");
         Long it2 = itemService.addItem("choc 2", "black and bitter chocolate");
         Long ite = itemService.addItem("straw", "yare yareada chocolate");
-        Long ite2 = itemService.addItem("dkjs;a", ";ldjaf_");
-        Long ite3 = itemService.addItem("dfja;", "chds;f");
-        Long ite4 = itemService.addItem("sdlfjchocolate;", "jdfaksljfla chocolate");
-        Long ite5 = itemService.addItem("trex", "dljkfsa;chocolate");
+        Long ite2 = itemService.addItem("pineapple", ";ldjaf_");
+        Long ite3 = itemService.addItem("pink popcorn", "chds;f");
+        Long ite4 = itemService.addItem("golden crown;", "jdfaksljfla chocolate");
+        Long ite5 = itemService.addItem("t-rex statue", "dljkfsa;chocolate");
 
 //        vendorService.addUser("hit", "mail", "dlak;j", "choc");
 //        vendorService.addUser("meow cat shop", "post", "drifkdlf;j; ;dalkfj", "fire");
@@ -81,6 +89,29 @@ public class InvManagementApplication {
 //        System.out.println(itemService.paginatedGetAllItem(2, 3).stream().collect(Collectors.toList()));
         System.out.println(itemService.paginatedGetSearchedItems(0, 6, "choc").getContent().stream().map(item -> item.getName()).collect(Collectors.toList()));
         System.out.println("coffee");
+
+
+        vendorService.addUser("straw", "v@gmail.com", "la;dkjf", "choc");
+        try {
+            vendorService.addStock("v@gmail.com", it1, 76.00, 65);
+        } catch (StockCreationUnsuccessfulException e) {
+            e.printStackTrace();
+        }
+
+        usersService.addUser("meow", "u@gmail.com", "woah i can buy", "choc");
+        Stock stock;
+        try {
+            stock = stockService.getParticularStock("v@gmail.com", it1);
+        } catch (StockNotFoundException e) {
+            e.printStackTrace();
+            stock = null;
+        }
+        try {
+            Orders orders =orderService.createOrder(stock, usersService.getUser("u@gmail.com").getUserId(), 2);
+            System.out.println(orders.getId());
+        } catch (Exception e) {
+
+        }
     }
 
 

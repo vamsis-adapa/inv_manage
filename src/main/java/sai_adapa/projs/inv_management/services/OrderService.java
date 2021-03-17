@@ -67,21 +67,19 @@ public class OrderService {
     public void changeOrderStatus(Orders orders, PaymentStatus s) {
         if (s == PaymentStatus.Successful)
             orders.setOrderStatus(OrderStatus.Confirmed);
-        else if (s== PaymentStatus.Failed)
+        else if (s == PaymentStatus.Failed)
             orders.setOrderStatus(OrderStatus.Cancelled);
         orderRepository.save(orders);
     }
 
 
-    public String createOrder(Stock stock, UUID userID, Integer numberOfItems) {
+
+    public Orders createOrder(Stock stock, UUID userID, Integer numberOfItems) {
         Double total_cost = numberOfItems * stock.getCost();
         stockService.buyStock(stock.getId(), numberOfItems);
         Orders orders = Orders.builder().orderStatus(OrderStatus.Pending).userId(userID).vendorId(stock.getVendor().getVendorId()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).individualCost(stock.getCost()).totalCost(total_cost).build();
         orderRepository.save(orders);
-
-        PaymentStatus paymentStatus = PaymentStatus.Successful;
-//        PaymentStatus paymentStatus =paymentService.payForOrder(orders,usersService.getUser(userID).getEmail(),stock.getVendor().getEmail(),total_cost);
-        return orders.getId();
+        return orders;
     }
 
     //Todo: check sneaky throw usage
@@ -94,7 +92,7 @@ public class OrderService {
     }
 
     @SneakyThrows
-    DisplayableOrderVendor createDisplayableOrderVendor(Orders orders)  {
+    DisplayableOrderVendor createDisplayableOrderVendor(Orders orders) {
         String vendorEmail = vendorService.getUser(orders.getVendorId()).getEmail();
         String itemName = itemService.getItemById(orders.getItemId()).getName();
         return DisplayableOrderVendor.builder().id(orders.getId()).vendorEmail(vendorEmail).userID(orders.getUserId()).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();

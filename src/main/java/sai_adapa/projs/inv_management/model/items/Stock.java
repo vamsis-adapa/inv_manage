@@ -18,7 +18,6 @@ public class Stock {
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    @Column(nullable = false)
     Item item;
     @Column(nullable = false)
     Integer inv_num;
@@ -30,7 +29,6 @@ public class Stock {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "vendor_id")
-    @Column(nullable = false)
     private Vendor vendor;
     @CreationTimestamp
     private LocalDateTime DateAdded;
