@@ -13,6 +13,7 @@ import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.tools.SortDetails;
 import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
+import sai_adapa.projs.inv_management.tools.enums.PaymentStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,12 +25,16 @@ public class OrderService {
     UsersService usersService;
     VendorService vendorService;
     StockService stockService;
-    Pageable sortedByPriceDescNameAsc =
-            PageRequest.of(0, 5, Sort.by("price").descending().and(Sort.by("name")));
+    PaymentService paymentService;
 
     @Autowired
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
+    }
+
+    @Autowired
+    public void setPaymentService(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 
     @Autowired
@@ -59,12 +64,24 @@ public class OrderService {
         return orders.getId();
     }
 
-    public Orders createOrder(Stock stock, UUID userID, Integer numberOfItems) {
+    public void changeOrderStatus(Orders orders, PaymentStatus s) {
+        if (s == PaymentStatus.Successful)
+            orders.setOrderStatus(OrderStatus.Confirmed);
+        else if (s== PaymentStatus.Failed)
+            orders.setOrderStatus(OrderStatus.Cancelled);
+        orderRepository.save(orders);
+    }
+
+
+    public String createOrder(Stock stock, UUID userID, Integer numberOfItems) {
         Double total_cost = numberOfItems * stock.getCost();
         stockService.buyStock(stock.getId(), numberOfItems);
         Orders orders = Orders.builder().orderStatus(OrderStatus.Pending).userId(userID).vendorId(stock.getVendor().getVendorId()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).individualCost(stock.getCost()).totalCost(total_cost).build();
         orderRepository.save(orders);
-        return orders;
+
+        PaymentStatus paymentStatus = PaymentStatus.Successful;
+//        PaymentStatus paymentStatus =paymentService.payForOrder(orders,usersService.getUser(userID).getEmail(),stock.getVendor().getEmail(),total_cost);
+        return orders.getId();
     }
 
     //Todo: check sneaky throw usage
@@ -95,17 +112,17 @@ public class OrderService {
         Sort sort;
         if (preSort == null) {
             sort = Sort.by(criteria);
-            if (direction == "des")
+            if (direction.equals("des"))
                 sort = sort.descending();
-            else if (direction == "asc")
+            else if (direction.equals("asc"))
                 sort = sort.ascending();
             return sort;
         }
 
         sort = preSort.and(Sort.by(criteria));
-        if (direction == "des")
+        if (direction.equals("des"))
             sort = sort.descending();
-        else if (direction == "asc")
+        else if (direction.equals("asc"))
             sort = sort.ascending();
         return sort;
     }
