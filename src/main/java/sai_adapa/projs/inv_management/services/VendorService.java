@@ -208,12 +208,11 @@ public class VendorService {
         Vendor vendor = getUser(email);
        
         session = PasswordTools.generateNewToken();
-        vendor.setSessionToken(sessionToken);
+        vendor.setSessionToken(session);
         addVendorToCache(vendor);
         vendorRepository.save(vendor);
 
-
-        return sessionToken;
+        return session;
     }
 
     public void removeSessionCache(Vendor vendor) {

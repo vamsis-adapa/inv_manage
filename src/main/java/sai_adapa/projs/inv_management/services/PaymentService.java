@@ -16,7 +16,7 @@ import sai_adapa.projs.inv_management.exceptions.PaymentFailedException;
 import sai_adapa.projs.inv_management.model.io.EmailsAndAmount;
 import sai_adapa.projs.inv_management.model.io.PaymentResponse;
 import sai_adapa.projs.inv_management.model.orders.Orders;
-import sai_adapa.projs.inv_management.tools.enums.PaymentStatus;
+import sai_adapa.projs.inv_management.model.enums.PaymentStatus;
 
 import java.util.concurrent.Future;
 
