@@ -1,9 +1,6 @@
 package sai_adapa.projs.inv_management.model.orders;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
@@ -16,13 +13,15 @@ import java.util.UUID;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
 @Entity
 public class Orders {
+    String PaymentID;
     @Id
-    private String Id;
+    private String id;
     private UUID vendorId;
     private UUID userId;
     private Long itemId;
