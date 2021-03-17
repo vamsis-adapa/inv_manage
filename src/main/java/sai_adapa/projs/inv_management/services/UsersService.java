@@ -9,10 +9,10 @@ import sai_adapa.projs.inv_management.cache.UserCache;
 import sai_adapa.projs.inv_management.exceptions.SessionCreateFailedException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.items.ItemWithRating;
-import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrder;
+import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
-import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.tools.PasswordTools;
 import sai_adapa.projs.inv_management.tools.SortDetails;
 
 import java.util.List;
@@ -65,9 +65,8 @@ public class UsersService {
         this.orderService = orderService;
     }
 
-    public void addUser(String name, String e_mail, String details, String password) throws DataIntegrityViolationException {
-
-        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(AuthTools.encodePassword(password)).build());
+    public void addUser(String name, String e_mail, String details, String password) {
+        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());
     }
 
     public Users displayUser(String email) throws UserNotFoundException {
@@ -172,7 +171,7 @@ public class UsersService {
             check = 1;
         }
         if (password != null) {
-            users.setPasswdHash(AuthTools.encodePassword(password));
+            users.setPasswdHash(PasswordTools.encodePassword(password));
             check = 1;
         }
         if (check == 0) {
@@ -189,7 +188,7 @@ public class UsersService {
         } catch (UserNotFoundException e) {
             return false;
         }
-        return AuthTools.verifyPassword(password, passwdHash);
+        return PasswordTools.verifyPassword(password, passwdHash);
     }
 
 
@@ -204,7 +203,7 @@ public class UsersService {
             throw new SessionCreateFailedException();
         }
 
-        String sessionToken = AuthTools.generateNewToken();
+        String sessionToken = PasswordTools.generateNewToken();
         users.setSessionToken(sessionToken);
         addUserToCache(users);
         usersRepository.save(users);

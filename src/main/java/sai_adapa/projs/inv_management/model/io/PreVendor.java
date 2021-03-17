@@ -1,4 +1,4 @@
-package sai_adapa.projs.inv_management.model.users.io;
+package sai_adapa.projs.inv_management.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

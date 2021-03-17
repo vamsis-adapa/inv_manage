@@ -1,11 +1,8 @@
-package sai_adapa.projs.inv_management.model.orders.io;
+package sai_adapa.projs.inv_management.model.io;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import sai_adapa.projs.inv_management.model.orders.Orders;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter

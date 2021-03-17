@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.exceptions.ItemNotFoundException;
 import sai_adapa.projs.inv_management.model.io.ItemWithPrice;
 import sai_adapa.projs.inv_management.model.items.Item;
-import sai_adapa.projs.inv_management.model.items.io.ItemDetails;
+import sai_adapa.projs.inv_management.model.io.ItemDetails;
 import sai_adapa.projs.inv_management.services.ItemService;
 import sai_adapa.projs.inv_management.tools.ResponseHandler;
 

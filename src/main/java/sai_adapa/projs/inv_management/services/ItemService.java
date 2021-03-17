@@ -10,8 +10,8 @@ import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.model.io.ItemWithPrice;
 import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.items.Stock;
-import sai_adapa.projs.inv_management.model.items.io.ItemDetails;
-import sai_adapa.projs.inv_management.model.items.io.VendorCostMap;
+import sai_adapa.projs.inv_management.model.io.ItemDetails;
+import sai_adapa.projs.inv_management.model.io.VendorCostMap;
 import sai_adapa.projs.inv_management.repositories.sql.ItemRepository;
 
 import java.util.List;

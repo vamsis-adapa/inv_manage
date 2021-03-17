@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class AuthTools {
+public class PasswordTools {
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe

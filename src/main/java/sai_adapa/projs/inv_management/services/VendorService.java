@@ -8,12 +8,12 @@ import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulExcept
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.items.Stock;
-import sai_adapa.projs.inv_management.model.orders.io.DisplayableOrderVendor;
+import sai_adapa.projs.inv_management.model.io.DisplayableOrderVendor;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.repositories.sql.VendorRepository;
-import sai_adapa.projs.inv_management.tools.AuthTools;
+import sai_adapa.projs.inv_management.tools.PasswordTools;
 import sai_adapa.projs.inv_management.tools.SortDetails;
-import sai_adapa.projs.inv_management.tools.enums.OrderStatus;
+import sai_adapa.projs.inv_management.model.enums.OrderStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,8 +48,8 @@ public class VendorService {
         this.stockService = stockService;
     }
 
-    public void addUser(String name, String email, String description, String passwd) throws DataIntegrityViolationException {
-        vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(AuthTools.encodePassword(passwd)).build());
+    public void addUser(String name, String email, String description, String passwd) {
+        vendorRepository.save(Vendor.builder().name(name).email(email).description(description).passwdHash(PasswordTools.encodePassword(passwd)).build());
     }
 
     public void addVendorToCache(Vendor vendor) {
@@ -81,7 +81,7 @@ public class VendorService {
             check = 1;
         }
         if (password != null) {
-            vendor.setPasswdHash(AuthTools.encodePassword(password));
+            vendor.setPasswdHash(PasswordTools.encodePassword(password));
             check = 1;
         }
         if (check == 0) {
@@ -143,7 +143,7 @@ public class VendorService {
     }
 
     public Boolean verifyUser(String email, String password) throws UserNotFoundException {
-        return AuthTools.verifyPassword(password, getUser(email).getPasswdHash());
+        return PasswordTools.verifyPassword(password, getUser(email).getPasswdHash());
     }
 
     public Long addNewItem(String item_name, String description) {
@@ -202,12 +202,12 @@ public class VendorService {
 
     public String createSession(String email) throws UserNotFoundException {
         String session = vendorCache.getSession(email);
-        String sessionToken = null;
         if (session != null)
             return session;
 
         Vendor vendor = getUser(email);
-        sessionToken = AuthTools.generateNewToken();
+       
+        session = PasswordTools.generateNewToken();
         vendor.setSessionToken(sessionToken);
         addVendorToCache(vendor);
         vendorRepository.save(vendor);
