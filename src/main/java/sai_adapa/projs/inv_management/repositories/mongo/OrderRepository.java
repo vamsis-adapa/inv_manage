@@ -13,8 +13,11 @@ import java.util.UUID;
 @Repository
 public interface OrderRepository extends MongoRepository<Orders, String> {
     List<Orders> findAllByUserId(UUID userId);
+
     List<Orders> findAllByVendorId(UUID vendorId);
+
     Page<Orders> findAllByUserId(UUID uuid, Pageable pageable);
+
     Page<Orders> findAllByVendorId(UUID uuid, Pageable pageable);
 
 }

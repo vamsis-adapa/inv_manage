@@ -34,7 +34,7 @@ public class VendorVerifierInterceptor implements HandlerInterceptor {
         try {
             vendor = vendorService.getUserBySession(request.getHeader("session_token"));
         } catch (UserNotFoundException e) {
-            vendor =null;
+            vendor = null;
         }
         if (vendor != null) {
             sessionIdentity.setIdentity(vendor.getEmail());

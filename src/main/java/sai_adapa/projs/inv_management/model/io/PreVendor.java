@@ -13,7 +13,6 @@ import lombok.Setter;
 public class PreVendor {
 
 
-
     private String name;
     private String email;
     private String changed_email;

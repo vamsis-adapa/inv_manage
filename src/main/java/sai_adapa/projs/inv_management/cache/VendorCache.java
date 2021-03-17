@@ -4,7 +4,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.Vendor;
 
 import java.util.UUID;

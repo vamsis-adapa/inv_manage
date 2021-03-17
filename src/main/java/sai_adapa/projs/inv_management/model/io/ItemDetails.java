@@ -11,9 +11,9 @@ import java.util.List;
 @Builder
 public class ItemDetails {
 
- String name;
- String Details;
- List<VendorCostMap> listOfVendors;
+    String name;
+    String Details;
+    List<VendorCostMap> listOfVendors;
 
 
 }

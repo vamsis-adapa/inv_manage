@@ -30,13 +30,12 @@ public class UsersVerifierInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
-        try{
-        if (usersService.verifySession(request.getHeader("session_token"))) {
-            identity.setIdentity(usersService.getUsersBySession(request.getHeader("session_token")).getEmail());
-            return true;
-        }}
-        catch (UserNotFoundException e)
-        {
+        try {
+            if (usersService.verifySession(request.getHeader("session_token"))) {
+                identity.setIdentity(usersService.getUsersBySession(request.getHeader("session_token")).getEmail());
+                return true;
+            }
+        } catch (UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
             return false;
         }

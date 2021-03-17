@@ -34,7 +34,7 @@ public class Admin implements Serializable {
     @Column(nullable = false)
     private String passwdHash;
     @Setter
-    @Column( nullable = true)
+    @Column(nullable = true)
     private String sessionToken;
 
 

@@ -11,12 +11,15 @@ import java.util.List;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-public List<Stock> findAllByVendor(Vendor vendor);
-public Stock findStockByVendorAndItem(Vendor vendor, Item item);
-public  boolean existsStockByVendorAndItem(Vendor vendor, Item item);
+    List<Stock> findAllByVendor(Vendor vendor);
 
-public List<Stock>findAllByItem(Item item);
+    Stock findStockByVendorAndItem(Vendor vendor, Item item);
 
-public List<Vendor>findDistinctVendorByItem(Item item);
-public Stock findStockById(Long id);
+    boolean existsStockByVendorAndItem(Vendor vendor, Item item);
+
+    List<Stock> findAllByItem(Item item);
+
+    List<Vendor> findDistinctVendorByItem(Item item);
+
+    Stock findStockById(Long id);
 }

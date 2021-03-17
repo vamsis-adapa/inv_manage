@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
+import sai_adapa.projs.inv_management.model.io.PreUserWithOrder;
 import sai_adapa.projs.inv_management.model.orders.Orders;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.users.Vendor;
-import sai_adapa.projs.inv_management.model.io.PreUserWithOrder;
 import sai_adapa.projs.inv_management.services.*;
 import sai_adapa.projs.inv_management.tools.ResponseHandler;
 
@@ -63,7 +63,7 @@ public class OrderController {
 
             if (stockService.checkAvailability(preUserWithOrder.getItemId(), vendor.getEmail(), preUserWithOrder.getNumberOfItems())) {
                 Orders orders = orderService.createOrder(stockService.getParticularStock(vendor.getEmail(), preUserWithOrder.getItemId()), users.getUserId(), preUserWithOrder.getNumberOfItems());
-                paymentService.payForOrder(orders,users.getEmail(),vendor.getEmail(),orders.getTotalCost());
+                paymentService.payForOrder(orders, users.getEmail(), vendor.getEmail(), orders.getTotalCost());
                 return orders;
             }
 
@@ -74,7 +74,7 @@ public class OrderController {
         } catch (StockNotFoundException e) {
             ResponseHandler.resourceNotFound(response);
         }
-    //TODO add resp
+        //TODO add resp
         return null;
     }
 

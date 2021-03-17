@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class DisplayableOrder {
     private String id;
-    private String  vendorEmail;
+    private String vendorEmail;
     private String userEmail;
     private Long itemId;
     private String itemName;

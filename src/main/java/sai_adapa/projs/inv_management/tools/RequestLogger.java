@@ -1,6 +1,5 @@
 package sai_adapa.projs.inv_management.tools;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.zalando.logbook.Logbook;
 

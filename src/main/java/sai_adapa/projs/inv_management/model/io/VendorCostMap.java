@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VendorCostMap{
-        String vendor_email;
-        Double cost;
-        Integer numberOfItemsInStock;
+public class VendorCostMap {
+    String vendor_email;
+    Double cost;
+    Integer numberOfItemsInStock;
 
-        }
+}

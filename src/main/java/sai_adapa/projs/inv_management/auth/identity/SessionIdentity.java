@@ -20,10 +20,7 @@ public class SessionIdentity {
 
     public Boolean verifyIdentity(String email) {
 
-        if (email.equals(this.email)) {
-            return true;
-        }
-        return false;
+        return email.equals(this.email);
     }
 
 }

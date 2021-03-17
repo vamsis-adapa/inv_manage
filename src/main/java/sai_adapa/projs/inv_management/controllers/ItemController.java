@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sai_adapa.projs.inv_management.exceptions.ItemNotFoundException;
+import sai_adapa.projs.inv_management.model.io.ItemDetails;
 import sai_adapa.projs.inv_management.model.io.ItemWithPrice;
 import sai_adapa.projs.inv_management.model.items.Item;
-import sai_adapa.projs.inv_management.model.io.ItemDetails;
 import sai_adapa.projs.inv_management.services.ItemService;
 import sai_adapa.projs.inv_management.tools.ResponseHandler;
 
@@ -35,13 +35,12 @@ public class ItemController {
         if (searchWord == null)
             return itemService.paginatedGetAllItem(pageNumber, pageSize).getContent();
         else
-            return itemService.paginatedGetSearchedItems(pageNumber,pageSize,searchWord).getContent();
+            return itemService.paginatedGetSearchedItems(pageNumber, pageSize, searchWord).getContent();
     }
 
 
     @RequestMapping(value = {"/items/min_price"})
-    public List<ItemWithPrice> listAllItemWithMinPrice()
-    {
+    public List<ItemWithPrice> listAllItemWithMinPrice() {
         return itemService.getAllItemsWithLeastPrice();
     }
 
@@ -50,9 +49,7 @@ public class ItemController {
     public ItemDetails getItem(@PathVariable Long id, HttpServletResponse response) {
         try {
             return itemService.getItemDetails(id);
-        }
-        catch (ItemNotFoundException e)
-        {
+        } catch (ItemNotFoundException e) {
             ResponseHandler.resourceNotFound(response);
         }
         return null;

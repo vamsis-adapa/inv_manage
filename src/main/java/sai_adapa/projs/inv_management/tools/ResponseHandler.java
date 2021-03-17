@@ -52,7 +52,7 @@ public class ResponseHandler {
         } catch (Exception e) {
         }
         return;
-            
+
     }
 
     public static void userDoesNotExist(HttpServletResponse response) {

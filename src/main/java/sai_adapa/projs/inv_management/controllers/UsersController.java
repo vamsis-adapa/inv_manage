@@ -5,11 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.exceptions.SessionCreateFailedException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
-import sai_adapa.projs.inv_management.model.items.Rating;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
-import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.model.io.PreUsers;
 import sai_adapa.projs.inv_management.model.io.UserWithSort;
+import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.services.ItemService;
 import sai_adapa.projs.inv_management.services.RatingService;
 import sai_adapa.projs.inv_management.services.UsersService;
@@ -55,7 +54,7 @@ public class UsersController {
             return usersService.getUser(sessionIdentity.getEmail());
         } catch (UserNotFoundException e) {
             //todo: HANDLE
-            return  null;
+            return null;
         }
     }
 
@@ -71,8 +70,7 @@ public class UsersController {
                 return usersService.createSession(preUsers.getEmail());
             } else
                 return "failed";
-        }catch (SessionCreateFailedException e)
-        {
+        } catch (SessionCreateFailedException e) {
             return "failed";
         }
     }
@@ -81,9 +79,7 @@ public class UsersController {
     public Users displayUser() {
         try {
             return usersService.displayUser(sessionIdentity.getEmail());
-        }
-        catch (UserNotFoundException e)
-        {
+        } catch (UserNotFoundException e) {
             //TODO: handle response
             return null;
         }

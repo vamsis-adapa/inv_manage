@@ -73,7 +73,6 @@ public class OrderService {
     }
 
 
-
     public Orders createOrder(Stock stock, UUID userID, Integer numberOfItems) {
         Double total_cost = numberOfItems * stock.getCost();
         stockService.buyStock(stock.getId(), numberOfItems);

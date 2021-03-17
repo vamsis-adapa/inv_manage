@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class Item implements Serializable {
 
     @Id
-    @GeneratedValue( generator = "identity")
+    @GeneratedValue(generator = "identity")
     protected Long item_id;
     @Setter
     @Column(unique = true)

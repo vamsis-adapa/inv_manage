@@ -82,8 +82,7 @@ public class InvManagementApplication {
 //        vendorService.addStock("post", itemService.getAllItems().get(0).getItem_id(), 12.0, 32);
 //        List<Stock> allStock = stockService.getAllStock();
 //        List<Vendor> allVendor = stockService.getItemVendors(itemService.getAllItems().get(0).getItem_id());
-        ;
-//        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUserId(), 32);
+        //        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUserId(), 32);
 //        System.out.println(itemService.paginatedGetAllItem(1, 2).get().map(item -> item.getName()).collect(Collectors.toList()));
 //        System.out.println(itemService.paginatedGetAllItem(2, 3));
 //        System.out.println(itemService.paginatedGetAllItem(2, 3).stream().collect(Collectors.toList()));
@@ -107,7 +106,7 @@ public class InvManagementApplication {
             stock = null;
         }
         try {
-            Orders orders =orderService.createOrder(stock, usersService.getUser("u@gmail.com").getUserId(), 2);
+            Orders orders = orderService.createOrder(stock, usersService.getUser("u@gmail.com").getUserId(), 2);
             System.out.println(orders.getId());
         } catch (Exception e) {
 

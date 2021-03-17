@@ -8,12 +8,12 @@ import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
-import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrderVendor;
-import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.model.io.PreVendor;
 import sai_adapa.projs.inv_management.model.io.PreVendorWithItem;
 import sai_adapa.projs.inv_management.model.io.VendorWithSort;
+import sai_adapa.projs.inv_management.model.items.Stock;
+import sai_adapa.projs.inv_management.model.users.Vendor;
 import sai_adapa.projs.inv_management.services.VendorService;
 import sai_adapa.projs.inv_management.tools.ResponseHandler;
 
@@ -163,12 +163,10 @@ public class VendorController {
             return null;
         try {
             return vendorService.getVendorStock(preVendorWithItem.getEmail());
+        } catch (UserNotFoundException e) {
+            ResponseHandler.actionFailed(response, "user Not found");
         }
-        catch (UserNotFoundException e)
-        {
-            ResponseHandler.actionFailed(response,"user Not found");
-        }
-        return null ;
+        return null;
     }
 
     @RequestMapping(value = {"/vendor/orders"})
