@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Item;
-import sai_adapa.projs.inv_management.model.items.ItemWithRating;
+import sai_adapa.projs.inv_management.model.io.ItemWithRating;
 import sai_adapa.projs.inv_management.model.items.Rating;
 
 @Service
@@ -29,6 +29,6 @@ public class RatingService {
     public void rateItem(Item item, Rating rating) {
         ItemWithRating itemWithRating = new ItemWithRating(item, rating);
 
-        kafkaTemplate.send("ItemWithRating", itemWithRating);
+        kafkaTemplate.send("RatingService", itemWithRating);
     }
 }

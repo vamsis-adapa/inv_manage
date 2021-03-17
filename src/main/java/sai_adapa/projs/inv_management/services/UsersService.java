@@ -8,7 +8,7 @@ import sai_adapa.projs.inv_management.cache.UserCache;
 import sai_adapa.projs.inv_management.exceptions.SessionCreateFailedException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
-import sai_adapa.projs.inv_management.model.items.ItemWithRating;
+import sai_adapa.projs.inv_management.model.io.ItemWithRating;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.repositories.sql.UsersRepository;
 import sai_adapa.projs.inv_management.tools.PasswordTools;

@@ -58,7 +58,8 @@ public class PaymentService {
     }
 
 
-    //todo use more lambdas
+    //TODO use more lambdas
+    //TODO also handle async func properly
     @Async
     public Future<PaymentStatus> payForOrder(Orders orders, String userEmail, String vendorEmail, Double amount) {
 

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import sai_adapa.projs.inv_management.model.items.ItemWithRating;
+import sai_adapa.projs.inv_management.model.io.ItemWithRating;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class KafkaItemRatingProducerConfig {
         Map<String, Object> config = new HashMap<>();
         config.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "127.0.0.1:9092");
+                "127.0.0.1:9092");  ///kafka server ip
         config.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 JsonSerializer.class);
