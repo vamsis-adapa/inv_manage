@@ -15,8 +15,9 @@ public class ResponseHandler {
         } catch (Exception ignored) {
         }
     }
-    public static void successfulEdit(HttpServletResponse response)
-    {response.setStatus(200);
+
+    public static void successfulEdit(HttpServletResponse response) {
+        response.setStatus(200);
         try {
             response.getWriter().write("successfulEdit");
         } catch (IOException ignored) {
@@ -33,10 +34,17 @@ public class ResponseHandler {
         return;
     }
 
+    public static void notEnoughResources(HttpServletResponse response, String msg) {
+        response.setStatus(400);
+        try {
+            response.getWriter().write(msg);
+        } catch (Exception ignored) {
+        }
+    }
 
     public static void resourceNotFound(HttpServletResponse response) {
         response.setStatus(404);
-        return;
+
     }
 
     public static void resourceNotCreated(HttpServletResponse response) {

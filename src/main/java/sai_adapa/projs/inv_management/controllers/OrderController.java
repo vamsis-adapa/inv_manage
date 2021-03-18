@@ -52,10 +52,8 @@ public class OrderController {
     //add role auth users
     @RequestMapping(method = RequestMethod.POST, value = {"/order"})
     public Orders handleOrder(@RequestBody PreUserWithOrder preUserWithOrder, HttpServletResponse response) {
-        if (!sessionIdentity.verifyIdentity(preUserWithOrder.getEmail())) {
-            //throw
+        if (!ResponseHandler.verifyUserIdentity(sessionIdentity, preUserWithOrder.getEmail(), response))
             return null;
-        }
 
         try {
             Users users = usersService.getUser(preUserWithOrder.getEmail());
@@ -67,14 +65,14 @@ public class OrderController {
                 return orders;
             }
 
-            //TODO ADD RESPONSE
+            ResponseHandler.notEnoughResources(response,"not enough stock of product");
             return null;
         } catch (UserNotFoundException e) {
             ResponseHandler.actionFailed(response, "User not found");
         } catch (StockNotFoundException e) {
             ResponseHandler.resourceNotFound(response);
         }
-        //TODO add resp
+
         return null;
     }
 
