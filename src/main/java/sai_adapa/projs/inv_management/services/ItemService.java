@@ -1,10 +1,12 @@
 package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import sai_adapa.projs.inv_management.exceptions.ItemAlreadyExistsException;
 import sai_adapa.projs.inv_management.exceptions.ItemNotFoundException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.model.io.ItemDetails;
@@ -33,9 +35,14 @@ public class ItemService {
         this.stockService = stockService;
     }
 
-    public Long addItem(String name, String description) {
+    public Long addItem(String name, String description)  {
         Item item = Item.builder().name(name).description(description).build();
-        itemRepository.save(item);
+        try{//TODO ADD CHECK FOR ALREADY EXISTING ITEM
+        itemRepository.save(item);}
+        catch (DataIntegrityViolationException e)
+        {
+//            throw new  ItemAlreadyExistsException();
+        }
         return item.getItem_id();
     }
 
