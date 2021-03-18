@@ -90,6 +90,7 @@ public class AdminController {
             return;
         try {
             adminService.editUser(adminService.getUser(preAdmin.getEmail()), preAdmin.getChanged_email(), preAdmin.getPasswd());
+            adminService.endSession(preAdmin.getEmail());
         } catch (NullPointerException e) {
             ResponseHandler.userDoesNotExist(response);
         }

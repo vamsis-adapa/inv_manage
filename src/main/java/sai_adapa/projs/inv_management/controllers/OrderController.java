@@ -72,7 +72,6 @@ public class OrderController {
         } catch (StockNotFoundException e) {
             ResponseHandler.resourceNotFound(response);
         }
-
         return null;
     }
 

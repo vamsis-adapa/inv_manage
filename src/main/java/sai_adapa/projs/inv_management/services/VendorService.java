@@ -62,7 +62,13 @@ public class VendorService {
     }
 
     public void deleteUser(Vendor vendor) {
-        vendorRepository.delete(vendor);
+        removeSessionCache(vendor);
+        vendor.setEmail(null);
+        vendor.setSessionToken(null);
+        vendor.setDescription(null);
+        vendor.setPasswdHash(null);
+        vendor.setName(null);
+        vendorRepository.save(vendor);
     }
 
     public void editUser(Vendor vendor, String name, String email, String desc, String password) {

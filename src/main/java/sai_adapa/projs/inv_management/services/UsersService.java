@@ -160,7 +160,12 @@ public class UsersService {
     //TODO: Edit
     public void deleteUser(Users users) {
         removeUserFromCache(users);
-        usersRepository.delete(users);
+        users.setSessionToken(null);
+        users.setDetails(null);
+        users.setEmail(null);
+        users.setPasswdHash(null);
+        users.setName(null);
+        usersRepository.save(users);
     }
 
 
