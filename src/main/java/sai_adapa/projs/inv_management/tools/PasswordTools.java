@@ -16,7 +16,7 @@ public class PasswordTools {
         pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
     }
 
-    public static String encodePassword(String password) {
+    public static String encodePassword(String password) {//TODO CHECK IF PASSWORD IS GOOD
         return pbkdf2PasswordEncoder.encode(password);
     }
 

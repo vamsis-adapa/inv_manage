@@ -1,11 +1,14 @@
 package sai_adapa.projs.inv_management.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.cache.UserCache;
+import sai_adapa.projs.inv_management.exceptions.InvalidRequestException;
 import sai_adapa.projs.inv_management.exceptions.SessionCreateFailedException;
+import sai_adapa.projs.inv_management.exceptions.UserAlreadyExistsException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.io.ItemWithRating;
@@ -64,8 +67,17 @@ public class UsersService {
         this.orderService = orderService;
     }
 
-    public void addUser(String name, String e_mail, String details, String password) {
-        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());
+    public void addUser(String name, String e_mail, String details, String password) throws UserAlreadyExistsException, InvalidRequestException {
+        try{
+        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());}
+        catch (DataIntegrityViolationException e)
+        {
+            throw new UserAlreadyExistsException();
+        }
+        catch (NullPointerException e)
+        {
+            throw new InvalidRequestException( "password is null");
+        }
     }
 
     public Users displayUser(String email) throws UserNotFoundException {

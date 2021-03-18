@@ -12,13 +12,16 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import sai_adapa.projs.inv_management.exceptions.InvalidRequestException;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
+import sai_adapa.projs.inv_management.exceptions.UserAlreadyExistsException;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.orders.Orders;
 import sai_adapa.projs.inv_management.repositories.mongo.OrderRepository;
 import sai_adapa.projs.inv_management.services.*;
 
+import java.util.InvalidPropertiesFormatException;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -97,7 +100,13 @@ public class InvManagementApplication {
             e.printStackTrace();
         }
 
-        usersService.addUser("meow", "u@gmail.com", "woah i can buy", "choc");
+        try {
+            usersService.addUser("meow", "u@gmail.com", "woah i can buy", "choc");
+        }
+        catch (InvalidRequestException | UserAlreadyExistsException e)
+        {
+            //t
+        }
         Stock stock;
         try {
             stock = stockService.getParticularStock("v@gmail.com", it1);

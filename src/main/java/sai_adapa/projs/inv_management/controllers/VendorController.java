@@ -60,6 +60,7 @@ public class VendorController {
         }
         try {
             vendorService.addUser(preVendor.getName(), preVendor.getEmail(), preVendor.getDescription(), preVendor.getPasswd());
+            ResponseHandler.successfulCreate(response);
         } catch (NullPointerException e) {
             ResponseHandler.insufficientDetailsInRequest(response);
             return;
@@ -76,7 +77,7 @@ public class VendorController {
                 return vendorService.createSession(preVendor.getEmail());
             } else
                 ResponseHandler.userVerificationFailed(response);
-            return "login failed";
+            return "login failed"; //TODO maybe
         } catch (UserNotFoundException e) {
             ResponseHandler.userVerificationFailed(response);
         }
@@ -90,6 +91,7 @@ public class VendorController {
 
         try {
             vendorService.editUser(vendorService.getUser(preVendor.getEmail()), preVendor.getName(), preVendor.getChanged_email(), preVendor.getDescription(), preVendor.getPasswd());
+            ResponseHandler.successfulEdit(response);
         } catch (UserNotFoundException e) {
             ResponseHandler.actionFailed(response, "user not found");
         }
@@ -97,8 +99,9 @@ public class VendorController {
 
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/items"})
-    public void addItem(@RequestBody PreVendorWithItem preVendorWithItem) {
+    public void addItem(@RequestBody PreVendorWithItem preVendorWithItem, HttpServletResponse response) {
         vendorService.addNewItem(preVendorWithItem.getItem_name(), preVendorWithItem.getItem_description());
+        ResponseHandler.successfulCreate(response);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/stock"})
@@ -107,6 +110,7 @@ public class VendorController {
             return;
         try {
             vendorService.addStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getCost(), preVendorWithItem.getNum_stock());
+            ResponseHandler.successfulCreate(response);
         } catch (StockCreationUnsuccessfulException e) {
             ResponseHandler.resourceNotCreated(response);
         }
@@ -116,9 +120,9 @@ public class VendorController {
     public void incrementStock(@RequestBody PreVendorWithItem preVendorWithItem, @PathVariable Long id, HttpServletResponse response) {
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, preVendorWithItem.getEmail(), response))
             return;
-
         try {
             vendorService.incrementVendorStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getNum_stock());
+            ResponseHandler.successfulEdit(response);
         } catch (StockNotFoundException e) {
             ResponseHandler.resourceNotFound(response);
         }
@@ -127,7 +131,6 @@ public class VendorController {
     @RequestMapping(method = RequestMethod.GET, value = {"/vendor"})
     public Vendor displayVendor(HttpServletResponse response) {
         try {
-
             return vendorService.displayUser(sessionIdentity.getEmail());
         } catch (UserNotFoundException e) {
             ResponseHandler.actionFailed(response, "User does not exist in system");
@@ -152,6 +155,7 @@ public class VendorController {
             return;
         try {
             vendorService.deleteStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id());
+            ResponseHandler.successfulEdit(response);
         } catch (StockNotFoundException e) {
             ResponseHandler.resourceNotFound(response);
         }
@@ -178,7 +182,6 @@ public class VendorController {
         if (pageSize == null)
             pageSize = 0;
         try {
-
 
             if (vendorWithSort.getSortDetailsList() == null)
                 return vendorService.getOrderReportPaginated(vendorWithSort.getVendorEmail(), pageSize, pageNumber);

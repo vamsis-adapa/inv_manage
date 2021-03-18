@@ -3,6 +3,7 @@ package sai_adapa.projs.inv_management.tools;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class ResponseHandler {
 
@@ -11,10 +12,17 @@ public class ResponseHandler {
         response.setStatus(201);
         try {
             response.getWriter().write("Successfully created");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
-        return;
     }
+    public static void successfulEdit(HttpServletResponse response)
+    {response.setStatus(200);
+        try {
+            response.getWriter().write("successfulEdit");
+        } catch (IOException ignored) {
+        }
+    }
+
 
     public static void userAlreadyExists(HttpServletResponse response) {
         response.setStatus(409);

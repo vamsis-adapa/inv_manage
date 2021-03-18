@@ -26,7 +26,7 @@ public class PaymentService {
     final WebClient walletWebClient;
     private OrderService orderService;
 
-    public PaymentService() {//TODO CHANGE TOKEN
+    public PaymentService() {
         this.walletWebClient = WebClient.builder().baseUrl("http://localhost:765").defaultCookie("JSESSIONID", getAccessToken())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
     }
@@ -36,6 +36,7 @@ public class PaymentService {
         this.orderService = orderService;
     }
 
+    //TODO CHANGE TOKEN
     private String getAccessToken() {
         return "accessToken";
     }
