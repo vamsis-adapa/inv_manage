@@ -25,13 +25,10 @@ public class Users implements Serializable {
     @Column(unique = true, nullable = false)
     @Type(type = "pg-uuid")
     private UUID userId;
-
-    @Column(nullable = false)
     private String name;
     @Column(unique = true)
     private String email;
     private String details;
-    @Column(nullable = false)
     private String passwdHash;
     private String sessionToken;
 

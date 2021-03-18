@@ -123,6 +123,7 @@ public class AdminController {
     public void deleteVendor(@RequestBody PreVendor preVendor, HttpServletResponse response) {
         try {
             vendorService.deleteUser(vendorService.getUser(preVendor.getEmail()));
+            ResponseHandler.successfulEdit(response);
         } catch (NullPointerException | UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }
@@ -134,6 +135,7 @@ public class AdminController {
     public void deleteUser(@RequestBody PreUsers preUsers, HttpServletResponse response) {
         try {
             usersService.deleteUser(usersService.getUser(preUsers.getEmail()));
+            ResponseHandler.successfulEdit(response);
         } catch (UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }

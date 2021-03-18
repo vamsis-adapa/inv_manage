@@ -3,6 +3,7 @@ package sai_adapa.projs.inv_management.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.cache.AdminCache;
+import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.users.Admin;
 import sai_adapa.projs.inv_management.repositories.sql.AdminRepository;
 import sai_adapa.projs.inv_management.tools.PasswordTools;
@@ -43,13 +44,27 @@ public class AdminService {
         return admin;
     }
 
-    public String getUserEmailFromSession(String token) {
-        String email = adminCache.getEmailSession(token);
+    public String getUserEmailFromSession(String token) throws UserNotFoundException {
+        String email;
+        try
+        {email = adminCache.getEmailSession(token);}
+        catch (IllegalArgumentException e)
+        {
+            email = null;
+        }
         if (email != null)
             return email;
 
-        email = adminRepository.findBySessionToken(token).getEmail();
-        adminCache.addEmailSession(token, email);
+        try {
+            email = adminRepository.findBySessionToken(token).getEmail();
+            adminCache.addEmailSession(token, email);
+        }catch (NullPointerException e)
+        {
+            email =null;
+        }
+        if (email==null)
+            throw new UserNotFoundException();
+
         return email;
     }
 

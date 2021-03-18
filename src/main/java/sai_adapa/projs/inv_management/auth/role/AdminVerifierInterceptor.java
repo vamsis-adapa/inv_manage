@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
+import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.services.AdminService;
 import sai_adapa.projs.inv_management.tools.ResponseHandler;
 
@@ -30,7 +31,16 @@ public class AdminVerifierInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        String email = adminService.getUserEmailFromSession(request.getHeader("session_token"));
+
+        String email;
+        try {
+
+            email = adminService.getUserEmailFromSession(request.getHeader("session_token"));
+        }
+        catch (UserNotFoundException e)
+        {
+            email=null;
+        }
         if (email != null) {
             sessionIdentity.setIdentity(email);
             System.out.println("verified");

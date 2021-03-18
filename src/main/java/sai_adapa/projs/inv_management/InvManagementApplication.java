@@ -105,7 +105,7 @@ public class InvManagementApplication {
         }
         catch (InvalidRequestException | UserAlreadyExistsException e)
         {
-            //t
+            //stg
         }
         Stock stock;
         try {
