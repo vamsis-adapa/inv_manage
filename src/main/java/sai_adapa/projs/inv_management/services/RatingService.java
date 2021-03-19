@@ -1,5 +1,7 @@
 package sai_adapa.projs.inv_management.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,12 @@ import sai_adapa.projs.inv_management.model.users.Users;
 @Setter
 public class RatingService {
 
-    KafkaTemplate<String, ItemWithRating> kafkaTemplate;
+    KafkaTemplate<String, String> kafkaTemplate;
 
     private String address;
 
     @Autowired
-    public void setKafkaTemplate(KafkaTemplate<String, ItemWithRating> kafkaTemplate) {
+    public void setKafkaTemplate(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
@@ -28,7 +30,16 @@ public class RatingService {
 
 
     public void rateItem(Item item, Rating rating, Users users) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
         ItemWithRating itemWithRating = new ItemWithRating(item, rating,users);
-        kafkaTemplate.send("Rating", itemWithRating);
+        try {
+
+
+            kafkaTemplate.send("Rating", objectMapper.writeValueAsString(itemWithRating));
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

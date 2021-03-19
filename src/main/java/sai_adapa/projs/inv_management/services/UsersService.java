@@ -30,7 +30,7 @@ public class UsersService {
     private SessionIdentity sessionIdentity;
     private VendorService vendorService;
     private ItemService itemService;
-    private KafkaTemplate<String, ItemWithRating> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
     public UsersService(UsersRepository usersRepository) {
@@ -38,7 +38,7 @@ public class UsersService {
     }
 
     @Autowired
-    public void setKafkaTemplate(KafkaTemplate<String, ItemWithRating> kafkaTemplate) {
+    public void setKafkaTemplate(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 

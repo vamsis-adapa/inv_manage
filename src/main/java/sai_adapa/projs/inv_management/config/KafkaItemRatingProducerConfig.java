@@ -17,7 +17,7 @@ import java.util.Map;
 public class KafkaItemRatingProducerConfig {
 
     @Bean
-    public ProducerFactory<String, ItemWithRating>
+    public ProducerFactory<String, String>
     producerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(
@@ -25,7 +25,7 @@ public class KafkaItemRatingProducerConfig {
                 "127.0.0.1:9092");  ///kafka server ip
         config.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                JsonSerializer.class);
+                StringSerializer.class);
         config.put(
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
@@ -33,7 +33,7 @@ public class KafkaItemRatingProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, ItemWithRating> kafkaTemplate() {
+    public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }
