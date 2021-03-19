@@ -130,7 +130,7 @@ public class UsersController {
 
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = {"/app_user/rate"})
+    @RequestMapping(method = RequestMethod.POST, value = {"/app_user/rate"})
     public void rate (@RequestBody UserWithRating user,HttpServletResponse response )
     {
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, user.getEmail(), response))

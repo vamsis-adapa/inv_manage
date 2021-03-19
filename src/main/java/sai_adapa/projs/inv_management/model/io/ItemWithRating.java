@@ -8,15 +8,16 @@ import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.items.Rating;
 import sai_adapa.projs.inv_management.model.users.Users;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ItemWithRating {
+public class ItemWithRating implements Serializable {
     private final String type;
-    private Long clientId;
+    private Integer clientId;
     private String clientName;
     private String clientPassword;
     private Long typeId = null;
@@ -27,9 +28,9 @@ public class ItemWithRating {
     }
 
     public ItemWithRating(Item item, Rating rating, Users user) {
-        this.clientId = user.getRating_id();
+        this.clientId = 1000 + (int)(Math.random() * ((1000000 - 1000) + 1));
         this.clientName = user.getEmail();
-        this.clientPassword = user.getRating_id().toString();
+        this.clientPassword = clientId.toString();
         this.typeId = item.getItem_id();
         this.name = item.getName();
         this.rating.put("quality",rating.getQuality());

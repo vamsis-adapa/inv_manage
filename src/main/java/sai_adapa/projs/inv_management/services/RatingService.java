@@ -29,6 +29,6 @@ public class RatingService {
 
     public void rateItem(Item item, Rating rating, Users users) {
         ItemWithRating itemWithRating = new ItemWithRating(item, rating,users);
-        kafkaTemplate.send("RatingService", itemWithRating);
+        kafkaTemplate.send("Rating", itemWithRating);
     }
 }
