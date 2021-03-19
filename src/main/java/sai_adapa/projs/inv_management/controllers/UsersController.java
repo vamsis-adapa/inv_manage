@@ -3,12 +3,10 @@ package sai_adapa.projs.inv_management.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
-import sai_adapa.projs.inv_management.exceptions.InvalidRequestException;
-import sai_adapa.projs.inv_management.exceptions.SessionCreateFailedException;
-import sai_adapa.projs.inv_management.exceptions.UserAlreadyExistsException;
-import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
+import sai_adapa.projs.inv_management.exceptions.*;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
 import sai_adapa.projs.inv_management.model.io.PreUsers;
+import sai_adapa.projs.inv_management.model.io.UserWithRating;
 import sai_adapa.projs.inv_management.model.io.UserWithSort;
 import sai_adapa.projs.inv_management.model.users.Users;
 import sai_adapa.projs.inv_management.services.ItemService;
@@ -130,6 +128,20 @@ public class UsersController {
             return null;
         }
 
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = {"/app_user/rate"})
+    public void rate (@RequestBody UserWithRating user,HttpServletResponse response )
+    {
+        if (!ResponseHandler.verifyUserIdentity(sessionIdentity, user.getEmail(), response))
+            return;
+        try {
+            ratingService.rateItem(itemService.getItemById(user.getItemId()),user.getRating(),usersService.getUser(user.getEmail()));
+            ResponseHandler.successfulCreate(response);
+        }catch (ItemNotFoundException | UserNotFoundException e)
+        {
+            ResponseHandler.actionFailed(response,"could not process rating");
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = {"/app_user/logout"})

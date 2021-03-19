@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.io.ItemWithRating;
 import sai_adapa.projs.inv_management.model.items.Rating;
+import sai_adapa.projs.inv_management.model.users.Users;
 
 @Service
 @Getter
@@ -26,9 +27,8 @@ public class RatingService {
 
 
 
-    public void rateItem(Item item, Rating rating) {
-        ItemWithRating itemWithRating = new ItemWithRating(item, rating);
-
+    public void rateItem(Item item, Rating rating, Users users) {
+        ItemWithRating itemWithRating = new ItemWithRating(item, rating,users);
         kafkaTemplate.send("RatingService", itemWithRating);
     }
 }
