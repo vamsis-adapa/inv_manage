@@ -17,6 +17,7 @@ import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.repositories.sql.ItemRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -35,19 +36,25 @@ public class ItemService {
         this.stockService = stockService;
     }
 
-    public Long addItem(String name, String description)  {
+    public Long addItem(String name, String description) throws ItemAlreadyExistsException {
         Item item = Item.builder().name(name).description(description).build();
-        try{//TODO ADD CHECK FOR ALREADY EXISTING ITEM
+        try{
         itemRepository.save(item);}
         catch (DataIntegrityViolationException e)
         {
-//            throw new  ItemAlreadyExistsException();
+            throw new  ItemAlreadyExistsException();
         }
         return item.getItem_id();
     }
 
     public Item getItemById(Long item_id) throws ItemNotFoundException {
-        Item item = itemRepository.findById(item_id).get();
+        Item item;
+        try {
+         item = itemRepository.findById(item_id).get();}
+        catch (NoSuchElementException e)
+        {
+            throw (new ItemNotFoundException("requested item (itemId: " + item_id + ") not found"));
+        }
         if (item == null)
             throw (new ItemNotFoundException("requested item (itemId: " + item_id + ") not found"));
         return item;

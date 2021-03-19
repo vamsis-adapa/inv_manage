@@ -36,6 +36,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminVerifierInterceptor).addPathPatterns("/admin", "/admin/**").excludePathPatterns("/admin/new", "/admin/login");
         registry.addInterceptor(usersVerifierInterceptor).addPathPatterns("/app_user/**", "/app_user", "/order", "/item/*/rate").excludePathPatterns("/app_user/new", "/app_user/login");
-        registry.addInterceptor(vendorVerifierInterceptor).addPathPatterns("/vendor/**", "/vendor").excludePathPatterns("/vendor/new", "/vendor/login");
+        registry.addInterceptor(vendorVerifierInterceptor).addPathPatterns("/vendor/**","/vendor/items", "/vendor").excludePathPatterns("/vendor/new", "/vendor/login");
     }
 }

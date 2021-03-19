@@ -1,5 +1,6 @@
 package sai_adapa.projs.inv_management;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -59,67 +60,12 @@ public class InvManagementApplication {
     }
 
 
+    @SneakyThrows
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
         System.out.println("strawberry");
 
-        cacheManager.getCacheNames()
-                .parallelStream()
-                .forEach(n -> cacheManager.getCache(n).clear());
-        Long it1 = itemService.addItem("choc", "brown and hard chocolate");
-        Long it2 = itemService.addItem("choc 2", "black and bitter chocolate");
-        Long ite = itemService.addItem("straw", "yare yareada chocolate");
-        Long ite2 = itemService.addItem("pineapple", ";ldjaf_");
-        Long ite3 = itemService.addItem("pink popcorn", "chds;f");
-        Long ite4 = itemService.addItem("golden crown;", "jdfaksljfla chocolate");
-        Long ite5 = itemService.addItem("t-rex statue", "dljkfsa;chocolate");
 
-//        vendorService.addUser("hit", "mail", "dlak;j", "choc");
-//        vendorService.addUser("meow cat shop", "post", "drifkdlf;j; ;dalkfj", "fire");
-//        usersService.addUser("fire", "gif", "dalk;jf", "yare");
-//        stockService.addNewStock(it1, "mail", 55, 12.0);
-//        stockService.addNewStock(it2, "post", 34, 99.0);
-//        stockService.addNewStock(it1, "mail", 55, 13.0);
-
-//        vendorService.addStock("mail", itemService.getAllItems().get(0).getItem_id(), 32.0, 5);
-//        vendorService.addStock("post", itemService.getAllItems().get(0).getItem_id(), 12.0, 32);
-//        List<Stock> allStock = stockService.getAllStock();
-//        List<Vendor> allVendor = stockService.getItemVendors(itemService.getAllItems().get(0).getItem_id());
-        //        orderService.createOrder(stockService.getVendorStock("mail").get(0), usersService.getUser("gif").getUserId(), 32);
-//        System.out.println(itemService.paginatedGetAllItem(1, 2).get().map(item -> item.getName()).collect(Collectors.toList()));
-//        System.out.println(itemService.paginatedGetAllItem(2, 3));
-//        System.out.println(itemService.paginatedGetAllItem(2, 3).stream().collect(Collectors.toList()));
-        System.out.println(itemService.paginatedGetSearchedItems(0, 6, "choc").getContent().stream().map(item -> item.getName()).collect(Collectors.toList()));
-        System.out.println("coffee");
-
-
-        vendorService.addUser("straw", "v@gmail.com", "la;dkjf", "choc");
-        try {
-            vendorService.addStock("v@gmail.com", it1, 76.00, 65);
-        } catch (StockCreationUnsuccessfulException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            usersService.addUser("meow", "u@gmail.com", "woah i can buy", "choc");
-        }
-        catch (InvalidRequestException | UserAlreadyExistsException e)
-        {
-            //stg
-        }
-        Stock stock;
-        try {
-            stock = stockService.getParticularStock("v@gmail.com", it1);
-        } catch (StockNotFoundException e) {
-            e.printStackTrace();
-            stock = null;
-        }
-        try {
-            Orders orders = orderService.createOrder(stock, usersService.getUser("u@gmail.com").getUserId(), 2);
-            System.out.println(orders.getId());
-        } catch (Exception e) {
-
-        }
     }
 
 

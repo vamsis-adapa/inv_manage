@@ -114,7 +114,9 @@ public class StockService {
 
     public boolean checkAvailability(Long item_id, String vendor_email, Integer required) throws StockNotFoundException {
 //TODO : FIX
-        return (required >= getParticularStock(vendor_email, item_id).getInv_num());
+        Integer kk = getParticularStock(vendor_email, item_id).getInv_num();
+        System.out.println("kk");
+        return (required <=kk );
     }
 
     public List<Stock> getVendorStock(String vendor_email) throws UserNotFoundException {

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
+import sai_adapa.projs.inv_management.exceptions.ItemAlreadyExistsException;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
@@ -14,6 +15,7 @@ import sai_adapa.projs.inv_management.model.io.PreVendorWithItem;
 import sai_adapa.projs.inv_management.model.io.VendorWithSort;
 import sai_adapa.projs.inv_management.model.items.Stock;
 import sai_adapa.projs.inv_management.model.users.Vendor;
+import sai_adapa.projs.inv_management.services.ItemService;
 import sai_adapa.projs.inv_management.services.VendorService;
 import sai_adapa.projs.inv_management.tools.ResponseHandler;
 
@@ -25,10 +27,16 @@ public class VendorController {
 
     VendorService vendorService;
     SessionIdentity sessionIdentity;
+    ItemService itemService;
 
     @Autowired
     public VendorController(VendorService vendorService) {
         this.vendorService = vendorService;
+    }
+
+    @Autowired
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
     }
 
     @Autowired
@@ -100,19 +108,27 @@ public class VendorController {
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/items"})
     public void addItem(@RequestBody PreVendorWithItem preVendorWithItem, HttpServletResponse response) {
-        vendorService.addNewItem(preVendorWithItem.getItem_name(), preVendorWithItem.getItem_description());
+        try {
+
+
+        itemService.addItem(preVendorWithItem.getItem_name(), preVendorWithItem.getItem_description());}
+        catch (ItemAlreadyExistsException e)
+        {
+            ResponseHandler.actionFailed(response, "item already exists");
+            return;
+        }
         ResponseHandler.successfulCreate(response);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = {"/vendor/stock"})
-    public void addStock(@RequestBody PreVendorWithItem preVendorWithItem, HttpServletResponse response) {
+            public void addStock(@RequestBody PreVendorWithItem preVendorWithItem, HttpServletResponse response) {
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, preVendorWithItem.getEmail(), response))
             return;
         try {
             vendorService.addStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getCost(), preVendorWithItem.getNum_stock());
             ResponseHandler.successfulCreate(response);
         } catch (StockCreationUnsuccessfulException e) {
-            ResponseHandler.resourceNotCreated(response);
+            ResponseHandler.resourceNotCreated(response, "stock already exists, try editing stock");
         }
     }
 

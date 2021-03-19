@@ -29,7 +29,7 @@ public class ItemController {
     @RequestMapping(value = {"/items"})
     public List<Item> listAllItems(@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer pageNumber, @RequestParam(required = false) String searchWord) {
         if (pageSize == null)
-            pageSize = 1000;
+            pageSize = 7;
         if (pageNumber == null)
             pageNumber = 0;
         if (searchWord == null)

@@ -47,9 +47,12 @@ public class ResponseHandler {
 
     }
 
-    public static void resourceNotCreated(HttpServletResponse response) {
+    public static void resourceNotCreated(HttpServletResponse response, String msg) {
         response.setStatus(409);
-        return;
+        try {
+            response.getWriter().write(msg);
+        } catch (Exception ignored) {
+        }
     }
 
     public static void insufficientDetailsInRequest(HttpServletResponse response) {
@@ -98,12 +101,20 @@ public class ResponseHandler {
     }
 
     public static Boolean verifyUserIdentity(SessionIdentity sessionIdentity, String email, HttpServletResponse response) {
-        if (sessionIdentity.verifyIdentity(email)) {
-            return true;
-        } else {
-            userIdentityNotValid(response);
-            return false;
-        }
+      try {
+
+
+          if (sessionIdentity.verifyIdentity(email)) {
+              return true;
+          } else {
+              userIdentityNotValid(response);
+              return false;
+          }
+      }catch (NullPointerException e)
+      {
+          userIdentityNotValid(response);
+          return false;
+      }
 
     }
 

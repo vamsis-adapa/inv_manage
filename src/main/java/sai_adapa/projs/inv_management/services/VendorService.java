@@ -151,10 +151,6 @@ public class VendorService {
         return PasswordTools.verifyPassword(password, getUser(email).getPasswdHash());
     }
 
-    public Long addNewItem(String item_name, String description) {
-        return itemService.addItem(item_name, description);
-    }
-
     public List<Stock> getVendorStock(String email) throws UserNotFoundException {
         return stockService.getVendorStock(email);
 

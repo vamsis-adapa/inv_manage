@@ -41,10 +41,12 @@ public class OrderController {
         this.paymentService = paymentService;
     }
 
+    @Autowired
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
     }
 
+    @Autowired
     public void setSessionIdentity(SessionIdentity sessionIdentity) {
         this.sessionIdentity = sessionIdentity;
     }
@@ -64,7 +66,6 @@ public class OrderController {
                 paymentService.payForOrder(orders, users.getEmail(), vendor.getEmail(), orders.getTotalCost());
                 return orders;
             }
-
             ResponseHandler.notEnoughResources(response,"not enough stock of product");
             return null;
         } catch (UserNotFoundException e) {
