@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.io.ItemWithRating;
@@ -24,7 +25,13 @@ public class RatingService {
 
     private String kafkaAddress;
     private String ratingServiceAddress;
+    private String resourceLocation;
     final WebClient walletWebClient;
+    {
+        ratingServiceAddress = "https://localhost:8080";
+        resourceLocation = "rating";
+
+    }
 
     public RatingService() {
         this.walletWebClient = WebClient.builder().baseUrl(ratingServiceAddress)
@@ -39,7 +46,10 @@ public class RatingService {
 
     public void getRating(Long itemId)
     {
-        WebClient.RequestHeadersUriSpec webClient = WebClient.create(ratingServiceAddress).delete();
+        RestTemplate restTemplate = new RestTemplate();
+
+
+
     }
 
 
@@ -50,7 +60,7 @@ public class RatingService {
         ItemWithRating itemWithRating = new ItemWithRating(item, rating,users);
         try {
 
-
+            System.out.println(objectMapper.writeValueAsString(itemWithRating));
             kafkaTemplate.send("Rating", objectMapper.writeValueAsString(itemWithRating));
         }
         catch (JsonProcessingException e) {

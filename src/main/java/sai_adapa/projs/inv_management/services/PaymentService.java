@@ -2,7 +2,6 @@ package sai_adapa.projs.inv_management.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -19,8 +18,7 @@ import sai_adapa.projs.inv_management.model.io.PaymentResponse;
 import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.orders.Orders;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Future;
 
 @Service
@@ -33,7 +31,7 @@ public class PaymentService {
     private String resourcePath;
 
     {
-        baseUrl = "https://14bf556a6b56.ngrok.io";
+        baseUrl = "https://316278416b16.ngrok.io";
         resourcePath = "/items";//"/wallet-service";
     }
 
@@ -50,7 +48,7 @@ public class PaymentService {
 
     //TODO CHANGE TOKEN
     private String getAccessToken() {
-        return "accessToken";
+        return "Y29veW9PVFQtb3R0QGdtYWlsLmNvbQ==";
     }
 
     private PaymentResponse convertStringToObject(String paymentResponseString) throws JsonProcessingException {
@@ -64,30 +62,15 @@ public class PaymentService {
     }
 
     private void checkPaymentResponse(PaymentResponse paymentResponse) throws PaymentFailedException {
-        try{
-        if (!paymentResponse.getStatus().equals("success")) {
+        try {
+            if (!paymentResponse.getStatus().equals("successful")) {
+                throw new PaymentFailedException();
+            }
+        } catch (NullPointerException e) {
             throw new PaymentFailedException();
-        }}
-        catch (NullPointerException e)
-        {
-            throw  new PaymentFailedException();
         }
 
     }
-
-public void choc()
-{
-    RestTemplate restTemplate = new RestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", getAccessToken());
-    HttpEntity<String> request = new HttpEntity<>(headers);
-    Item[] listOfItems= restTemplate.getForObject(baseUrl+resourcePath,Item[].class);
-    System.out.println(listOfItems);
-
-}
-
-
 
     public PaymentStatus payForOrder(Orders orders, String userEmail, String vendorEmail, Double amount) {
         Integer amountInteger = ceilDoubleToInteger(amount);

@@ -33,6 +33,15 @@ public class ResponseHandler {
         }
         return;
     }
+    public static void userAlreadyExists(HttpServletResponse response, String msg) {
+        response.setStatus(409);
+        try {
+            response.getWriter().write(msg);
+        } catch (Exception e) {
+        }
+        return;
+    }
+
 
     public static void notEnoughResources(HttpServletResponse response, String msg) {
         response.setStatus(400);

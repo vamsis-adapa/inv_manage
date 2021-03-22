@@ -89,7 +89,7 @@ public class OrderService {
         String vendorEmail = vendorService.getUser(orders.getVendorId()).getEmail();
         String userEmail = usersService.getUser(orders.getUserId()).getEmail();
         String itemName = itemService.getItemById(orders.getItemId()).getName();
-        return DisplayableOrder.builder().id(orders.getId()).vendorEmail(vendorEmail).userEmail(userEmail).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
+        return DisplayableOrder.builder().id(orders.getId()).vendorEmail(vendorEmail).orderStatus(orders.getOrderStatus()).userEmail(userEmail).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
     }
 
 
@@ -107,7 +107,7 @@ public class OrderService {
         } catch (IllegalArgumentException | ItemNotFoundException e) {
             itemName = null;
         }
-        return DisplayableOrderVendor.builder().id(orders.getId()).vendorEmail(vendorEmail).userID(orders.getUserId()).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
+        return DisplayableOrderVendor.builder().id(orders.getId()).vendorEmail(vendorEmail).orderStatus(orders.getOrderStatus()).userID(orders.getUserId()).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
     }
 
     public List<Orders> findOrdersOfUser(UUID uuid) {

@@ -1,6 +1,7 @@
 package sai_adapa.projs.inv_management.model.io;
 
 import lombok.*;
+import sai_adapa.projs.inv_management.model.enums.OrderStatus;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,7 @@ public class DisplayableOrder {
     private Double individualCost;
     private LocalDateTime transactionDate;
     private Double totalCost;
+    private OrderStatus orderStatus;
 
 
 }

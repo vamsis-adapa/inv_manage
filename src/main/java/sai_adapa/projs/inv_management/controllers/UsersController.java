@@ -1,6 +1,7 @@
 package sai_adapa.projs.inv_management.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 import sai_adapa.projs.inv_management.auth.identity.SessionIdentity;
 import sai_adapa.projs.inv_management.exceptions.*;
@@ -103,9 +104,20 @@ public class UsersController {
         try {
             usersService.editUser(usersService.getUser(preUsers.getEmail()), preUsers.getName(), preUsers.getChanged_email(), preUsers.getDetails(), preUsers.getPasswd());
             ResponseHandler.successfulEdit(response);
+
         } catch (UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }
+        catch (DataIntegrityViolationException e)
+        {
+            ResponseHandler.userAlreadyExists(response,"a user exists with the following data");
+        }
+        try {
+            usersService.endSession(usersService.getUser(preUsers.getEmail()));
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"})
