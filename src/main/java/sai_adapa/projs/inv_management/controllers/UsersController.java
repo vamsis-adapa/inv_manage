@@ -54,7 +54,7 @@ public class UsersController {
     @RequestMapping(value = {"app_user"})
     public Users getUserDetails(HttpServletResponse response) {
         try {
-            return usersService.getUser(sessionIdentity.getEmail());
+            return usersService.displayUser(sessionIdentity.getEmail());
         } catch (UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }
@@ -86,16 +86,7 @@ public class UsersController {
         return null;
     }
 
-    @RequestMapping(value = {"/app_user/me"})
-    public Users displayUser(HttpServletResponse response) {
-        try {
-            return usersService.displayUser(sessionIdentity.getEmail());
-        } catch (UserNotFoundException e) {
-            ResponseHandler.userDoesNotExist(response);
-            return null;
-        }
 
-    }
 
     @RequestMapping(method = RequestMethod.PATCH, value = {"/app_user"})
     public void editUser(@RequestBody PreUsers preUsers, HttpServletResponse response) {
