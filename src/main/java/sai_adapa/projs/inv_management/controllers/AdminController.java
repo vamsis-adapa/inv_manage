@@ -115,7 +115,7 @@ public class AdminController {
             adminService.endSession(preAdmin.getEmail());
 
         } catch (NullPointerException e) {
-            ResponseHandler.userDoesNotExist(response);
+            ResponseHandler.resourceNotFound(response,"admin with given details not found ");
         }
     }
 
@@ -125,7 +125,7 @@ public class AdminController {
             vendorService.deleteUser(vendorService.getUser(preVendor.getEmail()));
             ResponseHandler.successfulEdit(response);
         } catch (NullPointerException | UserNotFoundException e) {
-            ResponseHandler.userDoesNotExist(response);
+            ResponseHandler.resourceNotFound(response,"vendor with given details not found");
         }
 
     }
@@ -137,7 +137,7 @@ public class AdminController {
             usersService.deleteUser(usersService.getUser(preUsers.getEmail()));
             ResponseHandler.successfulEdit(response);
         } catch (UserNotFoundException e) {
-            ResponseHandler.userDoesNotExist(response);
+            ResponseHandler.resourceNotFound(response, "user with given details not found");
         }
     }
 

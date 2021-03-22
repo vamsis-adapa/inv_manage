@@ -108,12 +108,12 @@ public class UsersController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"}, params = {"pageSize", "pageNumber"})
-    public List<DisplayableOrder> getOrderReport(@RequestBody UserWithSort userWithSort, @RequestParam Integer pageSize, @RequestParam Integer pageNumber, HttpServletResponse response) {
+    @RequestMapping(method = RequestMethod.GET, value = {"/app_user/orders"})
+    public List<DisplayableOrder> getOrderReport(@RequestBody UserWithSort userWithSort, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer pageNumber, HttpServletResponse response) {
+
 
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, userWithSort.getUserEmail(), response))
             return null;
-
         if (pageNumber == null)
             pageNumber = 0;
         if (pageSize == null)

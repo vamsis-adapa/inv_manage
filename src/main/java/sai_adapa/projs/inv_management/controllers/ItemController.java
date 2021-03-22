@@ -50,7 +50,7 @@ public class ItemController {
         try {
             return itemService.getItemDetails(id);
         } catch (ItemNotFoundException e) {
-            ResponseHandler.resourceNotFound(response);
+            ResponseHandler.resourceNotFound(response, "requested item not found");
         }
         return null;
     }

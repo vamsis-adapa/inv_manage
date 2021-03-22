@@ -13,6 +13,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.kafka.core.KafkaTemplate;
 import sai_adapa.projs.inv_management.exceptions.InvalidRequestException;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
@@ -54,6 +55,8 @@ public class InvManagementApplication {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private KafkaTemplate<String, String > kafkaTemplate;
 
     public static void main(String[] args) {
         SpringApplication.run(InvManagementApplication.class, args);
@@ -64,6 +67,9 @@ public class InvManagementApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
         System.out.println("strawberry");
+
+//        kafkaTemplate.send("cho", "straw");
+        System.out.println("yara ");
 
 
     }

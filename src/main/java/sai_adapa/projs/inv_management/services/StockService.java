@@ -82,11 +82,16 @@ public class StockService {
     }
 
     public Stock getParticularStock(String vendor_email, Long item_id) throws StockNotFoundException {
+        Stock stock;
         try {
-            return stockRepository.findStockByVendorAndItem(vendorService.getUser(vendor_email), itemService.getItemById(item_id));
+            stock =  stockRepository.findStockByVendorAndItem(vendorService.getUser(vendor_email), itemService.getItemById(item_id));
         } catch (ItemNotFoundException | UserNotFoundException exception) {
-            throw new StockNotFoundException();
+            stock = null;
         }
+        if ( stock ==null)
+            throw new StockNotFoundException();
+
+        return stock;
     }
 
     public Boolean checkExistingStock(String vendor_email, Long item_id) {
@@ -114,6 +119,7 @@ public class StockService {
 
     public boolean checkAvailability(Long item_id, String vendor_email, Integer required) throws StockNotFoundException {
 //TODO : FIX
+
         Integer kk = getParticularStock(vendor_email, item_id).getInv_num();
         System.out.println("kk");
         return (required <=kk );

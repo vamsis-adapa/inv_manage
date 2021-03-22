@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import sai_adapa.projs.inv_management.exceptions.ItemNotFoundException;
+import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.enums.OrderStatus;
 import sai_adapa.projs.inv_management.model.enums.PaymentStatus;
 import sai_adapa.projs.inv_management.model.io.DisplayableOrder;
@@ -59,7 +61,7 @@ public class OrderService {
 
 
     public String createVendorOrder(Stock stock, Integer numberOfItems, OrderStatus orderStatus) {
-        Orders orders = Orders.builder().vendorId(stock.getVendor().getVendorId()).numberOfItems(numberOfItems).orderStatus(orderStatus).build();
+        Orders orders = Orders.builder().vendorId(stock.getVendor().getVendorId()).itemId(stock.getItem().getItem_id()).numberOfItems(numberOfItems).orderStatus(orderStatus).build();
         orderRepository.save(orders);
         return orders.getId();
     }
@@ -90,10 +92,21 @@ public class OrderService {
         return DisplayableOrder.builder().id(orders.getId()).vendorEmail(vendorEmail).userEmail(userEmail).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
     }
 
-    @SneakyThrows
+
     DisplayableOrderVendor createDisplayableOrderVendor(Orders orders) {
-        String vendorEmail = vendorService.getUser(orders.getVendorId()).getEmail();
-        String itemName = itemService.getItemById(orders.getItemId()).getName();
+        String vendorEmail = null;
+        try {
+            vendorEmail = vendorService.getUser(orders.getVendorId()).getEmail();
+        } catch (UserNotFoundException e) {
+            vendorEmail = null;
+        }
+        String itemName = null;
+        try {
+
+            itemName = itemService.getItemById(orders.getItemId()).getName();
+        } catch (IllegalArgumentException | ItemNotFoundException e) {
+            itemName = null;
+        }
         return DisplayableOrderVendor.builder().id(orders.getId()).vendorEmail(vendorEmail).userID(orders.getUserId()).itemId(orders.getItemId()).itemName(itemName).numberOfItems(orders.getNumberOfItems()).individualCost(orders.getIndividualCost()).transactionDate(orders.getTransactionDate()).totalCost(orders.getTotalCost()).build();
     }
 
@@ -106,21 +119,21 @@ public class OrderService {
     }
 
     public Sort declareSort(String criteria, String direction, Sort preSort) {
-        Sort sort;
+        Sort sort = null;
         if (preSort == null) {
-            sort = Sort.by(criteria);
+
             if (direction.equals("des"))
-                sort = sort.descending();
+                sort = Sort.by(Sort.Order.desc(criteria));
             else if (direction.equals("asc"))
-                sort = sort.ascending();
+                sort = Sort.by(Sort.Order.asc(criteria));
             return sort;
         }
 
-        sort = preSort.and(Sort.by(criteria));
+
         if (direction.equals("des"))
-            sort = sort.descending();
+            sort = preSort.and(Sort.by(Sort.Order.desc(criteria)));
         else if (direction.equals("asc"))
-            sort = sort.ascending();
+            sort = preSort.and(Sort.by(Sort.Order.asc(criteria)));
         return sort;
     }
 

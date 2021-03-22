@@ -2,32 +2,44 @@ package sai_adapa.projs.inv_management.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import sai_adapa.projs.inv_management.exceptions.PaymentFailedException;
 import sai_adapa.projs.inv_management.model.enums.PaymentStatus;
 import sai_adapa.projs.inv_management.model.io.EmailsAndAmount;
 import sai_adapa.projs.inv_management.model.io.PaymentResponse;
+import sai_adapa.projs.inv_management.model.items.Item;
 import sai_adapa.projs.inv_management.model.orders.Orders;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Future;
 
 @Service
+@Slf4j
 public class PaymentService {
 
     final WebClient walletWebClient;
     private OrderService orderService;
+    private String baseUrl;
+    private String resourcePath;
+
+    {
+        baseUrl = "https://14bf556a6b56.ngrok.io";
+        resourcePath = "/items";//"/wallet-service";
+    }
+
 
     public PaymentService() {
-        this.walletWebClient = WebClient.builder().baseUrl("http://localhost:765").defaultCookie("JSESSIONID", getAccessToken())
+        this.walletWebClient = WebClient.builder().baseUrl(baseUrl).defaultCookie("JSESSIONID", getAccessToken())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
     }
 
@@ -52,17 +64,57 @@ public class PaymentService {
     }
 
     private void checkPaymentResponse(PaymentResponse paymentResponse) throws PaymentFailedException {
+        try{
         if (!paymentResponse.getStatus().equals("success")) {
             throw new PaymentFailedException();
+        }}
+        catch (NullPointerException e)
+        {
+            throw  new PaymentFailedException();
         }
 
     }
 
+public void choc()
+{
+    RestTemplate restTemplate = new RestTemplate();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("Authorization", getAccessToken());
+    HttpEntity<String> request = new HttpEntity<>(headers);
+    Item[] listOfItems= restTemplate.getForObject(baseUrl+resourcePath,Item[].class);
+    System.out.println(listOfItems);
+
+}
+
+
+
+    public PaymentStatus payForOrder(Orders orders, String userEmail, String vendorEmail, Double amount) {
+        Integer amountInteger = ceilDoubleToInteger(amount);
+        EmailsAndAmount emailsAndAmount = EmailsAndAmount.builder().amount(amountInteger).email(userEmail).secondEmail(vendorEmail).build();
+
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", getAccessToken());
+            HttpEntity<EmailsAndAmount> request = new HttpEntity<EmailsAndAmount>(emailsAndAmount, headers);
+            PaymentResponse paymentResponse = restTemplate.postForObject(baseUrl + resourcePath, request, PaymentResponse.class);
+            checkPaymentResponse(paymentResponse);
+
+        } catch (HttpClientErrorException | PaymentFailedException e) {
+            orderService.changeOrderStatus(orders, PaymentStatus.Failed);
+            return PaymentStatus.Failed;
+        }
+        orderService.changeOrderStatus(orders, PaymentStatus.Successful);
+        return PaymentStatus.Successful;
+
+    }
 
     //TODO use more lambdas
     //TODO also handle async func properly
-    @Async
-    public Future<PaymentStatus> payForOrder(Orders orders, String userEmail, String vendorEmail, Double amount) {
+    public Future<PaymentStatus> payForOrderWebClient(Orders orders, String userEmail, String vendorEmail, Double amount) {
 
         Integer amountInteger = ceilDoubleToInteger(amount);
 
@@ -75,7 +127,6 @@ public class PaymentService {
 
 
         Mono<String> walletResponse = headersSpec.exchangeToMono(response -> {
-
             if (response.statusCode()
                     .equals(HttpStatus.OK)) {
                 return response.bodyToMono(String.class);
@@ -90,13 +141,14 @@ public class PaymentService {
 
         try {
             PaymentResponse paymentResponse = convertStringToObject(walletResponse.block());
+            System.out.println(paymentResponse);
+
             checkPaymentResponse(paymentResponse);
         } catch (JsonProcessingException | PaymentFailedException e) {
 
             orderService.changeOrderStatus(orders, PaymentStatus.Failed);
             return new AsyncResult<PaymentStatus>(PaymentStatus.Failed);
         }
-
         orderService.changeOrderStatus(orders, PaymentStatus.Successful);
         return new AsyncResult<PaymentStatus>(PaymentStatus.Successful);
     }

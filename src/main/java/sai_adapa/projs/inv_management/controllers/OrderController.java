@@ -61,6 +61,7 @@ public class OrderController {
             Users users = usersService.getUser(preUserWithOrder.getEmail());
             Vendor vendor = vendorService.getUser((preUserWithOrder.getVendorEmail()));
 
+
             if (stockService.checkAvailability(preUserWithOrder.getItemId(), vendor.getEmail(), preUserWithOrder.getNumberOfItems())) {
                 Orders orders = orderService.createOrder(stockService.getParticularStock(vendor.getEmail(), preUserWithOrder.getItemId()), users.getUserId(), preUserWithOrder.getNumberOfItems());
                 paymentService.payForOrder(orders, users.getEmail(), vendor.getEmail(), orders.getTotalCost());
@@ -71,7 +72,7 @@ public class OrderController {
         } catch (UserNotFoundException e) {
             ResponseHandler.actionFailed(response, "User not found");
         } catch (StockNotFoundException e) {
-            ResponseHandler.resourceNotFound(response);
+            ResponseHandler.resourceNotFound(response, "item not sold by vendor");
         }
         return null;
     }

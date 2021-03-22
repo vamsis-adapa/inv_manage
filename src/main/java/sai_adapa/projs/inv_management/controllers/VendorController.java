@@ -140,7 +140,7 @@ public class VendorController {
             vendorService.incrementVendorStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getNum_stock());
             ResponseHandler.successfulEdit(response);
         } catch (StockNotFoundException e) {
-            ResponseHandler.resourceNotFound(response);
+            ResponseHandler.resourceNotFound(response, "requested stock not found");
         }
     }
 
@@ -161,7 +161,7 @@ public class VendorController {
         try {
             vendorService.editStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getNum_stock(), preVendorWithItem.getCost());
         } catch (StockNotFoundException e) {
-            ResponseHandler.resourceNotFound(response);
+            ResponseHandler.resourceNotFound(response,"requested Stock not found");
         }
     }
 
@@ -173,7 +173,7 @@ public class VendorController {
             vendorService.deleteStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id());
             ResponseHandler.successfulEdit(response);
         } catch (StockNotFoundException e) {
-            ResponseHandler.resourceNotFound(response);
+            ResponseHandler.resourceNotFound(response, "requested stock not found");
         }
     }
 
@@ -190,13 +190,13 @@ public class VendorController {
     }
 
     @RequestMapping(value = {"/vendor/orders"})
-    public List<DisplayableOrderVendor> viewAllOrders(@RequestBody VendorWithSort vendorWithSort, @RequestParam Integer pageNumber, @RequestParam Integer pageSize, HttpServletResponse response) {
+    public List<DisplayableOrderVendor> viewAllOrders(@RequestBody VendorWithSort vendorWithSort, @RequestParam(required = false) Integer pageNumber, @RequestParam(required = false) Integer pageSize, HttpServletResponse response) {
         if (!ResponseHandler.verifyUserIdentity(sessionIdentity, vendorWithSort.getVendorEmail(), response))
             return null;
         if (pageNumber == null)
             pageNumber = 0;
         if (pageSize == null)
-            pageSize = 0;
+            pageSize = 100;
         try {
 
             if (vendorWithSort.getSortDetailsList() == null)
