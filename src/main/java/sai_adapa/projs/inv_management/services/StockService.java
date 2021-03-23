@@ -80,6 +80,11 @@ public class StockService {
         stock.setInv_num(stock.getInv_num() - num_stock);
         stockRepository.save(stock);
     }
+    public void unBuyStock(Stock stock, Integer num_stock)
+    {
+        stock.setInv_num(stock.getInv_num()+num_stock);
+        stockRepository.save(stock);
+    }
 
     public Stock getParticularStock(String vendor_email, Long item_id) throws StockNotFoundException {
         Stock stock;

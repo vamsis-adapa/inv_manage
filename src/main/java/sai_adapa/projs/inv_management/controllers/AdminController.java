@@ -81,7 +81,7 @@ public class AdminController {
         } catch (NullPointerException e) {
             ResponseHandler.userDoesNotExist(response);
         }
-        return "k";
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = {"/admin"})
@@ -91,6 +91,12 @@ public class AdminController {
         try {
             adminService.editUser(adminService.getUser(preAdmin.getEmail()), preAdmin.getChanged_email(), preAdmin.getPasswd());
             adminService.endSession(preAdmin.getEmail());
+            ResponseHandler.successfulEdit(response);
+            if ( preAdmin.getChanged_email()!=null)
+            {
+                adminService.endSession(adminService.getUser(preAdmin.getChanged_email()).getEmail());
+                ResponseHandler.successfulLogOut(response);
+            }
         } catch (NullPointerException e) {
             ResponseHandler.userDoesNotExist(response);
         }
@@ -101,6 +107,7 @@ public class AdminController {
     public void deleteAdmin(@RequestBody PreAdmin preAdmin, HttpServletResponse response) {
         try {
             adminService.deleteUser(adminService.getUser(preAdmin.getEmail()));
+            ResponseHandler.successfulEdit(response);
         } catch (NullPointerException e) {
             ResponseHandler.userDoesNotExist(response);
         }
@@ -113,6 +120,7 @@ public class AdminController {
 
         try {
             adminService.endSession(preAdmin.getEmail());
+            ResponseHandler.successfulLogOut(response);
 
         } catch (NullPointerException e) {
             ResponseHandler.resourceNotFound(response,"admin with given details not found ");

@@ -95,7 +95,11 @@ public class UsersController {
         try {
             usersService.editUser(usersService.getUser(preUsers.getEmail()), preUsers.getName(), preUsers.getChanged_email(), preUsers.getDetails(), preUsers.getPasswd());
             ResponseHandler.successfulEdit(response);
-
+            if ( preUsers.getChanged_email()!=null)
+            {
+                usersService.endSession(usersService.getUser(preUsers.getChanged_email()));
+                ResponseHandler.successfulLogOut(response);
+            }
         } catch (UserNotFoundException e) {
             ResponseHandler.userDoesNotExist(response);
         }

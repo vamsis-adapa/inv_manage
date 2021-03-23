@@ -19,7 +19,16 @@ public class ResponseHandler {
     public static void successfulEdit(HttpServletResponse response) {
         response.setStatus(200);
         try {
-            response.getWriter().write("successfulEdit");
+            response.getWriter().write("successfulEdit\n");
+        } catch (IOException ignored) {
+        }
+    }
+
+    public static void successfulLogOut(HttpServletResponse re)
+    {
+        re.setStatus(200);
+        try {
+            re.getWriter().write("successfully logged out\n");
         } catch (IOException ignored) {
         }
     }

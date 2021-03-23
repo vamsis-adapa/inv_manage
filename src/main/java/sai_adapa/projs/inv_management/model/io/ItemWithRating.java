@@ -17,7 +17,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class ItemWithRating implements Serializable {
     private final String type;
-    private Integer clientId;
+    private Long clientId;
     private String clientName;
     private String clientPassword;
     private Long typeId = null;
@@ -28,7 +28,7 @@ public class ItemWithRating implements Serializable {
     }
 
     public ItemWithRating(Item item, Rating rating, Users user) {
-        this.clientId = 1000 + (int)(Math.random() * ((1000000 - 1000) + 1));
+        this.clientId = user.getRatingId();
         this.clientName = user.getEmail();
         this.clientPassword = clientId.toString();
         this.typeId = item.getItem_id();

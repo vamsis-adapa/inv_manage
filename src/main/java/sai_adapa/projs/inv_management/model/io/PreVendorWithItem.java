@@ -19,4 +19,5 @@ public class PreVendorWithItem extends PreVendor {
     private String item_description;
     private Double cost;
     private Integer num_stock;
+
 }

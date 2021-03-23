@@ -51,7 +51,7 @@ public class ItemService {
         Item item;
         try {
          item = itemRepository.findById(item_id).get();}
-        catch (NoSuchElementException e)
+        catch (NoSuchElementException | IllegalArgumentException e)
         {
             throw (new ItemNotFoundException("requested item (itemId: " + item_id + ") not found"));
         }

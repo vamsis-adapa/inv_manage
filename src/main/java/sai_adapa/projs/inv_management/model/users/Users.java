@@ -31,8 +31,9 @@ public class Users implements Serializable {
     private String details;
     private String passwdHash;
     private String sessionToken;
-    @GeneratedValue(generator = "identity")
-    protected Long rating_id;
+    @Column(unique = true)
+    private Long ratingId;
+
 }
 
 

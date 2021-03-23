@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sai_adapa.projs.inv_management.exceptions.ItemNotFoundException;
+import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
 import sai_adapa.projs.inv_management.exceptions.UserNotFoundException;
 import sai_adapa.projs.inv_management.model.enums.OrderStatus;
 import sai_adapa.projs.inv_management.model.enums.PaymentStatus;
@@ -71,6 +72,13 @@ public class OrderService {
             orders.setOrderStatus(OrderStatus.Confirmed);
         else if (s == PaymentStatus.Failed)
             orders.setOrderStatus(OrderStatus.Cancelled);
+        try {
+            stockService.unBuyStock(stockService.getParticularStock(vendorService.getUser(orders.getVendorId()).getEmail(),orders.getItemId()),orders.getNumberOfItems());
+        } catch (StockNotFoundException e) {
+            e.printStackTrace();
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
         orderRepository.save(orders);
     }
 

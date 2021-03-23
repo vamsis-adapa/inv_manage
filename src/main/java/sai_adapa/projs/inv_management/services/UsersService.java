@@ -18,6 +18,7 @@ import sai_adapa.projs.inv_management.tools.PasswordTools;
 import sai_adapa.projs.inv_management.tools.SortDetails;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,9 @@ public class UsersService {
 
     public void addUser(String name, String e_mail, String details, String password) throws UserAlreadyExistsException, InvalidRequestException {
         try{
-        usersRepository.save(Users.builder().name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());}
+            Random random = new Random();
+
+        usersRepository.save(Users.builder().ratingId(random.nextLong()).name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());}
         catch (DataIntegrityViolationException e)
         {
             throw new UserAlreadyExistsException();

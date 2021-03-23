@@ -100,6 +100,10 @@ public class VendorController {
         try {
             vendorService.editUser(vendorService.getUser(preVendor.getEmail()), preVendor.getName(), preVendor.getChanged_email(), preVendor.getDescription(), preVendor.getPasswd());
             ResponseHandler.successfulEdit(response);
+            if ( preVendor.getChanged_email()!=null)
+            {
+                vendorService.endSession(vendorService.getUser(preVendor.getChanged_email()).getEmail());
+            }
         } catch (UserNotFoundException e) {
             ResponseHandler.actionFailed(response, "user not found");
         }
@@ -160,6 +164,7 @@ public class VendorController {
             return;
         try {
             vendorService.editStock(preVendorWithItem.getEmail(), preVendorWithItem.getItem_id(), preVendorWithItem.getNum_stock(), preVendorWithItem.getCost());
+            ResponseHandler.successfulEdit(response);
         } catch (StockNotFoundException e) {
             ResponseHandler.resourceNotFound(response,"requested Stock not found");
         }
