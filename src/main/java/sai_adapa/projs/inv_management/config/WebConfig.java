@@ -1,24 +1,41 @@
 package sai_adapa.projs.inv_management.config;
 
-import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import sai_adapa.projs.inv_management.auth.user_authorization.AdminVerifier;
-import sai_adapa.projs.inv_management.auth.user_authorization.UsersVerifier;
-import sai_adapa.projs.inv_management.auth.user_authorization.VendorVerifier;
+import sai_adapa.projs.inv_management.auth.role.AdminVerifierInterceptor;
+import sai_adapa.projs.inv_management.auth.role.UsersVerifierInterceptor;
+import sai_adapa.projs.inv_management.auth.role.VendorVerifierInterceptor;
 
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry)
-    {
+    AdminVerifierInterceptor adminVerifierInterceptor;
+    UsersVerifierInterceptor usersVerifierInterceptor;
+    VendorVerifierInterceptor vendorVerifierInterceptor;
 
-        registry.addInterceptor(new AdminVerifier()).addPathPatterns("/admin","/admin/**").excludePathPatterns("/admin/new","/admin/login");
-        registry.addInterceptor(new UsersVerifier()).addPathPatterns("/app_user/logout");
-        registry.addInterceptor(new VendorVerifier()).addPathPatterns(("/vendor/logout"));
+    @Autowired
+    public void setAdminVerifierInterceptor(AdminVerifierInterceptor adminVerifierInterceptor) {
+        this.adminVerifierInterceptor = adminVerifierInterceptor;
     }
 
+    @Autowired
+
+    public void setUsersVerifierInterceptor(UsersVerifierInterceptor usersVerifierInterceptor) {
+        this.usersVerifierInterceptor = usersVerifierInterceptor;
+    }
+
+    @Autowired
+    public void setVendorVerifierInterceptor(VendorVerifierInterceptor vendorVerifierInterceptor) {
+        this.vendorVerifierInterceptor = vendorVerifierInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(adminVerifierInterceptor).addPathPatterns("/admin", "/admin/**").excludePathPatterns("/admin/new", "/admin/login");
+        registry.addInterceptor(usersVerifierInterceptor).addPathPatterns("/app_user/**", "/app_user", "/order", "/item/*/rate").excludePathPatterns("/app_user/new", "/app_user/login");
+        registry.addInterceptor(vendorVerifierInterceptor).addPathPatterns("/vendor/**","/vendor/items", "/vendor").excludePathPatterns("/vendor/new", "/vendor/login");
+    }
 }
