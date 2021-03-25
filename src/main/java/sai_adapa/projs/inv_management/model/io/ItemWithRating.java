@@ -17,7 +17,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class ItemWithRating implements Serializable {
     private final String type;
-    private Long clientId;
+    private Integer clientId;
     private String clientName;
     private String clientPassword;
     private Long typeId = null;

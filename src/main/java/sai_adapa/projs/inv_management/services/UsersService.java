@@ -72,7 +72,7 @@ public class UsersService {
         try{
             Random random = new Random();
 
-        usersRepository.save(Users.builder().ratingId(random.nextLong()).name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());}
+        usersRepository.save(Users.builder().ratingId(random.nextInt(10000)).name(name).email(e_mail).details(details).passwdHash(PasswordTools.encodePassword(password)).build());}
         catch (DataIntegrityViolationException e)
         {
             throw new UserAlreadyExistsException();

@@ -32,7 +32,7 @@ public class Users implements Serializable {
     private String passwdHash;
     private String sessionToken;
     @Column(unique = true)
-    private Long ratingId;
+    private Integer ratingId;
 
 }
 

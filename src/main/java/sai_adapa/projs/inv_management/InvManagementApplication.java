@@ -1,5 +1,6 @@
 package sai_adapa.projs.inv_management;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 import sai_adapa.projs.inv_management.exceptions.InvalidRequestException;
 import sai_adapa.projs.inv_management.exceptions.StockCreationUnsuccessfulException;
 import sai_adapa.projs.inv_management.exceptions.StockNotFoundException;
@@ -70,7 +74,25 @@ public class InvManagementApplication {
 
 //        kafkaTemplate.send("cho", "straw");
         System.out.println("yara ");
+        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send("Choc", "straw");
 
+        future.addCallback(new ListenableFutureCallback<>() {
+
+            @Override
+            public void onSuccess(SendResult<String, String> result) {
+
+
+                    System.out.println("----------------------->Sent message=[" + "straw" +
+                            "] with offset=[" + result.getRecordMetadata().offset() + "]");
+
+            }
+
+            @Override
+            public void onFailure(Throwable ex)  {
+                System.out.println("----------------------->Unable to send message=["
+                        + "] due to : " + ex.getMessage());
+            }
+        });
 
     }
 
