@@ -22,7 +22,7 @@ public class KafkaItemRatingProducerConfig {
         Map<String, Object> config = new HashMap<>();
         config.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                  "127.0.0.1:9092");  ///kafka server ip
+                  "127.0.0.1:9095");  ///kafka server ip
         config.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);

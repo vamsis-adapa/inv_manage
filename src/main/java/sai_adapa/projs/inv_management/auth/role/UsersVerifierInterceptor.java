@@ -1,6 +1,6 @@
 package sai_adapa.projs.inv_management.auth.role;
 
-import org.jetbrains.annotations.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,7 +29,7 @@ public class UsersVerifierInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
+    public boolean preHandle(HttpServletRequest request,  HttpServletResponse response,  Object handler) {
         try {
             if (usersService.verifySession(request.getHeader("session_token"))) {
                 identity.setIdentity(usersService.getUsersBySession(request.getHeader("session_token")).getEmail());

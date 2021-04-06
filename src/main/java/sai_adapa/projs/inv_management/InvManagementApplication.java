@@ -72,7 +72,7 @@ public class InvManagementApplication {
     public void doSomethingAfterStartup() {
         System.out.println("strawberry");
 
-//        kafkaTemplate.send("cho", "straw");
+        kafkaTemplate.send("cho", "straw");
         System.out.println("yara ");
         ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send("Choc", "straw");
 
@@ -93,7 +93,6 @@ public class InvManagementApplication {
                         + "] due to : " + ex.getMessage());
             }
         });
-
     }
 
 
